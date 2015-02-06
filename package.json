@@ -1,0 +1,19 @@
+{
+  "name": "causality",
+  "version": "0.0.0",
+  "private": true,
+  "description": "web automation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "later": "^1.1.6",
+    "lodash": "^3.1.0",
+    "nopt": "^3.0.1",
+    "split": "^0.3.3",
+    "through2": "^0.6.3"
+  }
+}
