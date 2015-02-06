@@ -3,8 +3,10 @@ var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
-var split = require('split');
 var later = require('later');
+var request = require('request');
+var FeedParser = require('feedparser');
+var split = require('split');
 var through2 = require('through2');
 
 var nopt = require('nopt');
@@ -29,8 +31,7 @@ var argv = nopt(opts, shorthands, process.argv);
 
 
 var schedule = later.parse.recur().every(10).second();
-var next10 = later.schedule(schedule).next(10);
-console.log(next10);
+// var next10 = later.schedule(schedule).next(10);
 var timer = later.setInterval(function() {
 	console.log('hehe');
 }, schedule);
@@ -51,6 +52,20 @@ process.on('SIGINT', function () {
 	console.info(chalk.yellow('exiting...'));
 	process.exit();
 });
+
+
+
+// var seen = {};
+// feedparser.on('readable', function() {
+// 	var stream = this;
+// 	var article;
+// 	while (article = stream.read()) {
+// 		var time = article.date.getTime();
+// 		if (!(article.guid in seen) || (seen[article.guid] !== 0 && seen[article.guid] != time)) {
+// 			seen[article.guid] = article.date ? time : 0;
+// 		}
+// 	}
+// });
 
 
 
