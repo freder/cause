@@ -8,6 +8,7 @@ var request = require('request');
 var FeedParser = require('feedparser');
 var split = require('split');
 var through2 = require('through2');
+var lowdb = require('lowdb');
 
 var nopt = require('nopt');
 var opts = {
@@ -53,6 +54,13 @@ process.on('SIGINT', function () {
 	process.exit();
 });
 
+
+var db = lowdb('db.json', {
+	autosave: true, // automatically save on change
+	async: true // async write
+});
+db('posts').push({ title: 'lowdb is awesome' });
+db('posts').find({ title: 'lowdb is awesome' });
 
 
 // var seen = {};
