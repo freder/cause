@@ -11,13 +11,16 @@
   "dependencies": {
     "async": "^0.9.0",
     "chalk": "^0.5.1",
+    "cheerio": "^0.18.0",
     "feedparser": "^0.19.2",
     "later": "^1.1.6",
     "lodash": "^3.1.0",
     "lowdb": "^0.7.1",
+    "moment": "^2.9.0",
     "nopt": "^3.0.1",
     "request": "^2.53.0",
     "split": "^0.3.3",
-    "through2": "^0.6.3"
+    "through2": "^0.6.3",
+    "winston": "^0.9.0"
   }
 }

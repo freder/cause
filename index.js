@@ -9,6 +9,16 @@ var FeedParser = require('feedparser');
 var split = require('split');
 var through2 = require('through2');
 var lowdb = require('lowdb');
+var cheerio = require('cheerio');
+var moment = require('moment');
+var winston = require('winston');
+winston.remove(winston.transports.Console);
+winston.add(winston.transports.Console, {
+	timestamp: function() {
+		return moment().format('DD-MM-YYYY, hh:mm:ss');
+	},
+	colorize: true
+});
 
 var nopt = require('nopt');
 var opts = {
@@ -31,10 +41,10 @@ var argv = nopt(opts, shorthands, process.argv);
 // console.log(argv);
 
 
-var schedule = later.parse.recur().every(10).second();
+var schedule = later.parse.recur().every(10).minute();
 // var next10 = later.schedule(schedule).next(10);
 var timer = later.setInterval(function() {
-	console.log('hehe');
+	check_price();
 }, schedule);
 
 
@@ -43,7 +53,7 @@ function handle_error(err) {
 }
 
 process.on('uncaughtException', function(err) {
-	handle_error(err)
+	handle_error(err);
 	process.exit(1);
 });
 
@@ -55,12 +65,31 @@ process.on('SIGINT', function () {
 });
 
 
-var db = lowdb('db.json', {
-	autosave: true, // automatically save on change
-	async: true // async write
-});
-db('posts').push({ title: 'lowdb is awesome' });
-db('posts').find({ title: 'lowdb is awesome' });
+// var db = lowdb('db.json', {
+// 	autosave: true, // automatically save on change
+// 	async: true // async write
+// });
+// db('posts').push({ title: 'lowdb is awesome' });
+// db('posts').find({ title: 'lowdb is awesome' });
+
+
+var url = 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm';
+function check_price() {
+	request(url, function(err, response, html) {
+		if (err) {
+			handle_error(err);
+			return;
+		}
+
+		var $ = cheerio.load(html);
+		var price = $('#priceblock_ourprice').text();
+		price = price.replace(/EUR/, '').replace(' ', '').replace(',', '.');
+		price = parseFloat(price);
+		winston.info(price);
+	});
+}
+check_price();
+
 
 
 // var seen = {};
