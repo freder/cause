@@ -21,6 +21,7 @@ var helper = require('./helper.js');
 var config = require('./config.js');
 var email = require('./email.js');
 var amazon = require('./amazon.js');
+var bitcoin = require('./bitcoin.js');
 
 
 var nopt = require('nopt');
@@ -77,14 +78,31 @@ var check_price = amazon.create_pricecheck({
 });
 
 
+var bitcoin_price = bitcoin.create();
+
+
 function create_task(func, interval) {
 	// var schedule = later.parse.recur()
 	// 	.every(10).minute();
+	
 	var schedule = later.parse.text(interval);
 	var timer = later.setInterval(func, schedule);
+
+	return {
+		func: func,
+		schedule: schedule,
+		timer: timer
+	};
 }
 
-create_task(check_price, 'every 10 mins');
+var tasks = [
+	create_task(check_price, 'every 10 mins'), // amazon: monitor
+	create_task(bitcoin_price, 'every 20 mins'), // bitcoin price
+];
+
+tasks.forEach(function(task) {
+	task.func();
+});
 
 
 
