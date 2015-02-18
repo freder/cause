@@ -18,7 +18,7 @@ function format_price(price) {
 }
 
 
-function create_pricecheck(options, callback) {
+function create_pricecheck(options/*, callback*/) {
 	// TODO: validate url
 	if (!validator.isURL(options.url)) {
 		// TODO: what to do in such a case?
@@ -40,7 +40,7 @@ function create_pricecheck(options, callback) {
 			price = parseFloat(price);
 
 			if (previous_value != price) {
-				winston.info('price has changed: ' + price);				
+				winston.info('price has changed: ' + price);
 			}
 
 			if (options.threshold && price <= options.threshold) {
@@ -49,8 +49,9 @@ function create_pricecheck(options, callback) {
 				email.send(subject, link);
 			}
 
+			previous_value = price;
 		});
-	}
+	};
 }
 
 
