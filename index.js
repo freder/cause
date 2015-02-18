@@ -6,7 +6,6 @@ var chalk = require('chalk');
 var later = require('later');
 var split = require('split');
 var through2 = require('through2');
-var lowdb = require('lowdb');
 var moment = require('moment');
 var winston = require('winston');
 winston.remove(winston.transports.Console);
@@ -19,9 +18,20 @@ winston.add(winston.transports.Console, {
 
 var helper = require('./helper.js');
 var config = require('./config.js');
+var db = require('./db.js');
 var email = require('./email.js');
 var amazon = require('./amazon.js');
 var bitcoin = require('./bitcoin.js');
+var feeds = require('./feeds.js');
+
+
+/*
+TODO:
+- persist tasks and their state
+- TDD
+- how to update tasks while the programm is running?
+- how to use streams to make modules connectable?
+*/
 
 
 var nopt = require('nopt');
@@ -31,18 +41,15 @@ var opts = {
 	// "baz" : path,
 	// "bloo" : [ "big", "medium", "small" ],
 	// "flag" : Boolean,
-	// "pick" : Boolean,
 	// "many" : [String, Array]
 };
 var shorthands = {
 	// "foofoo" : ["--foo", "Mr. Foo"],
 	// "b7" : ["--bar", "7"],
 	// "m" : ["--bloo", "medium"],
-	// "p" : ["--pick"],
 	// "f" : ["--flag"]
 };
 var argv = nopt(opts, shorthands, process.argv);
-
 
 
 
@@ -59,15 +66,6 @@ process.on('SIGINT', function () {
 });
 
 
-// var db = lowdb('db.json', {
-// 	autosave: true, // automatically save on change
-// 	async: true // async write
-// });
-// db('posts').push({ title: 'lowdb is awesome' });
-// db('posts').find({ title: 'lowdb is awesome' });
-
-
-
 
 
 
@@ -79,12 +77,13 @@ var check_price = amazon.create_pricecheck({
 
 
 var bitcoin_price = bitcoin.create();
+var adventuretime_rss = feeds.create();
 
 
 function create_task(func, interval) {
 	// var schedule = later.parse.recur()
 	// 	.every(10).minute();
-	
+
 	var schedule = later.parse.text(interval);
 	var timer = later.setInterval(func, schedule);
 
@@ -98,6 +97,7 @@ function create_task(func, interval) {
 var tasks = [
 	create_task(check_price, 'every 10 mins'), // amazon: monitor
 	create_task(bitcoin_price, 'every 20 mins'), // bitcoin price
+	create_task(adventuretime_rss, 'every 50 mins'), // adventure time
 ];
 
 tasks.forEach(function(task) {
