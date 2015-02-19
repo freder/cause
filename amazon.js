@@ -1,7 +1,18 @@
-var request = require('request');
 var cheerio = require('cheerio');
 var validator = require('validator');
 var winston = require('winston');
+// var request = require('request');
+var noodle = require('./noodlejs');
+noodle.configure({
+	debug: false,
+	/*"resultsCacheMaxTime":   0,
+	// "resultsCachePurgeTime": 60480000, // -1 will turn purging off
+	"resultsCacheMaxSize":   0,
+	"pageCacheMaxTime":      0,
+	// "pageCachePurgeTime":    60480000, // -1 will turn purging off
+	"pageCacheMaxSize":      0,	*/		
+});
+// noodle.stopCache();
 
 var helper = require('./helper.js');
 var email = require('./email.js');
@@ -26,30 +37,45 @@ function create_pricecheck(options/*, callback*/) {
 	}
 
 	var previous_value = null;
+	function process_price(price_text) {
+		var price = format_price(price_text);
+		price = parseFloat(price);
+
+		if (previous_value != price) {
+			winston.info('price has changed: ' + price);
+		}
+
+		if (options.threshold && price <= options.threshold) {
+			var subject = 'price alert: ' + price;
+			var link = '<a href="'+options.url+'">'+options.url+'</a>';
+			email.send(subject, link);
+		}
+
+		previous_value = price;
+	}
 
 	return function check_price() {
-		request(options.url, function(err, response, html) {
-			if (err) {
-				helper.handle_error(err);
-				return;
-			}
+		// request(options.url, function(err, response, html) {
+		// 	if (err) {
+		// 		helper.handle_error(err);
+		// 		return;
+		// 	}
 
-			var $ = cheerio.load(html);
-			var price = $(price_selector).text();
-			price = format_price(price);
-			price = parseFloat(price);
-
-			if (previous_value != price) {
-				winston.info('price has changed: ' + price);
-			}
-
-			if (options.threshold && price <= options.threshold) {
-				var subject = 'price alert: ' + price;
-				var link = '<a href="'+options.url+'">'+options.url+'</a>';
-				email.send(subject, link);
-			}
-
-			previous_value = price;
+		// 	var $ = cheerio.load(html);
+		// 	var text = $(price_selector).text();
+		// 	process_price(text);
+		// });
+		
+		noodle.query({
+			cache: false,
+			url: options.url,
+			selector: price_selector,
+			extract: ['text']
+		})
+		.fail(helper.handle_error)
+		.then(function(results) {
+			var text = results.results[0].results[0].text;
+			process_price(text);
 		});
 	};
 }
