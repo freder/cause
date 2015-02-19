@@ -40,9 +40,12 @@ function create_pricecheck(options/*, callback*/) {
 		}
 
 		if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
-			var subject = 'price alert: ' + price;
-			var link = '<a href="'+options.url+'">'+options.url+'</a>';
-			email.send(subject, link);
+
+			if (options.threshold_email) {
+				var subject = 'price alert: ' + price;
+				var link = '<a href="'+options.url+'">'+options.url+'</a>';
+				email.send(subject, link);				
+			}
 		}
 
 		previous_value = price;

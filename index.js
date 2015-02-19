@@ -111,7 +111,8 @@ var amazon = create_task(
 		name: 'dell monitor price check',
 		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
 		threshold: 400,
-		threshold_comparison: '<='
+		threshold_comparison: '<=',
+		threshold_email: true
 	},
 	'every 10 mins'
 );
