@@ -1,21 +1,14 @@
+var chalk = require('chalk');
 var cheerio = require('cheerio');
 var validator = require('validator');
 var winston = require('winston');
-// var request = require('request');
-var noodle = require('./noodlejs');
+var noodle = require('../noodlejs');
 noodle.configure({
-	debug: false,
-	/*"resultsCacheMaxTime":   0,
-	// "resultsCachePurgeTime": 60480000, // -1 will turn purging off
-	"resultsCacheMaxSize":   0,
-	"pageCacheMaxTime":      0,
-	// "pageCachePurgeTime":    60480000, // -1 will turn purging off
-	"pageCacheMaxSize":      0,	*/		
+	debug: false
 });
-// noodle.stopCache();
 
-var helper = require('./helper.js');
-var email = require('./email.js');
+var helper = require('../helper.js');
+var email = require('../email.js');
 
 
 var price_selector = '#priceblock_ourprice';
@@ -42,7 +35,8 @@ function create_pricecheck(options/*, callback*/) {
 		price = parseFloat(price);
 
 		if (previous_value != price) {
-			winston.info('price has changed: ' + price);
+			// TODO: logging function like this:
+			winston.info( chalk.blue(options.module), chalk.bgBlue(options.name), 'price changed: ' + price);
 		}
 
 		if (options.threshold && price <= options.threshold) {
@@ -54,18 +48,7 @@ function create_pricecheck(options/*, callback*/) {
 		previous_value = price;
 	}
 
-	return function check_price() {
-		// request(options.url, function(err, response, html) {
-		// 	if (err) {
-		// 		helper.handle_error(err);
-		// 		return;
-		// 	}
-
-		// 	var $ = cheerio.load(html);
-		// 	var text = $(price_selector).text();
-		// 	process_price(text);
-		// });
-		
+	return function check_price() {		
 		noodle.query({
 			cache: false,
 			url: options.url,
@@ -81,6 +64,6 @@ function create_pricecheck(options/*, callback*/) {
 }
 
 
-module.exports = {
-	create_pricecheck: create_pricecheck
+module.exports = function(options) {
+	return create_pricecheck(options);
 };
