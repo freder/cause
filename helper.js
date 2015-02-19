@@ -1,4 +1,6 @@
+var _ = require('lodash');
 var winston = require('winston');
+var chalk = require('chalk');
 
 
 function handle_error(err) {
@@ -7,6 +9,18 @@ function handle_error(err) {
 }
 
 
+function module_log_format(message, options) {
+	var message = chalk.white(message);
+	var module, name;
+	if (options) {
+		var module = chalk.blue(options.module || '');
+		var name = chalk.bgBlue(options.name || '');			
+	}
+	return _.compact([module, name, message]).join(' ');
+}
+
+
 module.exports = {
-	handle_error: handle_error
+	handle_error: handle_error,
+	module_log_format: module_log_format
 };

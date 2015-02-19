@@ -35,8 +35,7 @@ function create_pricecheck(options/*, callback*/) {
 		price = parseFloat(price);
 
 		if (previous_value != price) {
-			// TODO: logging function like this:
-			winston.info( chalk.blue(options.module), chalk.bgBlue(options.name), 'price changed: ' + price);
+			winston.info( helper.module_log_format('price changed: '+chalk.green(price), options) );
 		}
 
 		if (options.threshold && price <= options.threshold) {
