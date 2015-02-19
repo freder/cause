@@ -1,8 +1,10 @@
 var winston = require('winston');
+var cheerio = require('cheerio');
 var nodemailer = require('nodemailer');
 var mailgun = require('nodemailer-mailgun-transport');
 
 var config = require('./config.js');
+var helper = require('./helper.js');
 
 
 // can be re-used:
@@ -15,14 +17,14 @@ function send_email(subject, content) {
 		to: config.email.to,
 		subject: subject,
 		html: content,
-		text: cheerio(content).text()
+		text: cheerio(content.replace('<br>', '\n')).text()
 	};
 
 	transporter.sendMail(mail, function(err, info) {
 		if (err) {
-			winston.error(err);
+			helper.handle_error(err);
 		} else {
-			winston.info('Message sent: ' + info.response);
+			// winston.info('Message sent: ' + info.response);
 		}
 	});
 }

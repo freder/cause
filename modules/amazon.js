@@ -23,10 +23,8 @@ function format_price(price) {
 }
 
 
-function create_pricecheck(options/*, callback*/) {
-	// TODO: validate url
+function create_pricecheck(options) {
 	if (!validator.isURL(options.url)) {
-		// TODO: what to do in such a case?
 		winston.error('not a valid URL: ' + options.url);
 	}
 

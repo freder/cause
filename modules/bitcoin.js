@@ -1,11 +1,12 @@
 var request = require('request');
+var chalk = require('chalk');
 var winston = require('winston');
+var versus = require('versus');
 
-var helper = require('./helper.js');
-var email = require('./email.js');
+var helper = require('../helper.js');
+var email = require('../email.js');
 
 
-var url = 'https://api.bitcoinaverage.com/exchanges/EUR';
 // https://api.bitcoinaverage.com/exchanges/EUR
 /*bitcoin_de: {
 	display_URL: "https://bitcoin.de",
@@ -34,29 +35,34 @@ var url = 'https://api.bitcoinaverage.com/exchanges/EUR';
 
 function create(options) {
 	return function() {
-		var options = {
-			url: url,
+		var req_options = {
+			url: 'https://api.bitcoinaverage.com/exchanges/EUR',
 			json: true
 		};
-		request(options, function(err, response, body) {
+		request(req_options, function(err, response, body) {
 			if (err) {
 				helper.handle_error(err);
 				return;
 			}
 
-			var price = body.bitcoin_de.rates.last;
-			winston.info(body.bitcoin_de.display_name+': '+price);
+			var market = body[options.market];
+			var price = market.rates.last;
+			var line = market.display_name+': '+chalk.green(price);
+			winston.info( helper.module_log_format(line, options) );
 
-			if (options.threshold && price >= options.threshold) {
-				var subject = 'bitcoin alert: ' + price;
-				var link = ':)';
-				email.send(subject, link);
+			if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
+
+				if (options.threshold_email) {
+					var subject = 'bitcoin alert: ' + price;
+					var content = ':)';
+					email.send(subject, content);
+				}
 			}
 		});
 	};
 }
 
 
-module.exports = {
-	create: create
+module.exports = function(options) {
+	return create(options);
 };

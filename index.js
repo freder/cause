@@ -21,9 +21,6 @@ var helper = require('./helper.js');
 var config = require('./config.js');
 var db = require('./db.js');
 var email = require('./email.js');
-// var amazon = require('./amazon.js');
-// var bitcoin = require('./bitcoin.js');
-// var feeds = require('./feeds.js');
 
 
 process.on('uncaughtException', function(err) {
@@ -75,29 +72,14 @@ function create_task(module_name, options, interval) {
 /*
 TODO:
 - persist tasks and their state
+- load existing tasks on startup
 - TDD
-- think of a plugin / module system
-- how to use streams to make modules connectable?
+- how to use streams to make 'building blocks' connectable?
 - how to update tasks while the programm is running?
 */
 
 
-/*var nopt = require('nopt');
-var opts = {
-	// "foo" : [String, null],
-	// "bar" : [Stream, Number],
-	// "baz" : path,
-	// "bloo" : [ "big", "medium", "small" ],
-	// "flag" : Boolean,
-	// "many" : [String, Array]
-};
-var shorthands = {
-	// "foofoo" : ["--foo", "Mr. Foo"],
-	// "b7" : ["--bar", "7"],
-	// "m" : ["--bloo", "medium"],
-	// "f" : ["--flag"]
-};
-var argv = nopt(opts, shorthands, process.argv);*/
+/*var nopt = require('nopt');*/
 
 
 
@@ -117,11 +99,33 @@ var amazon = create_task(
 	'every 10 mins'
 );
 
+var bitcoin = create_task(
+	'bitcoin',
+	{
+		name: 'btc rate',
+		market: 'bitcoin_de',
+		threshold: 250,
+		threshold_comparison: '>=',
+		threshold_email: true
+	},
+	'every 20 mins'
+);
+
+var adventuretime = create_task(
+	'feed',
+	{
+		name: 'adventure time episodes',
+		url: 'http://www.watchcartoononline.com/anime/adventure-time/feed',
+		// email: true
+	},
+	'every 1 hours'
+);
+
 
 var tasks = [
-	amazon
-	// create_task(bitcoin_price, 'every 20 mins'), // bitcoin price
-	// create_task(adventuretime_rss, 'every 50 mins'), // adventure time
+	amazon,
+	bitcoin,
+	adventuretime
 ];
 
 tasks.forEach(function(task) {

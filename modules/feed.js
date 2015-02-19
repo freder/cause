@@ -1,13 +1,10 @@
 var FeedParser = require('feedparser');
 var request = require('request');
+var winston = require('winston');
 var _ = require('lodash');
 
-var helper = require('./helper.js');
-var config = require('./config.js');
-var email = require('./email.js');
-
-
-var url = 'http://www.watchcartoononline.com/anime/adventure-time/feed';
+var helper = require('../helper.js');
+var email = require('../email.js');
 
 
 function create(options) {
@@ -16,7 +13,7 @@ function create(options) {
 	var new_items = {};
 
 	return function() {
-		var req = request(url, {});
+		var req = request(options.url, {});
 		req.on('error', helper.handle_error);
 
 		var feedparser = new FeedParser();
@@ -54,13 +51,22 @@ function create(options) {
 			last_pubdate = meta['pubdate'];
 
 			_.each(new_items, function(item) {
-				console.log(item.title);
+				var line = item.title;
+				winston.info( helper.module_log_format(line, options) );
 			});
+
+			if (options.email) {
+				var subject = 'feed alert: ' + options.name;
+				var content = _.map(new_items, function(item) {
+					return '<a href="'+item.link+'">'+item.link+'</a>';
+				}).join('<br>');
+				email.send(subject, content);
+			}
 		});
 	};
 }
 
 
-module.exports = {
-	create: create
+module.exports = function(options) {
+	return create(options);
 };

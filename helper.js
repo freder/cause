@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var winston = require('winston');
-var chalk = require('chalk');
+// var chalk = require('chalk');
+var chalk = require('colors');
 
 
 function handle_error(err) {
