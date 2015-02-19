@@ -1,6 +1,7 @@
 var chalk = require('chalk');
 var cheerio = require('cheerio');
 var validator = require('validator');
+var versus = require('versus');
 var winston = require('winston');
 var noodle = require('../noodlejs');
 noodle.configure({
@@ -38,7 +39,7 @@ function create_pricecheck(options/*, callback*/) {
 			winston.info( helper.module_log_format('price changed: '+chalk.green(price), options) );
 		}
 
-		if (options.threshold && price <= options.threshold) {
+		if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
 			var subject = 'price alert: ' + price;
 			var link = '<a href="'+options.url+'">'+options.url+'</a>';
 			email.send(subject, link);
