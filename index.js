@@ -11,7 +11,7 @@ var winston = require('winston');
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
 	timestamp: function() {
-		return moment().format('DD-MM-YYYY, hh:mm:ss');
+		return moment().format('DD-MM-YYYY, HH:mm:ss');
 	},
 	colorize: true
 });
@@ -29,8 +29,9 @@ var feeds = require('./feeds.js');
 TODO:
 - persist tasks and their state
 - TDD
+- think of a plugin / module system
+	- how to use streams to make modules connectable?
 - how to update tasks while the programm is running?
-- how to use streams to make modules connectable?
 */
 
 
