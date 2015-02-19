@@ -1,22 +1,12 @@
 var lowdb = require('lowdb');
 
-
-var db_filename = 'db.json';
-var db_settings = {
-	autosave: true, // automatically save on change
-	async: true // async write
-};
+var config = require('./config.js');
 
 
-function connect() {
-	var db = lowdb(db_filename, db_settings);
-	return db;
+function get() {
+	return lowdb(config.db.path, config.db.settings);
 }
+var database = get();
 
-// db('posts').push({ title: 'lowdb is awesome' });
-// db('posts').find({ title: 'lowdb is awesome' });
-
-
-module.exports = {
-	connect: connect
-};
+// modules are cached
+module.exports = database;
