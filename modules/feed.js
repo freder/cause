@@ -1,11 +1,12 @@
+var path = require('path');
 var FeedParser = require('feedparser');
 var request = require('request');
 var winston = require('winston');
 var _ = require('lodash');
 
-var helper = require('../helper.js');
-var db = require('../db.js');
-var email = require('../email.js');
+var db = require( path.join(global.paths.root, 'db.js') );
+var helper = require( path.join(global.paths.lib, 'helper.js') );
+var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 function create(options) {

@@ -2,22 +2,22 @@ var nopt = require('nopt');
 var _ = require('lodash');
 var path = require('path');
 var chalk = require('chalk');
-var later = require('later');
-var moment = require('moment');
-var uuid = require('node-uuid');
 var winston = require('winston');
-winston.remove(winston.transports.Console);
-winston.add(winston.transports.Console, {
-	timestamp: function() {
-		return moment().format('DD-MM-YYYY, HH:mm:ss');
-	},
-	colorize: true
-});
 
-var helper = require('./helper.js');
-var config = require('./config.js');
-var db = require('./db.js');
-var email = require('./email.js');
+global.paths = {
+	root: __dirname,
+	lib: path.join(__dirname, 'lib'),
+	// blocks: path.join(__dirname, 'blocks'),
+	modules: path.join(__dirname, 'modules')
+};
+
+require( path.join(global.paths.lib, 'log.js') ).init();
+
+var config = require( path.join(global.paths.root, 'config.js') );
+var db = require( path.join(global.paths.root, 'db.js') );
+var helper = require( path.join(global.paths.lib, 'helper.js') );
+var email = require( path.join(global.paths.lib, 'email.js') );
+var task = require( path.join(global.paths.lib, 'task.js') );
 
 
 /*
@@ -27,9 +27,12 @@ TODO:
 - how to use streams to make 'building blocks' connectable?
 	- look at stream playground
 - how to update tasks while the programm is running?
+	- probably via ui
 - web ui
+	- api
 	- button to manually run a task
 */
+
 
 var opts = {
 	'notifications': Boolean
@@ -45,8 +48,8 @@ if (args.argv.remain.length >= 1) {
 	switch (args.argv.remain[0].toLowerCase()) {
 		case 'list':
 			console.log('TASKS');
-			db('tasks').forEach(function(task) {
-				console.log( helper.module_log_format('', task) );
+			db('tasks').forEach(function(t) {
+				console.log( helper.module_log_format('', t) );
 			});
 			process.exit();
 			break;
@@ -74,106 +77,6 @@ process.on('SIGINT', function() {
 });
 
 
-function savable(task) {
-	// don't persist anything prefixed with '_'
-	return _.omit(task, function(value, key, object) {
-		return (key[0] === '_');
-	});
-}
-
-
-function create_task(module_name, options, interval, replace_existing) {
-	replace_existing = replace_existing || false;
-
-	// load module
-	var p = path.join(__dirname, config.paths.modules, module_name+'.js');
-	var module = require(p);
-
-	options = _.extend(options, {
-		module: module_name
-	});
-	var run_function = module(options);
-	var schedule = later.parse.text(interval);
-
-	var task = _.extend(options, {
-		// id: uuid.v1(),
-		interval: interval,
-		data: {},
-		_run: run_function,
-		_schedule: schedule,
-		_timer: later.setInterval(run_function, schedule)
-	});
-
-	var results = db('tasks').get_all_by_name(task.name);
-	if (results.length > 0) {
-		// task already exists in db
-		if (replace_existing) {
-			// winston.debug('replacing existing task');
-			var existing_task = results[0];
-			existing_task = task;
-		} else {
-			var message = 'task with that name already exists in db: ' + task.name;
-			helper.handle_error(message);
-			throw message
-
-			// TODO: add one with same name?
-			// db('tasks').push( savable(task) );
-		}
-	}
-	db.save();
-
-	tasks.push(task);
-	return task;
-}
-
-
-// var amazon = create_task(
-// 	'amazon',
-// 	{
-// 		name: 'dell monitor price check',
-// 		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
-// 		threshold: {
-// 			value: 400,
-// 			comparison: '<=',
-// 			email: true
-// 		}
-// 		notifications: true
-// 	},
-// 	'every 15 mins'
-// );
-
-// var bitcoin = create_task(
-// 	'bitcoin',
-// 	{
-// 		name: 'btc rate',
-// 		market: 'bitcoin_de',
-// 		threshold: {
-// 			value: 250,
-// 			comparison: '>=',
-// 			email: true
-// 		}
-// 	},
-// 	'every 30 mins'
-// );
-
-// var adventuretime = create_task(
-// 	'feed',
-// 	{
-// 		name: 'adventure time episodes',
-// 		url: 'http://www.watchcartoononline.com/anime/adventure-time/feed',
-// 		// email: true
-// 	},
-// 	'every 2 hours'
-// );
-
-
-// var tasks = [
-// 	amazon,
-// 	bitcoin,
-// 	adventuretime
-// ];
-
-
 var tasks = [];
 function load_tasks() {
 	db('tasks').forEach(function(task_data) {
@@ -181,19 +84,21 @@ function load_tasks() {
 		winston.info(line);
 
 		var replace_existing = true;
-		var task = create_task(
+		var t = task.create_task(
 			task_data.module,
 			_.omit(task_data, 'module', 'interval'),
 			task_data.interval,
 			replace_existing
 		);
+		tasks.push(t);
 	});
 }
+
 
 // load tasks from db ...
 load_tasks();
 // ... and run them immediately
-tasks.forEach(function(task) {
-	task._run();
+tasks.forEach(function(t) {
+	t._run();
 });
 

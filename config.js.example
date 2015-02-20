@@ -8,11 +8,6 @@ module.exports = {
 		}
 	},
 
-	paths: {
-		lib: './lib',
-		modules: './modules',
-	},
-
 	email: {
 		from: 'XXXXXXXXX',
 		to: 'XXXXXXXXX',

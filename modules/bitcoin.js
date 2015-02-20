@@ -1,10 +1,11 @@
+var path = require('path');
 var request = require('request');
 var chalk = require('chalk');
 var winston = require('winston');
 var versus = require('versus');
 
-var helper = require('../helper.js');
-var email = require('../email.js');
+var helper = require( path.join(global.paths.lib, 'helper.js') );
+var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 // https://api.bitcoinaverage.com/exchanges/EUR

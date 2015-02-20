@@ -1,3 +1,4 @@
+var path = require('path');
 var chalk = require('chalk');
 var cheerio = require('cheerio');
 var validator = require('validator');
@@ -8,8 +9,8 @@ noodle.configure({
 	debug: false
 });
 
-var helper = require('../helper.js');
-var email = require('../email.js');
+var helper = require( path.join(global.paths.lib, 'helper.js') );
+var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 var price_selector = '#priceblock_ourprice';
