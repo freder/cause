@@ -4,12 +4,15 @@ var winston = require('winston');
 var _ = require('lodash');
 
 var helper = require('../helper.js');
+var db = require('../db.js');
 var email = require('../email.js');
 
 
 function create(options) {
-	var last_pubdate = null;
-	var seen = {};
+	var last_pubdate = options.data.seen_guids || null;
+	var seen_guids = options.data.seen_guids || [];
+	delete options.data;
+	
 	var new_items = {};
 
 	return function() {
@@ -34,9 +37,9 @@ function create(options) {
 
 			var article;
 			while (article = this.read()) {
-				if (!(article.guid in seen)) {
+				if (seen_guids.indexOf(article.guid) === -1) {
 					var data = _.pick(article, 'title', 'link');
-					seen[article.guid] = data;
+					seen_guids.push(article.guid);
 					new_items[article.guid] = data;
 				}
 			}
@@ -48,8 +51,6 @@ function create(options) {
 		});
 
 		feedparser.on('end', function() {
-			last_pubdate = meta['pubdate'];
-
 			_.each(new_items, function(item) {
 				var line = item.title;
 				winston.info( helper.module_log_format(line, options) );
@@ -62,6 +63,15 @@ function create(options) {
 				}).join('<br>');
 				email.send(subject, content);
 			}
+
+			last_pubdate = meta['pubdate'];
+
+			// save state
+			db('tasks').get_by_name(options.name).data = {
+				last_pubdate: last_pubdate,
+				seen_guids: seen_guids
+			};
+			db.saveSync();
 		});
 	};
 }

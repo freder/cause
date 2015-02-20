@@ -24,10 +24,10 @@ var email = require('./email.js');
 
 /*
 TODO:
-- persist tasks and their state
-- load existing tasks on startup
+- option to save 'history' data in separate db file
 - TDD
 - how to use streams to make 'building blocks' connectable?
+	- look at stream playground
 - how to update tasks while the programm is running?
 - web ui
 	- button to manually run a task
@@ -65,6 +65,8 @@ process.on('uncaughtException', function(err) {
 
 
 process.on('SIGINT', function() {
+	db.saveSync();
+
 	// TODO: do any cleanup here
 	console.info(chalk.yellow('\nexiting...'));
 	process.exit();
@@ -79,7 +81,9 @@ function savable(task) {
 }
 
 
-function create_task(module_name, options, interval) {
+function create_task(module_name, options, interval, replace_existing) {
+	replace_existing = replace_existing || false;
+
 	// load module
 	var p = path.join(__dirname, config.paths.modules, module_name+'.js');
 	var module = require(p);
@@ -93,88 +97,98 @@ function create_task(module_name, options, interval) {
 	var task = _.extend(options, {
 		// id: uuid.v1(),
 		interval: interval,
-		data: null, // TODO
+		data: {},
 		_run: run_function,
 		_schedule: schedule,
 		_timer: later.setInterval(run_function, schedule)
 	});
 
-	db('tasks').push( savable(task) );
+	var results = db('tasks').get_all_by_name(task.name);
+	if (results.length > 0) {
+		// task already exists in db
+		if (replace_existing) {
+			winston.info('replacing existing task');
+			var existing_task = results[0];
+			existing_task = task;
+		} else {
+			var message = 'task with that name already exists in db: ' + task.name;
+			helper.handle_error(message);
+			throw message
+
+			// TODO: add one with same name?
+			// db('tasks').push( savable(task) );
+		}
+	}
+	db.save();
+
+	tasks.push(task);
 	return task;
 }
 
 
+// var amazon = create_task(
+// 	'amazon',
+// 	{
+// 		name: 'dell monitor price check',
+// 		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
+// 		threshold: 400,
+// 		threshold_comparison: '<=',
+// 		threshold_email: true,
+// 		notifications: true
+// 	},
+// 	'every 15 mins'
+// );
 
-var amazon = create_task(
-	'amazon',
-	{
-		name: 'dell monitor price check',
-		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
-		threshold: 400,
-		threshold_comparison: '<=',
-		threshold_email: true,
-		notifications: true
-	},
-	'every 15 mins'
-);
+// var bitcoin = create_task(
+// 	'bitcoin',
+// 	{
+// 		name: 'btc rate',
+// 		market: 'bitcoin_de',
+// 		threshold: 250,
+// 		threshold_comparison: '>=',
+// 		threshold_email: true
+// 	},
+// 	'every 30 mins'
+// );
 
-var bitcoin = create_task(
-	'bitcoin',
-	{
-		name: 'btc rate',
-		market: 'bitcoin_de',
-		threshold: 250,
-		threshold_comparison: '>=',
-		threshold_email: true
-	},
-	'every 30 mins'
-);
-
-var adventuretime = create_task(
-	'feed',
-	{
-		name: 'adventure time episodes',
-		url: 'http://www.watchcartoononline.com/anime/adventure-time/feed',
-		// email: true
-	},
-	'every 2 hours'
-);
+// var adventuretime = create_task(
+// 	'feed',
+// 	{
+// 		name: 'adventure time episodes',
+// 		url: 'http://www.watchcartoononline.com/anime/adventure-time/feed',
+// 		// email: true
+// 	},
+// 	'every 2 hours'
+// );
 
 
-var tasks = [
-	amazon,
-	bitcoin,
-	adventuretime
-];
+// var tasks = [
+// 	amazon,
+// 	bitcoin,
+// 	adventuretime
+// ];
 
+
+var tasks = [];
+function load_tasks() {
+	db('tasks').forEach(function(task_data) {
+		var line = 'loading task from db: ' + helper.module_log_format('', task_data);
+		winston.info(line);
+
+		var replace_existing = true;
+		var task = create_task(
+			task_data.module,
+			_.omit(task_data, 'module', 'interval'),
+			task_data.interval,
+			replace_existing
+		);
+	});
+}
+
+// load tasks from db ...
+load_tasks();
+// ... and run them immediately
 tasks.forEach(function(task) {
 	task._run();
 });
 
-
-
-
-
-// var transform_json = through2.obj(
-// 	function(line, enc, cb) {
-// 		line = line.replace(/^module.exports * = * /, '');
-// 		line = line.replace(/[ \t]*[;]$/, '');
-// 		this.push(line);
-// 		cb();
-// 	}
-// );
-
-// var transform_format = through2.obj(
-// 	function(line, enc, cb) {
-// 		console.log(line);
-// 		this.push(line);
-// 		cb();
-// 	}
-// );
-
-
-// fs.createReadStream('test.txt')
-// 	.on('error', helper.handle_error)
-// 	.pipe(split())
-// 	.pipe(transform_json)
-// 	.pipe(transform_format);
