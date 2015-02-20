@@ -23,6 +23,27 @@ var db = require('./db.js');
 var email = require('./email.js');
 
 
+/*
+TODO:
+- persist tasks and their state
+- load existing tasks on startup
+- TDD
+- how to use streams to make 'building blocks' connectable?
+- how to update tasks while the programm is running?
+- web ui
+	- button to manually run a task
+*/
+
+var nopt = require('nopt');
+var opts = {
+	'notifications': Boolean
+};
+var shorthands = {
+	// 'n': ['--notifications']
+};
+var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variable
+
+
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
 	process.exit(1);
@@ -69,23 +90,6 @@ function create_task(module_name, options, interval) {
 }
 
 
-/*
-TODO:
-- persist tasks and their state
-- load existing tasks on startup
-- TDD
-- how to use streams to make 'building blocks' connectable?
-- how to update tasks while the programm is running?
-*/
-
-
-/*var nopt = require('nopt');*/
-
-
-
-
-// var bitcoin_price = bitcoin.create();
-// var adventuretime_rss = feeds.create();
 
 var amazon = create_task(
 	'amazon',
@@ -94,7 +98,8 @@ var amazon = create_task(
 		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
 		threshold: 400,
 		threshold_comparison: '<=',
-		threshold_email: true
+		threshold_email: true,
+		notifications: true
 	},
 	'every 10 mins'
 );

@@ -34,7 +34,15 @@ function create_pricecheck(options) {
 		price = parseFloat(price);
 
 		if (previous_value != price) {
-			winston.info( helper.module_log_format('price changed: '+chalk.green(price), options) );
+			var line = 'price changed: '+chalk.green(price);
+			winston.info( helper.module_log_format(line, options) );
+
+			if (global.args.notifications) {
+				helper.notify({
+					title: [options.module, options.name].join(': '),
+					message: chalk.stripColor(line)
+				});
+			}
 		}
 
 		if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
@@ -42,7 +50,7 @@ function create_pricecheck(options) {
 			if (options.threshold_email) {
 				var subject = 'price alert: ' + price;
 				var link = '<a href="'+options.url+'">'+options.url+'</a>';
-				email.send(subject, link);				
+				email.send(subject, link);
 			}
 		}
 

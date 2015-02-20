@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var winston = require('winston');
-// var chalk = require('chalk');
-var chalk = require('colors');
+var chalk = require('chalk');
+var notifier = require('node-notifier');
 
 
 function handle_error(err) {
@@ -21,7 +21,13 @@ function module_log_format(message, options) {
 }
 
 
+function notify(obj) {
+	notifier.notify(obj);
+}
+
+
 module.exports = {
 	handle_error: handle_error,
-	module_log_format: module_log_format
+	module_log_format: module_log_format,
+	notify: notify
 };
