@@ -34,6 +34,8 @@ var email = require('../email.js');
 
 
 function create(options) {
+	options.threshold = options.threshold || {};
+	
 	return function() {
 		var req_options = {
 			url: 'https://api.bitcoinaverage.com/exchanges/EUR',
@@ -50,9 +52,9 @@ function create(options) {
 			var line = market.display_name+': '+chalk.green(price);
 			winston.info( helper.module_log_format(line, options) );
 
-			if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
+			if (options.threshold.value && versus(price, options.threshold.comparison, options.threshold.value)) {
 
-				if (options.threshold_email) {
+				if (options.threshold.email) {
 					var subject = 'bitcoin alert: ' + price;
 					var content = ':)';
 					email.send(subject, content);

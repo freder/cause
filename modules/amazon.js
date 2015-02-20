@@ -24,6 +24,8 @@ function format_price(price) {
 
 
 function create_pricecheck(options) {
+	options.threshold = options.threshold || {};
+
 	if (!validator.isURL(options.url)) {
 		winston.error('not a valid URL: ' + options.url);
 	}
@@ -45,9 +47,9 @@ function create_pricecheck(options) {
 			}
 		}
 
-		if (options.threshold && versus(price, options.threshold_comparison, options.threshold)) {
+		if (options.threshold.value && versus(price, options.threshold.comparison, options.threshold.value)) {
 
-			if (options.threshold_email) {
+			if (options.threshold.email) {
 				var subject = 'price alert: ' + price;
 				var link = '<a href="'+options.url+'">'+options.url+'</a>';
 				email.send(subject, link);

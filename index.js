@@ -66,7 +66,8 @@ process.on('uncaughtException', function(err) {
 
 process.on('SIGINT', function() {
 	// do any cleanup here
-	db.saveSync();
+
+	// db.saveSync();
 
 	console.info(chalk.yellow('\nexiting...'));
 	process.exit();
@@ -107,7 +108,7 @@ function create_task(module_name, options, interval, replace_existing) {
 	if (results.length > 0) {
 		// task already exists in db
 		if (replace_existing) {
-			winston.info('replacing existing task');
+			// winston.debug('replacing existing task');
 			var existing_task = results[0];
 			existing_task = task;
 		} else {
@@ -131,9 +132,11 @@ function create_task(module_name, options, interval, replace_existing) {
 // 	{
 // 		name: 'dell monitor price check',
 // 		url: 'http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm',
-// 		threshold: 400,
-// 		threshold_comparison: '<=',
-// 		threshold_email: true,
+// 		threshold: {
+// 			value: 400,
+// 			comparison: '<=',
+// 			email: true
+// 		}
 // 		notifications: true
 // 	},
 // 	'every 15 mins'
@@ -144,9 +147,11 @@ function create_task(module_name, options, interval, replace_existing) {
 // 	{
 // 		name: 'btc rate',
 // 		market: 'bitcoin_de',
-// 		threshold: 250,
-// 		threshold_comparison: '>=',
-// 		threshold_email: true
+// 		threshold: {
+// 			value: 250,
+// 			comparison: '>=',
+// 			email: true
+// 		}
 // 	},
 // 	'every 30 mins'
 // );
