@@ -1,6 +1,5 @@
-var util = require('util');
+var nopt = require('nopt');
 var _ = require('lodash');
-var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
 var later = require('later');
@@ -34,7 +33,6 @@ TODO:
 	- button to manually run a task
 */
 
-var nopt = require('nopt');
 var opts = {
 	'notifications': Boolean
 };
@@ -42,6 +40,22 @@ var shorthands = {
 	// 'n': ['--notifications']
 };
 var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variable
+
+// handle positional arguments
+// TODO: use commander instead: https://www.npmjs.com/package/commander#git-style-sub-commands
+if (args.argv.remain.length >= 1) {
+	switch (args.argv.remain[0].toLowerCase()) {
+		case 'list':
+			console.log('TASKS');
+			db('tasks').forEach(function(task) {
+				console.log( helper.module_log_format('', task) );
+			});
+			process.exit();
+			break;
+		default:
+			break;
+	}	
+}
 
 
 process.on('uncaughtException', function(err) {
@@ -101,7 +115,7 @@ var amazon = create_task(
 		threshold_email: true,
 		notifications: true
 	},
-	'every 10 mins'
+	'every 15 mins'
 );
 
 var bitcoin = create_task(
@@ -113,7 +127,7 @@ var bitcoin = create_task(
 		threshold_comparison: '>=',
 		threshold_email: true
 	},
-	'every 20 mins'
+	'every 30 mins'
 );
 
 var adventuretime = create_task(
@@ -123,7 +137,7 @@ var adventuretime = create_task(
 		url: 'http://www.watchcartoononline.com/anime/adventure-time/feed',
 		// email: true
 	},
-	'every 1 hours'
+	'every 2 hours'
 );
 
 
