@@ -1,0 +1,27 @@
+module.exports = {
+
+	db: {
+		path: './db.json',
+		settings: {
+			autosave: true,
+			async: true
+		}
+	},
+
+	paths: {
+		lib: './lib',
+		modules: './modules',
+	},
+
+	email: {
+		from: 'XXXXXXXXX',
+		to: 'XXXXXXXXX',
+		mailgun: {
+			auth: {
+				api_key: 'XXXXXXXXX',
+				domain: 'XXXXXXXXX'
+			}
+		}
+	}
+
+};
