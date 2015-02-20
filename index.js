@@ -58,14 +58,16 @@ if (args.argv.remain.length >= 1) {
 
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
+	email.send_email('causality: '+err.name, err.message);
+
 	process.exit(1);
 });
 
 
 process.on('SIGINT', function() {
+	// do any cleanup here
 	db.saveSync();
 
-	// TODO: do any cleanup here
 	console.info(chalk.yellow('\nexiting...'));
 	process.exit();
 });
