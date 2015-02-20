@@ -1,4 +1,5 @@
 # causality
+
 > a web automation suite
 
 similar tools:
@@ -10,6 +11,10 @@ similar tools:
 ---
 
 ## installation
+
+requirements:
+- [node.js](http://nodejs.org/)
+- [git](http://git-scm.com/)
 
 ```shell
 npm install
