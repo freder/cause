@@ -1,11 +1,7 @@
 module.exports = {
 
 	db: {
-		path: './db.json',
-		settings: {
-			autosave: true,
-			async: true
-		}
+		path: './db.json'
 	},
 
 	email: {

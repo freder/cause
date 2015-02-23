@@ -1,5 +1,6 @@
 var lowdb = require('lowdb');
-var config = require('./config.js');
+var path = require('path');
+var config = require( path.join(global.paths.root, 'config.js') );
 
 
 function get_by(obj_array, key, value) {
@@ -26,7 +27,12 @@ lowdb.mixin({
 
 
 function get() {
-	return lowdb(config.db.path, config.db.settings);
+	var db_path = path.join(global.paths.root, config.db.path);
+	var settings = {
+		autosave: false, // automatically save on change
+		async: false // async write
+	};
+	return lowdb(db_path, settings);
 }
 
 
