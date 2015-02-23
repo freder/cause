@@ -44,15 +44,21 @@ var shorthands = {
 };
 var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variable
 
+
+function list_tasks() {
+	console.log('TASKS');
+	db('tasks').forEach(function(t) {
+		console.log( helper.module_log_format('', t) );
+	});
+}
+
+
 // handle positional arguments
 // TODO: use commander instead: https://www.npmjs.com/package/commander#git-style-sub-commands
 if (args.argv.remain.length >= 1) {
 	switch (args.argv.remain[0].toLowerCase()) {
 		case 'list':
-			console.log('TASKS');
-			db('tasks').forEach(function(t) {
-				console.log( helper.module_log_format('', t) );
-			});
+			list_tasks();
 			process.exit();
 			break;
 		default:
@@ -61,21 +67,43 @@ if (args.argv.remain.length >= 1) {
 }
 
 
+// https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
+process.stdin.on('data', function(data) {
+	var command = data.toString().trim().toLowerCase();
+	switch (command) {
+		case 'list':
+			list_tasks();
+			break;
+		case 'restart':
+			// TODO
+			break;
+		case 'quit':
+			exit();
+			break;
+	}
+});
+
+
+function exit(exit_code) {
+	exit_code = exit_code || 0;
+
+	// do any cleanup here
+
+	console.info(chalk.yellow('\nexiting...'));
+	process.exit(exit_code);
+}
+
+
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
 	email.send('causality: '+err.name, err.message);
 
-	process.exit(1);
+	exit(1);
 });
 
 
 process.on('SIGINT', function() {
-	// do any cleanup here
-
-	// db.saveSync();
-
-	console.info(chalk.yellow('\nexiting...'));
-	process.exit();
+	exit();
 });
 
 
