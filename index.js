@@ -61,7 +61,7 @@ if (args.argv.remain.length >= 1) {
 
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
-	email.send_email('causality: '+err.name, err.message);
+	email.send('causality: '+err.name, err.message);
 
 	process.exit(1);
 });
