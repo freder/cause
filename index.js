@@ -13,8 +13,9 @@ global.paths = {
 
 require( path.join(global.paths.lib, 'log.js') ).init();
 
-var config = require( path.join(global.paths.root, 'config.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
+var config = require( path.join(global.paths.root, 'config.js') );
+var server = require( path.join(global.paths.lib, 'server.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 var task = require( path.join(global.paths.lib, 'task.js') );
@@ -22,6 +23,7 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 
 /*
 TODO:
+- write wrapper for existing node-red nodes
 - option to save 'history' data in separate db file
 - TDD
 - how to use streams to make 'building blocks' connectable?

@@ -5,9 +5,7 @@ var validator = require('validator');
 var versus = require('versus');
 var winston = require('winston');
 var noodle = require('../noodlejs');
-noodle.configure({
-	debug: false
-});
+noodle.configure({ debug: false });
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
