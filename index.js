@@ -7,7 +7,7 @@ var winston = require('winston');
 global.paths = {
 	root: __dirname,
 	lib: path.join(__dirname, 'lib'),
-	// blocks: path.join(__dirname, 'blocks'),
+	blocks: path.join(__dirname, 'blocks'),
 	modules: path.join(__dirname, 'modules')
 };
 
@@ -25,11 +25,11 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 TODO:
 - TDD
 - more fine-grained, chainable blocks
-	- option to save 'history' data in separate db file
 	- email, pushover
 	- get feed
 	- filter
 	- collect
+- option to save 'history' data in separate db file
 - how to make 'building blocks' connectable?
 - web ui
 	- list tasks
@@ -49,10 +49,12 @@ var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid
 
 
 function list_tasks() {
+	console.log('———————————————');
 	console.log('TASKS');
 	db('tasks').forEach(function(t) {
 		console.log( helper.module_log_format('', t) );
 	});
+	console.log('———————————————');
 }
 
 

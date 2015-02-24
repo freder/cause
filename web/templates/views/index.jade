@@ -1,0 +1,19 @@
+extends ../layouts/default
+
+mixin task(t)
+	div
+		div
+			b #{t.name}
+			br
+			i #{t.module}
+			br
+			textarea.codemirror #{JSON.stringify(t, null, 4)}
+			br
+			br
+
+block content
+	h1 causality
+
+	h2 #{tasks.length} tasks
+	for t in tasks
+		+task(t)

@@ -4,6 +4,10 @@ module.exports = {
 		path: './db.json'
 	},
 
+	server: {
+		port: 3030
+	},
+
 	pushover: {
 		user_key: 'XXXXXXXXX',
 		api_key: 'XXXXXXXXX',
