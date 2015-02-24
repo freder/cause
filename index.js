@@ -23,16 +23,19 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 
 /*
 TODO:
-- write wrapper for existing node-red nodes
-- option to save 'history' data in separate db file
 - TDD
-- how to use streams to make 'building blocks' connectable?
-	- look at stream playground
-- how to update tasks while the programm is running?
-	- probably via ui
+- more fine-grained, chainable blocks
+	- option to save 'history' data in separate db file
+	- email, pushover
+	- get feed
+	- filter
+	- collect
+- how to make 'building blocks' connectable?
 - web ui
-	- api
+	- list tasks
+		- info
 	- button to manually run a task
+	- add new tasks
 */
 
 
