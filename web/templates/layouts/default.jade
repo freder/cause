@@ -23,21 +23,22 @@ html
 		block content
 		script(src='/bower_components/codemirror/lib/codemirror.js')
 		script(src='/bower_components/codemirror/mode/javascript/javascript.js')
+		script(src='/bower_components/codemirror/addon/selection/active-line.js')
 		script.
 			var elems = document.querySelectorAll('.codemirror');
 			for (var i = 0; i < elems.length; i++) {
-				//- CodeMirror(elems[i], {
-				//- 	value: 'function myScript(){return 100;}',
-				//- 	mode: 'javascript'
-				//- });
-				CodeMirror(function(cm_el) {
+				var editor = CodeMirror(function(cm_el) {
 						elems[i].parentNode.replaceChild(cm_el, elems[i]);
 					},
 					{
 						value: elems[i].value,
 						mode: 'javascript',
-						theme: 'monokai'
+							json: true,
+						theme: 'monokai',
+						//- lineNumbers: true,
+						styleActiveLine: true
 					}
 				);
+				//- console.log(editor.getValue());
 			}
 		block js

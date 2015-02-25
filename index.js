@@ -24,6 +24,7 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 /*
 TODO:
 - TDD
+- consider https://www.npmjs.com/package/debug for debug messages
 - more fine-grained, chainable blocks
 	- email, pushover
 	- get feed
@@ -31,11 +32,11 @@ TODO:
 	- collect
 - option to save 'history' data in separate db file
 - how to make 'building blocks' connectable?
-- web ui
-	- list tasks
-		- info
-	- button to manually run a task
-	- add new tasks
+- web
+	- ui
+		- button to manually run a task
+		- CRUD tasks
+	- api
 */
 
 
