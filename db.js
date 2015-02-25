@@ -1,28 +1,14 @@
 var lowdb = require('lowdb');
 var path = require('path');
+
 var config = require( path.join(global.paths.root, 'config.js') );
-
-
-function get_by(obj_array, key, value) {
-	return obj_array.filter(function(o) {
-		return (o[key] == value);
-	});
-}
-
-
-function get_all_by_name(array, name) {
-	return get_by(array, 'name', name);
-}
-
-function get_by_name(array, name) {
-	return get_all_by_name(array, name)[0];
-}
+var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 lowdb.mixin({
-	get_all_by_name: get_all_by_name,
-	get_by_name: get_by_name,
-	get_by: get_by
+	get_all_by_name: helper.get_all_by_name,
+	get_by_name: helper.get_by_name,
+	get_by: helper.get_by
 });
 
 

@@ -23,19 +23,18 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 
 /*
 TODO:
-- TDD
-- consider https://www.npmjs.com/package/debug for debug messages
-- more fine-grained, chainable blocks
-	- email, pushover
-	- get feed
-	- filter
-	- collect
-- option to save 'history' data in separate db file
 - how to make 'building blocks' connectable?
+- TDD
+- option to save 'history' data in separate db file
+- blocks:
+	- new tweets from user(s)
+	- email digest
+	- react on email
+- consider https://www.npmjs.com/package/debug for debug messages
 - web
 	- ui
-		- button to manually run a task
 		- CRUD tasks
+		- visualization
 	- api
 */
 
@@ -113,7 +112,7 @@ process.on('SIGINT', function() {
 });
 
 
-var tasks = [];
+var tasks = global.tasks = [];
 function load_tasks() {
 	db('tasks').forEach(function(task_data) {
 		var line = 'loading task from db: ' + helper.module_log_format('', task_data);

@@ -21,6 +21,7 @@ html
 		block css
 	body
 		block content
+		script(src='/bower_components/zepto/zepto.js')
 		script(src='/bower_components/codemirror/lib/codemirror.js')
 		script(src='/bower_components/codemirror/mode/javascript/javascript.js')
 		script(src='/bower_components/codemirror/addon/selection/active-line.js')
@@ -40,5 +41,11 @@ html
 					}
 				);
 				//- console.log(editor.getValue());
+			}
+
+			function run_task(name) {
+				$.post('/run/'+name, {}, function(res) {
+					console.log(res.ok);
+				});
 			}
 		block js

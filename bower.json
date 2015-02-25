@@ -2,8 +2,7 @@
   "name": "causality",
   "main": "index.js",
   "version": "0.0.0",
-  "authors": [
-  ],
+  "authors": [],
   "license": "MIT",
   "private": true,
   "ignore": [
@@ -12,5 +11,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "zepto": "~1.1.6"
+  }
 }

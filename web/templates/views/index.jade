@@ -1,13 +1,18 @@
 extends ../layouts/default
 
 mixin task(t)
+	hr
 	div
 		div
+			i #{t.module}: 
 			b #{t.name}
 			br
-			i #{t.module}
+			br
+			button(onclick='run_task("#{t.name}")') run now
+			br
 			br
 			textarea.codemirror #{JSON.stringify(t, null, 4)}
+			br
 			br
 			br
 
