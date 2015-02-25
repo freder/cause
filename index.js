@@ -23,7 +23,6 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 
 /*
 TODO:
-- how to make 'building blocks' connectable?
 - TDD
 - option to save 'history' data in separate db file
 - blocks:
