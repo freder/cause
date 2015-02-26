@@ -1,4 +1,4 @@
-var fmt = require('simple-fmt');
+var sf = require('sf');
 var winston = require('winston');
 var chalk = require('chalk');
 var path = require('path');
@@ -7,26 +7,24 @@ var _ = require('lodash');
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
-// console.log( helper.format('{} EUR', '123') );
-// console.log( helper.format('{price} EUR', { price: '123' }) );
-
-
 function create(task, step) {
-	return function(input, previous_step) {
-		// sanity check
-		var config = step.config || {};
-		config = _.defaults(config, {
-			title: step.name,
-			message: '{}'
-		});
+	var defaults = {
+		title: '{step.name}',
+		message: '{input}'
+	};
+	helper.validate_step_options(step, defaults);
+	helper.validate_step_data(step);
 
-		// do the work
-		var title = helper.format(config.title, input);
-		var message = helper.format(config.message, input);
-		var line = fmt(
+	return function(input, prev_step) {
+		var message_vars = helper.message_vars(task, input, step, prev_step);
+
+		var title = sf(step.options.title, message_vars);
+		var message = sf(step.options.message, message_vars);
+
+		var line = sf(
 			'{0} {1} {2}: {3}',
 			chalk.bgBlue(task.name),
-			chalk.blue(previous_step.module),
+			chalk.blue(prev_step.module),
 			chalk.white(title),
 			chalk.green(message)
 		);
@@ -36,10 +34,7 @@ function create(task, step) {
 		var output = input;
 
 		// invoke children
-		var children = helper.get_children(step, task); // TODO: DRY
-		children.forEach(function(child) {
-			child.execute(output, step);
-		});
+		helper.invoke_children(step, task, output);
 	};
 }
 

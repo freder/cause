@@ -1,24 +1,21 @@
-var notifier = require('node-notifier');
-var winston = require('winston');
 var path = require('path');
 var _ = require('lodash');
-var fmt = require('simple-fmt');
+var sf = require('sf');
 var cheerio = require('cheerio');
 var nodemailer = require('nodemailer');
 var mailgun = require('nodemailer-mailgun-transport');
 
-var cfg = require( path.join(global.paths.root, 'config.js') );
+var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
-// can be re-used
-var transporter = nodemailer.createTransport( mailgun(cfg.email.mailgun) );
+var transporter = nodemailer.createTransport( mailgun(config.email.mailgun) );
 
 
 function send_email(subject, content) {
 	var mail = {
-		from: cfg.email.from,
-		to: cfg.email.to,
+		from: config.email.from,
+		to: config.email.to,
 		subject: subject,
 		html: content,
 		text: cheerio(content.replace('<br>', '\n')).text()
@@ -31,27 +28,25 @@ function send_email(subject, content) {
 
 
 function create(task, step) {
-	return function(input, previous_step) {
-		// sanity check
-		var config = step.config || {};
-		config = _.defaults(config, {
-			title: fmt('causality: {0}', task.name),
-			message: fmt('{0}: {}', previous_step.module)
-		});
+	var defaults = {
+		title: 'causality: {task.name}',
+		message: '{prev_step.module}: {input}'
+	};
+	helper.validate_step_options(step, defaults);
+	helper.validate_step_data(step);
 
-		// do the work
-		var title = helper.format(config.title, input);
-		var message = helper.format(config.message, input);
+	return function(input, prev_step) {
+		var message_vars = helper.message_vars(task, input, step, prev_step);
+
+		var title = sf(step.options.title, message_vars);
+		var message = sf(step.options.message, message_vars);
 		send_email(title, message);
 
 		// pass through
 		var output = input;
 
 		// invoke children
-		var children = helper.get_children(step, task);
-		children.forEach(function(child) {
-			child.execute(output, step);
-		});
+		helper.invoke_children(step, task, output);
 	};
 }
 

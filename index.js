@@ -105,7 +105,7 @@ var tasks = {
 			{
 				id: "111",
 				module: "amazon-price",
-				config: {
+				options: {
 					url: "http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm",
 					currency: "EUR"
 				}
@@ -113,15 +113,15 @@ var tasks = {
 			{
 				id: "555",
 				module: "log-console",
-				config: {
+				options: {
 					title: "price changed",
-					message: "{}"
+					message: "{input}"
 				}
 			},
 			// {
 			// 	id: "222",
 			// 	module: "threshold",
-			// 	config: {
+			// 	options: {
 			// 		value: 400,
 			// 		comparison: "<="
 			// 	}
@@ -129,17 +129,17 @@ var tasks = {
 			// {
 			// 	id: "333",
 			// 	module: "email-notification",
-			// 	config: {}
+			// 	options: {}
 			// },
 			{
 				id: "666",
 				module: "desktop-notification",
-				config: {}
+				options: {}
 			},
 			// {
 			// 	id: "444",
 			// 	module: "pushover",
-			// 	config: {
+			// 	options: {
 			// 		message: "dell monitor price: {} EUR"
 			// 	}
 			// }
@@ -193,33 +193,4 @@ function load_tasks() {
 		task._run();
 	});
 }
-
 load_tasks();
-
-
-
-/*var tasks = global.tasks = [];
-function load_tasks() {
-	db('tasks').forEach(function(task_data) {
-		var line = 'loading task from db: ' + helper.module_log_format('', task_data);
-		winston.info(line);
-
-		var replace_existing = true;
-		var t = task.create_task(
-			task_data.module,
-			_.omit(task_data, 'module', 'interval'),
-			task_data.interval,
-			replace_existing
-		);
-		tasks.push(t);
-	});
-}
-
-
-// load tasks from db ...
-load_tasks();
-// ... and run them immediately
-tasks.forEach(function(t) {
-	t._run();
-});*/
-

@@ -27,7 +27,7 @@
     "nopt": "^3.0.1",
     "pushover-notifications": "^0.2.2",
     "request": "^2.53.0",
-    "simple-fmt": "^0.1.0",
+    "sf": "^0.1.7",
     "split": "^0.3.3",
     "through2": "^0.6.3",
     "validator": "^3.30.0",
