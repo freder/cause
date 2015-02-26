@@ -1,6 +1,5 @@
 var path = require('path');
 var _ = require('lodash');
-var sf = require('sf');
 var versus = require('versus');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );

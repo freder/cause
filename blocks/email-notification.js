@@ -1,6 +1,5 @@
 var path = require('path');
 var _ = require('lodash');
-var sf = require('sf');
 var cheerio = require('cheerio');
 var nodemailer = require('nodemailer');
 var mailgun = require('nodemailer-mailgun-transport');
@@ -29,8 +28,8 @@ function send_email(msg) { // TODO: put into library
 
 function create(task, step) {
 	var defaults = {
-		title: 'causality: {task.name}',
-		message: '{prev_step.block}: {input}'
+		title: 'causality: <%=task.name%>',
+		message: '<%=prev_step.block%>: <%=input%>'
 	};
 	helper.validate_step_options(step, defaults);
 	helper.validate_step_data(step);
@@ -38,8 +37,8 @@ function create(task, step) {
 	return function(input, prev_step) {
 		var message_vars = helper.message_vars(task, input, step, prev_step);
 
-		var title = sf(step.options.title, message_vars);
-		var message = sf(step.options.message, message_vars);
+		var title = _.template(step.options.title)(message_vars);
+		var message = _.template(step.options.message)(message_vars);
 		send_email({
 			title: title,
 			message: message

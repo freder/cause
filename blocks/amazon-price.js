@@ -31,7 +31,7 @@ function create(task, step) {
 	};
 	helper.validate_step_options(step, defaults);
 	var data_defaults = {
-		prev_price: null
+		prev_price: 0
 	};
 	helper.validate_step_data(step, data_defaults);
 
@@ -63,7 +63,6 @@ function create(task, step) {
 			helper.invoke_children(step, task, output, flow_decision);
 			
 			step.data.prev_price = price;
-			// TODO: save to db
 		});
 	};
 }

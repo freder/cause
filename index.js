@@ -118,7 +118,7 @@ var tasks = global.tasks = {
 				block: 'log-console',
 				options: {
 					title: 'price changed',
-					message: '{input:0.00}'
+					message: '<%=format.money(input)%>'
 				},
 				flow: {}
 			},
@@ -146,7 +146,7 @@ var tasks = global.tasks = {
 				id: 'desktop-notification',
 				block: 'desktop-notification',
 				options: {
-					message: '{input:0.00}'
+					message: '<%=format.money(input)%>'
 				},
 				flow: {}
 			},
@@ -154,19 +154,18 @@ var tasks = global.tasks = {
 				id: 'pushover',
 				block: 'pushover',
 				options: {
-					message: 'dell monitor price: {input:0.00}'
+					message: 'dell monitor price: <%=format.money(input)%>'
 				},
 				flow: {}
 			}
 		],
 
-		data: {}
+		data: {} // TODO: keep track of how many times a task has been run
 	},
 
 	'btc-rate': {
 		name: 'bitcoin rate',
-		// interval: 'every 30 mins',
-		interval: 'every 1 mins',
+		interval: 'every 10 mins',
 
 		steps: [
 			{
@@ -187,7 +186,7 @@ var tasks = global.tasks = {
 				block: 'log-console',
 				options: {
 					title: 'atm',
-					message: '{input:0.00}'
+					message: '<%=format.money(input)%>'
 				},
 				flow: {}
 			},
@@ -216,7 +215,7 @@ var tasks = global.tasks = {
 				id: 'desktop-notification',
 				block: 'desktop-notification',
 				options: {
-					message: '{input:0.00}'
+					message: '<%=format.money(input)%>'
 				},
 				flow: {}
 			},
@@ -224,14 +223,40 @@ var tasks = global.tasks = {
 				id: 'pushover',
 				block: 'pushover',
 				options: {
-					message: 'bitcoin rate: {input:0.00}'
+					message: 'bitcoin rate: <%=format.money(input)%>'
 				},
 				flow: {}
 			}
-		],
-
-		data: {}
+		]
 	},
+
+	'adventuretime-episodes': {
+		name: 'adventure time',
+		interval: 'every 2 hours',
+
+		steps: [
+			{
+				id: 'feedzzz',
+				block: 'feed',
+				options: {
+					'url': 'http://www.watchcartoononline.com/anime/adventure-time/feed'
+				},
+				flow: {
+					'if': ['console']
+				}
+			},
+			{
+				id: 'console',
+				block: 'log-console',
+				options: {
+					title: 'new episodes',
+					message: '<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>'
+					// .join("\n");
+				},
+				flow: {}
+			},
+		]
+	}
 }
 
 

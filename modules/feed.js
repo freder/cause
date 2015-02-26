@@ -10,7 +10,7 @@ var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 function create(options) {
-	var last_pubdate = options.data.seen_guids || null;
+	var last_pubdate = options.data.last_pubdate || null;
 	var seen_guids = options.data.seen_guids || [];
 	delete options.data;
 	
