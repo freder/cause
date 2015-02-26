@@ -17,7 +17,7 @@ function send_email(msg) { // TODO: put into library
 		to: config.email.to,
 		subject: msg.subject,
 		html: msg.content,
-		text: cheerio(content.replace('<br>', '\n')).text()
+		text: cheerio(msg.content.replace('<br>', '\n')).text()
 	};
 
 	transporter.sendMail(mail, function(err, info) {
@@ -39,9 +39,10 @@ function create(task, step) {
 
 		var title = _.template(step.options.title)(message_vars);
 		var message = _.template(step.options.message)(message_vars);
+
 		send_email({
-			title: title,
-			message: message
+			subject: title,
+			content: message
 		});
 
 		var flow_decision = helper.flow_decision_defaults;

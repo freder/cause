@@ -55,19 +55,6 @@ function create(task, step) {
 		});
 
 		feedparser.on('end', function() {
-			// _.each(new_items, function(item) {
-			// 	var line = item.title;
-			// 	winston.info(line);
-			// });
-
-			// if (options.email) {
-			// 	var subject = 'feed alert: ' + options.name;
-			// 	var content = _.map(new_items, function(item) {
-			// 		return '<a href="'+item.link+'">'+item.link+'</a>';
-			// 	}).join('<br>');
-			// 	email.send(subject, content);
-			// }
-
 			var new_items_array = _.values(new_items);
 			var new_ones = (new_items_array.length > 0);
 			var flow_decision = helper.flow_decision(new_ones);

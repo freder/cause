@@ -19,7 +19,6 @@ var db = require( path.join(global.paths.root, 'db.js') );
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.lib, 'server.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-// var email = require( path.join(global.paths.lib, 'email.js') );
 var task = require( path.join(global.paths.lib, 'task.js') );
 
 
@@ -242,7 +241,7 @@ var tasks = global.tasks = {
 					'url': 'http://www.watchcartoononline.com/anime/adventure-time/feed'
 				},
 				flow: {
-					'if': ['console']
+					'if': ['console', 'email']
 				}
 			},
 			{
@@ -251,7 +250,15 @@ var tasks = global.tasks = {
 				options: {
 					title: 'new episodes',
 					message: '<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>'
-					// .join("\n");
+				},
+				flow: {}
+			},
+			{
+				id: 'email',
+				block: 'email-notification',
+				options: {
+					title: 'new adventure time episode(s)',
+					message: '<%_.each(input, function(ep) {%>'+'<a href="'+'<%=ep.link%>'+'">'+'<%=ep.title%>'+'</a><br>'+'<%})%>'
 				},
 				flow: {}
 			},
