@@ -1,32 +1,22 @@
-var notifier = require('node-notifier');
-var winston = require('winston');
 var path = require('path');
 var _ = require('lodash');
 var sf = require('sf');
+var versus = require('versus');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 function create(task, step) {
 	var defaults = {
-		title: 'causality: {task.name}',
-		message: '{prev_step.block}: {input}'
+		// value: 0,
+		// comparison: '=='
 	};
 	helper.validate_step_options(step, defaults);
 	helper.validate_step_data(step);
 
 	return function(input, prev_step) {
-		var message_vars = helper.message_vars(task, input, step, prev_step);
-
-		var title = sf(step.options.title, message_vars);
-		var message = sf(step.options.message, message_vars);
-
-		notifier.notify({
-			title: title,
-			message: message
-		});
-
-		var flow_decision = helper.flow_decision_defaults;
+		var check = versus(input, step.options.comparison, step.options.value);
+		var flow_decision = helper.flow_decision(check);
 
 		// pass through
 		var output = input;

@@ -24,17 +24,19 @@ function create(task, step) {
 		var line = sf(
 			'{0} {1} {2}: {3}',
 			chalk.bgBlue(task.name),
-			chalk.blue(prev_step.module),
+			chalk.blue(prev_step.block),
 			chalk.white(title),
 			chalk.green(message)
 		);
 		winston.info(line);
 
+		var flow_decision = helper.flow_decision_defaults;
+
 		// pass through
 		var output = input;
 
 		// invoke children
-		helper.invoke_children(step, task, output);
+		helper.invoke_children(step, task, output, flow_decision);
 	};
 }
 

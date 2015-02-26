@@ -25,7 +25,7 @@ function create(task, step) {
 	// https://pushover.net/api
 	var defaults = {
 		title: 'causality: {task.name}',
-		message: '{prev_step.module}: {input}'
+		message: '{prev_step.block}: {input}'
 	};
 	helper.validate_step_options(step, defaults);
 	helper.validate_step_data(step);
@@ -40,11 +40,13 @@ function create(task, step) {
 			message: message
 		});
 
+		var flow_decision = helper.flow_decision_defaults;
+
 		// pass through
 		var output = input;
 
 		// invoke children
-		helper.invoke_children(step, task, output);
+		helper.invoke_children(step, task, output, flow_decision);
 	};
 }
 

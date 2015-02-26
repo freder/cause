@@ -12,12 +12,12 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var transporter = nodemailer.createTransport( mailgun(config.email.mailgun) );
 
 
-function send_email(subject, content) {
+function send_email(msg) { // TODO: put into library
 	var mail = {
 		from: config.email.from,
 		to: config.email.to,
-		subject: subject,
-		html: content,
+		subject: msg.subject,
+		html: msg.content,
 		text: cheerio(content.replace('<br>', '\n')).text()
 	};
 
@@ -30,7 +30,7 @@ function send_email(subject, content) {
 function create(task, step) {
 	var defaults = {
 		title: 'causality: {task.name}',
-		message: '{prev_step.module}: {input}'
+		message: '{prev_step.block}: {input}'
 	};
 	helper.validate_step_options(step, defaults);
 	helper.validate_step_data(step);
@@ -40,13 +40,18 @@ function create(task, step) {
 
 		var title = sf(step.options.title, message_vars);
 		var message = sf(step.options.message, message_vars);
-		send_email(title, message);
+		send_email({
+			title: title,
+			message: message
+		});
+
+		var flow_decision = helper.flow_decision_defaults;
 
 		// pass through
 		var output = input;
 
 		// invoke children
-		helper.invoke_children(step, task, output);
+		helper.invoke_children(step, task, output, flow_decision);
 	};
 }
 

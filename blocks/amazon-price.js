@@ -1,7 +1,6 @@
 var path = require('path');
 var validator = require('validator');
 var winston = require('winston');
-// var versus = require('versus');
 var _ = require('lodash');
 var noodle = require('../noodlejs');
 noodle.configure({ debug: false });
@@ -57,16 +56,12 @@ function create(task, step) {
 			price = parseFloat(price);
 			var output = price;
 
-			if (step.data.prev_price !== price) {
-				// price has changed
+			var price_changed = (step.data.prev_price != price);
+			var flow_decision = helper.flow_decision(price_changed);
 
-				// TODO: only invoke following steps when the price changed?
-				// TODO: should logging, db save, email, notificaitons really be blocks, too?
-
-				// invoke children
-				helper.invoke_children(step, task, output);
-			}
-
+			// invoke children
+			helper.invoke_children(step, task, output, flow_decision);
+			
 			step.data.prev_price = price;
 			// TODO: save to db
 		});
