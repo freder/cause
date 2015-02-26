@@ -3,6 +3,7 @@ var _ = require('lodash');
 var path = require('path');
 var chalk = require('chalk');
 var winston = require('winston');
+var later = require('later');
 
 global.paths = {
 	root: __dirname,
@@ -21,30 +22,13 @@ var email = require( path.join(global.paths.lib, 'email.js') );
 var task = require( path.join(global.paths.lib, 'task.js') );
 
 
-/*
-TODO:
-- TDD
-- option to save 'history' data in separate db file
-- blocks:
-	- new tweets from user(s)
-	- email digest
-	- react on email
-- consider https://www.npmjs.com/package/debug for debug messages
-- web
-	- ui
-		- CRUD tasks
-		- visualization
-	- api
-*/
-
-
 var opts = {
 	'notifications': Boolean
 };
 var shorthands = {
 	// 'n': ['--notifications']
 };
-var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variable
+var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variables
 
 
 function list_tasks() {
@@ -100,7 +84,7 @@ function exit(exit_code) {
 
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
-	email.send('causality: '+err.name, err.message);
+	// email.send('causality: '+err.name, err.message);
 
 	exit(1);
 });
@@ -111,7 +95,110 @@ process.on('SIGINT', function() {
 });
 
 
-var tasks = global.tasks = [];
+
+var tasks = {
+	"dell-monitor": {
+		name: "dell monitor",
+		interval: "every 15 mins",
+
+		steps: [
+			{
+				id: "111",
+				module: "amazon-price",
+				config: {
+					url: "http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm",
+					currency: "EUR"
+				}
+			},
+			{
+				id: "555",
+				module: "log-console",
+				config: {
+					title: "price changed",
+					message: "{}"
+				}
+			},
+			// {
+			// 	id: "222",
+			// 	module: "threshold",
+			// 	config: {
+			// 		value: 400,
+			// 		comparison: "<="
+			// 	}
+			// },
+			// {
+			// 	id: "333",
+			// 	module: "email-notification",
+			// 	config: {}
+			// },
+			{
+				id: "666",
+				module: "desktop-notification",
+				config: {}
+			},
+			// {
+			// 	id: "444",
+			// 	module: "pushover",
+			// 	config: {
+			// 		message: "dell monitor price: {} EUR"
+			// 	}
+			// }
+		],
+
+		flow: [
+			{ from: "111", to: "555" },
+			// { from: "111", to: "444" },
+			{ from: "111", to: "666" },
+			// { from: "111", to: "333" },
+		],
+
+		data: {}
+	}
+}
+
+
+function run_task(task) {
+	var tos = task.flow.map(function(connection) {
+		return connection.to;
+	});
+	var root_steps = task.steps.filter(function(step) {
+		return tos.indexOf(step.id) === -1;
+	});
+	root_steps.forEach(function(root_step) {
+		root_step.execute();
+	});
+}
+
+
+function load_tasks() {
+	_.keys(tasks).forEach(function(id) {
+		var task = tasks[id];
+		// winston.info('loading task: ' + task.name);
+
+		task.steps.forEach(function(step) {
+			var block = require( path.join(global.paths.blocks, step.module+'.js') );
+			step.execute = block.create(task, step);
+		});
+
+		var run = function() {
+			run_task(task)
+		};
+		var schedule = later.parse.text(task.interval);
+		task = _.extend(task, {
+			_run: run,
+			_schedule: schedule,
+			_timer: later.setInterval(run, schedule)
+		});
+
+		task._run();
+	});
+}
+
+load_tasks();
+
+
+
+/*var tasks = global.tasks = [];
 function load_tasks() {
 	db('tasks').forEach(function(task_data) {
 		var line = 'loading task from db: ' + helper.module_log_format('', task_data);
@@ -134,5 +221,5 @@ load_tasks();
 // ... and run them immediately
 tasks.forEach(function(t) {
 	t._run();
-});
+});*/
 

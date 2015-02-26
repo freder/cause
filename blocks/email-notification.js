@@ -1,21 +1,30 @@
-var pushover = require('pushover-notifications');
+var notifier = require('node-notifier');
 var winston = require('winston');
 var path = require('path');
 var _ = require('lodash');
 var fmt = require('simple-fmt');
+var cheerio = require('cheerio');
+var nodemailer = require('nodemailer');
+var mailgun = require('nodemailer-mailgun-transport');
 
-var config = require( path.join(global.paths.root, 'config.js') );
+var cfg = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
-var p = new pushover({
-	user: config.pushover.user_key,
-	token: config.pushover.api_key
-});
+// can be re-used
+var transporter = nodemailer.createTransport( mailgun(cfg.email.mailgun) );
 
 
-function send(msg) {
-	p.send(msg, function(err, result) {
+function send_email(subject, content) {
+	var mail = {
+		from: cfg.email.from,
+		to: cfg.email.to,
+		subject: subject,
+		html: content,
+		text: cheerio(content.replace('<br>', '\n')).text()
+	};
+
+	transporter.sendMail(mail, function(err, info) {
 		if (err) throw err;
 	});
 }
@@ -26,7 +35,6 @@ function create(task, step) {
 		// sanity check
 		var config = step.config || {};
 		config = _.defaults(config, {
-			// https://pushover.net/api
 			title: fmt('causality: {0}', task.name),
 			message: fmt('{0}: {}', previous_step.module)
 		});
@@ -34,10 +42,7 @@ function create(task, step) {
 		// do the work
 		var title = helper.format(config.title, input);
 		var message = helper.format(config.message, input);
-		send({
-			title: title,
-			message: message
-		});
+		send_email(title, message);
 
 		// pass through
 		var output = input;
