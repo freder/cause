@@ -30,12 +30,8 @@ function create(task, step) {
 		);
 		winston.info(line);
 
-		var flow_decision = helper.flow_decision_defaults;
-
-		// pass through
 		var output = input;
-
-		// invoke children
+		var flow_decision = helper.flow_decision_defaults;
 		helper.invoke_children(step, task, output, flow_decision);
 	};
 }

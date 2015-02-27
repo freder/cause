@@ -9,8 +9,7 @@ var sf = require('sf');
 global.paths = {
 	root: __dirname,
 	lib: path.join(__dirname, 'lib'),
-	blocks: path.join(__dirname, 'blocks'),
-	modules: path.join(__dirname, 'modules')
+	blocks: path.join(__dirname, 'blocks')
 };
 
 require( path.join(global.paths.lib, 'log.js') ).init();
@@ -21,6 +20,16 @@ var server = require( path.join(global.paths.lib, 'server.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var task = require( path.join(global.paths.lib, 'task.js') );
 
+/*
+TODO:
+- load tasks from db
+- clean up: task stuff into task.js
+- how to know when a task has ended?
+	- then save state to db
+WISH LIST:
+- different colors for different tasks
+- project logo
+*/
 
 var opts = {
 	'notifications': Boolean
@@ -223,6 +232,34 @@ var tasks = global.tasks = {
 				block: 'pushover',
 				options: {
 					message: 'bitcoin rate: <%=format.money(input)%>'
+				},
+				flow: {}
+			}
+		]
+	},
+
+	'subbacultcha-mps3s': {
+		name: 'new subbacultcha music',
+		interval: 'every 1 hours',
+
+		steps: [
+			{
+				id: 'website-changed',
+				block: 'website-changed',
+				options: {
+					url: 'http://subbacultcha.nl/mp3-of-the-day',
+					selector: '#maincontent'
+				},
+				flow: {
+					'if': ['console']
+				}
+			},
+			{
+				id: 'console',
+				block: 'log-console',
+				options: {
+					title: 'new',
+					message: 'music'
 				},
 				flow: {}
 			}
