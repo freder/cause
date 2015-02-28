@@ -4,6 +4,7 @@ var path = require('path');
 var _ = require('lodash');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function create(task, step) {
@@ -11,8 +12,8 @@ function create(task, step) {
 		title: 'causality: <%=task.name%>',
 		message: '<%=prev_step.block%>: <%=input%>'
 	};
-	helper.validate_step_options(step, defaults);
-	helper.validate_step_data(step);
+	tasklib.validate_step_options(step, defaults);
+	tasklib.validate_step_data(step);
 
 	return function(input, prev_step) {
 		var message_vars = helper.message_vars(task, input, step, prev_step);
@@ -26,8 +27,8 @@ function create(task, step) {
 		});
 
 		var output = input;
-		var flow_decision = helper.flow_decision_defaults;
-		helper.invoke_children(step, task, output, flow_decision);
+		var flow_decision = tasklib.flow_decision_defaults;
+		tasklib.invoke_children(step, task, output, flow_decision);
 	};
 }
 

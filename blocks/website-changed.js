@@ -4,6 +4,7 @@ var cheerio = require('cheerio');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
 
 
@@ -11,12 +12,12 @@ function create(task, step) {
 	var defaults = {
 		selector: 'body'
 	};
-	helper.validate_step_options(step, defaults);
+	tasklib.validate_step_options(step, defaults);
 
 	var data_defaults = {
 		prev_hash: ''
 	};
-	helper.validate_step_data(step, data_defaults);
+	tasklib.validate_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		var req_options = {
@@ -38,8 +39,8 @@ function create(task, step) {
 			var output = input;
 
 			var changed = (hash !== step.data.prev_hash);
-			var flow_decision = helper.flow_decision(changed);
-			helper.invoke_children(step, task, output, flow_decision);
+			var flow_decision = tasklib.flow_decision(changed);
+			tasklib.invoke_children(step, task, output, flow_decision);
 			
 			step.data.prev_hash = hash;
 			db.save();

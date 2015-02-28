@@ -6,18 +6,19 @@ var request = require('request');
 var FeedParser = require('feedparser');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
 
 
 function create(task, step) {
 	var defaults = {};
-	helper.validate_step_options(step, defaults); // TODO: should be a pure function
+	tasklib.validate_step_options(step, defaults); // TODO: should be a pure function
 
 	var data_defaults = {
 		last_pubdate: null,
 		seen_guids: []
 	};
-	helper.validate_step_data(step, data_defaults); // TODO: should be a pure function
+	tasklib.validate_step_data(step, data_defaults); // TODO: should be a pure function
 
 	return function(input, prev_step) {
 		var feedparser = new FeedParser();
@@ -57,9 +58,9 @@ function create(task, step) {
 		feedparser.on('end', function() {
 			var new_items_array = _.values(new_items);
 			var new_ones = (new_items_array.length > 0);
-			var flow_decision = helper.flow_decision(new_ones);
+			var flow_decision = tasklib.flow_decision(new_ones);
 			var output = new_items_array;
-			helper.invoke_children(step, task, output, flow_decision);
+			tasklib.invoke_children(step, task, output, flow_decision);
 
 			step.data.last_pubdate = meta['pubdate'];
 			db.save();

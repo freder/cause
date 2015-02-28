@@ -5,6 +5,7 @@ var _ = require('lodash');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 var p = new pushover({
@@ -26,8 +27,8 @@ function create(task, step) {
 		title: 'causality: <%=task.name%>',
 		message: '<%=prev_step.block>: <%=input%>'
 	};
-	helper.validate_step_options(step, defaults);
-	helper.validate_step_data(step);
+	tasklib.validate_step_options(step, defaults);
+	tasklib.validate_step_data(step);
 
 	return function(input, prev_step) {
 		var message_vars = helper.message_vars(task, input, step, prev_step);
@@ -39,13 +40,13 @@ function create(task, step) {
 			message: message
 		});
 
-		var flow_decision = helper.flow_decision_defaults;
+		var flow_decision = tasklib.flow_decision_defaults;
 
 		// pass through
 		var output = input;
 
 		// invoke children
-		helper.invoke_children(step, task, output, flow_decision);
+		tasklib.invoke_children(step, task, output, flow_decision);
 	};
 }
 

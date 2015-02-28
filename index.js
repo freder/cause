@@ -22,8 +22,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
 TODO:
-- clean up: task stuff into task.js
-- core functionality should be in /lib and not indivisual blocks
+- core functionality should be in /lib and not individual blocks
 - blocks should be able to do logging themselves config: { log: false }
 
 WISH LIST:
@@ -41,23 +40,12 @@ var shorthands = {
 var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variables
 
 
-function list_tasks() {
-	console.log('———————————————');
-	console.log('TASKS');
-	// db('tasks').forEach(function(t) {
-	tasks.forEach(function(task) {
-		console.log( sf('- {0} ({1})', chalk.bgBlue(task.name), task.interval) );
-	});
-	console.log('———————————————');
-}
-
-
 // handle positional arguments
 // TODO: use commander instead: https://www.npmjs.com/package/commander#git-style-sub-commands
 if (args.argv.remain.length >= 1) {
 	switch (args.argv.remain[0].toLowerCase()) {
 		case 'list':
-			list_tasks();
+			helper.list_tasks();
 			exit();
 			break;
 		default:
@@ -71,7 +59,7 @@ process.stdin.on('data', function(data) {
 	var command = data.toString().trim().toLowerCase();
 	switch (command) {
 		case 'list':
-			list_tasks();
+			helper.list_tasks();
 			break;
 		case 'quit':
 		case 'q':
@@ -100,64 +88,5 @@ process.on('SIGINT', function() {
 });
 
 
-function run_task(task) {
-	var tos = task.steps.reduce(function(result, step) {
-		result = result.concat(step.flow['if']);
-		result = result.concat(step.flow['else']);
-		result = result.concat(step.flow['anyway']);
-		return result;
-	}, []);
-	var root_steps = task.steps.filter(function(step) {
-		return tos.indexOf(step.id) === -1;
-	});
-	root_steps.forEach(function(root_step) {
-		root_step._execute();
-	});
-}
-
-
-function validate_step_flow(flow) {
-	flow = flow || {};
-	if (!_.isObject(flow)) flow = {};
-	if (!flow['if'] || !_.isArray(flow['if'])) flow['if'] = [];
-	if (!flow['else'] || !_.isArray(flow['else'])) flow['else'] = [];
-	if (!flow['anyway'] || !_.isArray(flow['anyway'])) flow['anyway'] = [];
-	return flow;
-}
-
-
-var tasks = [];
-function load_tasks() {
-	// load tasks from db
-	db.object.tasks.forEach(function(_task) {
-		var task = _.extend({}, _task);
-
-		winston.info('loading task: ' + task.name);
-
-		task.steps.forEach(function(step) {
-			step.flow = validate_step_flow(step.flow);
-
-			var block = require( path.join(global.paths.blocks, step.block+'.js') );
-			step._execute = block.create(task, step);
-		});
-
-		var run = function() {
-			run_task(task);
-		};
-		var schedule = later.parse.text(task.interval);
-		task = _.extend(task, {
-			_run: run,
-			_schedule: schedule,
-			_timer: later.setInterval(run, schedule)
-		});
-
-		tasks.push(task);
-		_task = tasklib.make_savable(task);
-	});
-}
-
-load_tasks();
-// global.tasks = tasks;
-tasks.forEach(function(task) {
-	task._run();
-});
+var tasks = /*global.tasks =*/ tasklib.load_tasks();
+tasklib.run_all(tasks);

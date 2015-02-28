@@ -6,6 +6,7 @@ var noodle = require('../noodlejs');
 noodle.configure({ debug: false });
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
 
 
@@ -30,11 +31,11 @@ function create(task, step) {
 	var defaults = {
 		currency: 'EUR'
 	};
-	helper.validate_step_options(step, defaults);
+	tasklib.validate_step_options(step, defaults);
 	var data_defaults = {
 		prev_price: 0
 	};
-	helper.validate_step_data(step, data_defaults);
+	tasklib.validate_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		// validation
@@ -58,10 +59,10 @@ function create(task, step) {
 			var output = price;
 
 			var price_changed = (step.data.prev_price != price);
-			var flow_decision = helper.flow_decision(price_changed);
+			var flow_decision = tasklib.flow_decision(price_changed);
 
 			// invoke children
-			helper.invoke_children(step, task, output, flow_decision);
+			tasklib.invoke_children(step, task, output, flow_decision);
 			
 			step.data.prev_price = price;
 			db.save();
