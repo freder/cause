@@ -5,8 +5,8 @@ var _ = require('lodash');
 var request = require('request');
 var FeedParser = require('feedparser');
 
-var db = require( path.join(global.paths.root, 'db.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var db = require( path.join(global.paths.root, 'db.js') );
 
 
 function create(task, step) {
@@ -62,6 +62,7 @@ function create(task, step) {
 			helper.invoke_children(step, task, output, flow_decision);
 
 			step.data.last_pubdate = meta['pubdate'];
+			db.save();
 		});
 	};
 }

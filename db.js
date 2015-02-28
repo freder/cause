@@ -1,5 +1,6 @@
 var lowdb = require('lowdb');
 var path = require('path');
+var _ = require('lodash');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -24,4 +25,10 @@ function get() {
 
 // modules are cached
 var database = get();
+
+// override original save function
+database._saveSync = database.saveSync;
+database._save = database.save;
+database.save = database.saveSync = _.throttle(database._saveSync, 500);
+
 module.exports = database;

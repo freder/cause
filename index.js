@@ -22,11 +22,10 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
 TODO:
-- how to know when a task has ended?
-	- we don't need to know: every step should request a db save of the entire task, but we are simply going to throttle it.
 - clean up: task stuff into task.js
 - core functionality should be in /lib and not indivisual blocks
 - blocks should be able to do logging themselves config: { log: false }
+
 WISH LIST:
 - different colors for different tasks
 	- white, grey, black, blue, cyan, green, magenta, red, yellow
