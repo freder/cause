@@ -1,6 +1,9 @@
+var path = require('path');
 var crypto = require('crypto');
 var cheerio = require('cheerio');
 var request = require('request');
+
+var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 function create(task, step) {
@@ -24,7 +27,7 @@ function create(task, step) {
 			}
 
 			var $ = cheerio.load(body);
-			var html = $(selector).html;
+			var html = $(step.options.selector).html();
 
 			var hash = crypto
 				.createHash('md5')
@@ -32,11 +35,12 @@ function create(task, step) {
 				.digest('hex');
 
 			var output = input;
-			step.data.prev_hash = hash;
 
-			var changed = (hash !== prev_hash);			
+			var changed = (hash !== step.data.prev_hash);
 			var flow_decision = helper.flow_decision(changed);
 			helper.invoke_children(step, task, output, flow_decision);
+			
+			step.data.prev_hash = hash;
 		});
 	};
 }
