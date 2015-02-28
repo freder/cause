@@ -23,9 +23,12 @@ var task = require( path.join(global.paths.lib, 'task.js') );
 /*
 TODO:
 - load tasks from db
-- clean up: task stuff into task.js
 - how to know when a task has ended?
-	- then save state to db
+	- we don't need to know: every step should request a db save of the entire task, but we are simply going to throttle it.
+
+- clean up: task stuff into task.js
+- core functionality should be in /lib and not indivisual blocks
+- blocks should be able to do logging themselves config: { log: true }
 WISH LIST:
 - different colors for different tasks
 - project logo

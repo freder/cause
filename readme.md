@@ -6,6 +6,7 @@ similar tools:
 - [ifttt](https://ifttt.com/)
 - [huginn](https://github.com/cantino/huginn)
 - [node-red](http://nodered.org/)
+- [no-flo](http://noflojs.org/)
 - [workflow](https://workflow.is/)
 
 ---
