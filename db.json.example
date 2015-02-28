@@ -1,0 +1,293 @@
+{
+  "tasks": [
+    {
+      "name": "dell monitor",
+      "interval": "every 15 mins",
+      "steps": [
+        {
+          "id": "price",
+          "block": "amazon-price",
+          "options": {
+            "url": "http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henv…/ref=sr_1_1?ie=UTF8&qid=1423474949&sr=8-1&keywords=dell+ultrasharp+u2713hm",
+            "currency": "EUR"
+          },
+          "flow": {
+            "if": [
+              "console",
+              "desktop-notification",
+              "threshold"
+            ],
+            "else": [],
+            "anyway": []
+          },
+          "data": {
+            "prev_price": 0
+          }
+        },
+        {
+          "id": "console",
+          "block": "log-console",
+          "options": {
+            "title": "price changed",
+            "message": "<%=format.money(input)%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "threshold",
+          "block": "threshold",
+          "options": {
+            "value": 400,
+            "comparison": "<="
+          },
+          "flow": {
+            "if": [
+              "email",
+              "pushover"
+            ],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "email",
+          "block": "email-notification",
+          "options": {
+            "title": "causality: <%=task.name%>",
+            "message": "<%=prev_step.block%>: <%=input%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "desktop-notification",
+          "block": "desktop-notification",
+          "options": {
+            "message": "<%=format.money(input)%>",
+            "title": "causality: <%=task.name%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "pushover",
+          "block": "pushover",
+          "options": {
+            "message": "dell monitor price: <%=format.money(input)%>",
+            "title": "causality: <%=task.name%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        }
+      ],
+      "data": {}
+    },
+    {
+      "name": "bitcoin rate",
+      "interval": "every 10 mins",
+      "steps": [
+        {
+          "id": "price",
+          "block": "bitcoin-rate",
+          "options": {
+            "market": "bitcoin_de"
+          },
+          "flow": {
+            "anyway": [
+              "console",
+              "threshold"
+            ],
+            "if": [],
+            "else": []
+          },
+          "data": {
+            "prev_price": 0
+          }
+        },
+        {
+          "id": "console",
+          "block": "log-console",
+          "options": {
+            "title": "atm",
+            "message": "<%=format.money(input)%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "threshold",
+          "block": "threshold",
+          "options": {
+            "value": 250,
+            "comparison": ">="
+          },
+          "flow": {
+            "if": [
+              "desktop-notification",
+              "email",
+              "pushover"
+            ],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "email",
+          "block": "email-notification",
+          "options": {
+            "title": "causality: <%=task.name%>",
+            "message": "<%=prev_step.block%>: <%=input%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "desktop-notification",
+          "block": "desktop-notification",
+          "options": {
+            "message": "<%=format.money(input)%>",
+            "title": "causality: <%=task.name%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "pushover",
+          "block": "pushover",
+          "options": {
+            "message": "bitcoin rate: <%=format.money(input)%>",
+            "title": "causality: <%=task.name%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        }
+      ]
+    },
+    {
+      "name": "new subbacultcha music",
+      "interval": "every 1 hours",
+      "steps": [
+        {
+          "id": "website-changed",
+          "block": "website-changed",
+          "options": {
+            "url": "http://subbacultcha.nl/mp3-of-the-day",
+            "selector": "#maincontent"
+          },
+          "flow": {
+            "if": [
+              "console"
+            ],
+            "else": [],
+            "anyway": []
+          },
+          "data": {
+            "prev_hash": ""
+          }
+        },
+        {
+          "id": "console",
+          "block": "log-console",
+          "options": {
+            "title": "new",
+            "message": "music"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        }
+      ]
+    },
+    {
+      "name": "adventure time",
+      "interval": "every 2 hours",
+      "steps": [
+        {
+          "id": "feedzzz",
+          "block": "feed",
+          "options": {
+            "url": "http://www.watchcartoononline.com/anime/adventure-time/feed"
+          },
+          "flow": {
+            "if": [
+              "console",
+              "email"
+            ],
+            "else": [],
+            "anyway": []
+          },
+          "data": {
+            "last_pubdate": null,
+            "seen_guids": []
+          }
+        },
+        {
+          "id": "console",
+          "block": "log-console",
+          "options": {
+            "title": "new episodes",
+            "message": "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        },
+        {
+          "id": "email",
+          "block": "email-notification",
+          "options": {
+            "title": "new adventure time episode(s)",
+            "message": "<%_.each(input, function(ep) {%><a href=\"<%=ep.link%>\"><%=ep.title%></a><br><%})%>"
+          },
+          "flow": {
+            "if": [],
+            "else": [],
+            "anyway": []
+          },
+          "data": {}
+        }
+      ]
+    }
+  ]
+}
