@@ -12,13 +12,13 @@ var db = require( path.join(global.paths.root, 'db.js') );
 
 function create(task, step) {
 	var defaults = {};
-	tasklib.validate_step_options(step, defaults); // TODO: should be a pure function
+	step.options = tasklib.validate_step_options(step, defaults);
 
 	var data_defaults = {
 		last_pubdate: null,
 		seen_guids: []
 	};
-	tasklib.validate_step_data(step, data_defaults); // TODO: should be a pure function
+	step.data = tasklib.validate_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		var feedparser = new FeedParser();
