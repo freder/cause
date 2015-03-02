@@ -1,4 +1,3 @@
-var nopt = require('nopt');
 var _ = require('lodash');
 var path = require('path');
 var chalk = require('chalk');
@@ -37,27 +36,7 @@ WISH LIST:
 - project logo
 */
 
-var opts = {
-	'notifications': Boolean
-};
-var shorthands = {
-	// 'n': ['--notifications']
-};
-var args = global.args = nopt(opts, shorthands, process.argv, 2); // TODO: avoid global variables
 
-
-// handle positional arguments
-// TODO: use commander instead: https://www.npmjs.com/package/commander#git-style-sub-commands
-if (args.argv.remain.length >= 1) {
-	switch (args.argv.remain[0].toLowerCase()) {
-		case 'list':
-			helper.list_tasks();
-			exit();
-			break;
-		default:
-			break;
-	}	
-}
 
 
 // https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
