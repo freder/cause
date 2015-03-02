@@ -21,22 +21,29 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
 TODO:
-- test
-- functional programming
-	- https://www.npmjs.com/package/ramda
-- versioning
-	`npm version major|minor|patch [-m "commit message"]`
-- twitter stream doesn't have an interval — how to handle blocks like that?
-- core functionality should be in /lib and not individual blocks
-- blocks should be able to do logging themselves config: { log: false }
+	- versioning
+		`npm version major|minor|patch [-m "commit message"]`
 
-WISH LIST:
-- different colors for different tasks
-	- white, grey, black, blue, cyan, green, magenta, red, yellow
-- project logo
+# 1.0
+	- twitter stream doesn't have an interval — how to handle blocks like that?
+	- blocks should be able to do logging themselves config: { log: false }
+	- different colors for different tasks
+		- white, grey, black, blue, cyan, green, magenta, red, yellow 
+	- functional programming
+		- https://www.npmjs.com/package/ramda
+	- write tests
+	- store tasks separately?
+		- as hjson maybe?
+	- switch templating engine to `liquid`?
+		- https://github.com/mattmccray/liquid.js
+	- write an example that uses node-red nodes
+	- project logo
+	- publish
+		- blog post
+
+# 2.0
+	- web frontend
 */
-
-
 
 
 // https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
