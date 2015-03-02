@@ -10,6 +10,21 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
 
 
+function format_delta(delta) {
+	var arrow = chalk.white('');
+	var sign = '±';
+	if (delta > 0) {
+		arrow = chalk.green('▲');
+		sign = '+';
+	}
+	if (delta < 0) {
+		arrow = chalk.red('▼');
+		sign = '';
+	}
+	return sf('{0}{1:0.00} {2}', sign, delta, arrow);
+}
+
+
 function create(task, step) {
 	var defaults = {
 		market: 'bitcoin_de'
@@ -34,20 +49,9 @@ function create(task, step) {
 			var market = body[step.options.market];
 			var price = market.rates.last;
 			var output = price;
-
-			var delta = price - step.data.prev_price;
-			// var arrow = chalk.white('▶');
-			var arrow = chalk.white('');
-			var sign = '±';
-			if (delta > 0) {
-				arrow = chalk.green('▲');
-				sign = '+';
-			}
-			if (delta < 0) {
-				arrow = chalk.red('▼');
-				sign = '';
-			}
-			winston.warn( sf('{0}{1:0.00} {2}', sign, delta, arrow) ); // TODO: modules should be able to do their own logging
+			
+			// TODO: modules should be able to do their own logging
+			winston.warn( format_delta(price - step.data.prev_price) );
 
 			var flow_decision = tasklib.flow_decision_defaults;
 			tasklib.invoke_children(step, task, output, flow_decision);

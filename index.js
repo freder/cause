@@ -1,9 +1,5 @@
-var _ = require('lodash');
 var path = require('path');
 var chalk = require('chalk');
-var winston = require('winston');
-var later = require('later');
-var sf = require('sf');
 
 global.paths = {
 	root: __dirname,
@@ -14,8 +10,6 @@ global.paths = {
 require( path.join(global.paths.lib, 'log.js') ).init();
 
 var db = require( path.join(global.paths.root, 'db.js') );
-var config = require( path.join(global.paths.root, 'config.js') );
-var server = require( path.join(global.paths.lib, 'server.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
