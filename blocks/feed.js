@@ -34,6 +34,7 @@ function create(task, step) {
 		});
 
 		var meta;
+		var current_guids = [];
 		var new_items;
 		feedparser.on('meta', function(metadata) {
 			meta = metadata;
@@ -49,9 +50,9 @@ function create(task, step) {
 			while (article = this.read()) {
 				if (step.data.seen_guids.indexOf(article.guid) === -1) {
 					var data = _.pick(article, 'title', 'link');
-					step.data.seen_guids.push(article.guid);
 					new_items[article.guid] = data;
 				}
+				current_guids.push(article.guid);
 			}
 		});
 
@@ -62,6 +63,7 @@ function create(task, step) {
 			var output = new_items_array;
 			tasklib.invoke_children(step, task, output, flow_decision);
 
+			step.data.seen_guids = current_guids;
 			step.data.last_pubdate = meta['pubdate'];
 			db.save();
 		});
