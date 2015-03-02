@@ -27,8 +27,8 @@ function create(task, step) {
 		title: 'causality: <%=task.name%>',
 		message: '<%=prev_step.block>: <%=input%>'
 	};
-	tasklib.validate_step_options(step, defaults);
-	tasklib.validate_step_data(step);
+	step.options = tasklib.validate_step_options(step, defaults);
+	step.data = tasklib.validate_step_data(step);
 
 	return function(input, prev_step) {
 		var message_vars = helper.message_vars(task, input, step, prev_step);
