@@ -4,8 +4,7 @@ mixin task(t)
 	hr
 	div
 		div
-			i #{t.module}: 
-			b #{t.name}
+			b.task-name #{t.name}
 			br
 			br
 			button(onclick='run_task("#{t.name}")') run now
