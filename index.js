@@ -10,6 +10,8 @@ global.paths = {
 require( path.join(global.paths.lib, 'log.js') ).init();
 
 var db = require( path.join(global.paths.root, 'db.js') );
+var server = require( path.join(global.paths.root, 'server.js') );
+server.start();
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
