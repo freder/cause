@@ -75,6 +75,37 @@ process.on('SIGINT', function() {
 	exit();
 });
 
+var testtasks = [
+	{
+		"name": "counter",
+		"interval": 'every 2 seconds',
+		"steps": [
+		  {
+		    "id": "tick",
+		    "block": "tick",
+		    "flow": {
+		      "if": ["digest"]
+		    },
+		  },
 
-var tasks = /*global.tasks =*/ tasklib.load_tasks(db.object.tasks);
+		  {
+		    "id": "digest",
+		    "block": "digest",
+		    "flow": {
+		      "if": ["console"]
+		    },
+		  },
+
+		  {
+		    "id": "console",
+		    "block": "log-console",
+		    "options": {
+		      "message": "<%=input%>"
+		    }
+		  },
+		]
+	}
+];
+var tasks = tasklib.load_tasks(testtasks);
+// var tasks = /*global.tasks =*/ tasklib.load_tasks(db.object.tasks);
 tasklib.run_all(tasks);
