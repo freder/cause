@@ -73,5 +73,5 @@ process.on('SIGINT', function() {
 });
 
 
-var tasks = /*global.tasks =*/ tasklib.load_tasks();
+var tasks = /*global.tasks =*/ tasklib.load_tasks(db.object.tasks);
 tasklib.run_all(tasks);
