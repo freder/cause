@@ -33,7 +33,7 @@ function create(task, step) {
 			var selection = $(step.options.selector);
 			if (selection.length === 0) {
 				throw 'selection is empty';
-			} else if (selection.length) {
+			} else if (selection.length > 1) {
 				winston.warn('selection contains more than one element — only using first one.');
 			}
 			var html = selection.first().html();
