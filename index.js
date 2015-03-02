@@ -22,6 +22,11 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
 TODO:
+- test
+- functional programming
+	- https://www.npmjs.com/package/ramda
+- versioning
+	`npm version major|minor|patch [-m "commit message"]`
 - twitter stream doesn't have an interval — how to handle blocks like that?
 - core functionality should be in /lib and not individual blocks
 - blocks should be able to do logging themselves config: { log: false }

@@ -1,30 +1,11 @@
 var path = require('path');
 var _ = require('lodash');
 var cheerio = require('cheerio');
-var nodemailer = require('nodemailer');
-var mailgun = require('nodemailer-mailgun-transport');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-
-
-var transporter = nodemailer.createTransport( mailgun(config.email.mailgun) );
-
-
-function send_email(msg) { // TODO: put into library
-	var mail = {
-		from: config.email.from,
-		to: config.email.to,
-		subject: msg.subject,
-		html: msg.content,
-		text: cheerio(msg.content.replace('<br>', '\n')).text()
-	};
-
-	transporter.sendMail(mail, function(err, info) {
-		if (err) throw err;
-	});
-}
+var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 function create(task, step) {
@@ -41,7 +22,7 @@ function create(task, step) {
 		var title = _.template(step.options.title)(message_vars);
 		var message = _.template(step.options.message)(message_vars);
 
-		send_email({
+		email.send({
 			subject: title,
 			content: message
 		});

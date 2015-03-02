@@ -1,6 +1,7 @@
 var path = require('path');
 var crypto = require('crypto');
 var cheerio = require('cheerio');
+var winston = require('winston');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -29,7 +30,13 @@ function create(task, step) {
 			}
 
 			var $ = cheerio.load(body);
-			var html = $(step.options.selector).html();
+			var selection = $(step.options.selector);
+			if (selection.length === 0) {
+				throw 'selection is empty';
+			} else if (selection.length) {
+				winston.warn('selection contains more than one element — only using first one.');
+			}
+			var html = selection.first().html();
 
 			var hash = crypto
 				.createHash('md5')
