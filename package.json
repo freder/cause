@@ -27,6 +27,7 @@
     "nodemailer-mailgun-transport": "^1.0.0",
     "numeral": "^1.5.3",
     "pushover-notifications": "^0.2.2",
+    "ramda": "^0.10.0",
     "request": "^2.53.0",
     "sf": "^0.1.7",
     "split": "^0.3.3",

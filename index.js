@@ -21,8 +21,8 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
-	- twitter stream doesn't have an interval — how to handle blocks like that?
 	- blocks should be able to do logging themselves config: { log: false }
+	- validation
 	- different colors for different tasks
 		- white, grey, black, blue, cyan, green, magenta, red, yellow 
 	- functional programming
@@ -32,10 +32,11 @@ TODO:
 		- as hjson maybe?
 	- switch templating engine to `liquid`?
 		- https://github.com/mattmccray/liquid.js
-	- write an example that uses node-red nodes
 	- project logo
+	- basic documentation
 	- publish
 		- blog post
+	- write an example that uses node-red nodes
 
 # 2.0
 	- web frontend
@@ -76,5 +77,36 @@ process.on('SIGINT', function() {
 });
 
 
+// var testtasks = [{
+// 	"name": "counter",
+// 	"interval": 'every 2 seconds',
+// 	"steps": [
+// 		{
+// 			"id": "tick",
+// 			"block": "tick",
+// 			"flow": {
+// 				"if": ["digest"]
+// 			},
+// 		},
+
+// 		{
+// 			"id": "digest",
+// 			"block": "digest",
+// 			"flow": {
+// 				"if": ["console"]
+// 			},
+// 		},
+
+// 		{
+// 			"id": "console",
+// 			"block": "log-console",
+// 			"options": {
+// 				"message": "<%=input%>"
+// 			}
+// 		},
+// 	]
+// }];
+
+// var tasks = tasklib.load_tasks(testtasks);
 var tasks = /*global.tasks =*/ tasklib.load_tasks(db.object.tasks);
 tasklib.run_all(tasks);
