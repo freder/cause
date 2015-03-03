@@ -11,8 +11,8 @@ function create(task, step) {
 		// value: 0,
 		// comparison: '=='
 	};
-	step.options = tasklib.validate_step_options(step, defaults);
-	step.data = tasklib.validate_step_data(step);
+	step.options = tasklib.normalize_step_options(step, defaults);
+	step.data = tasklib.normalize_step_data(step);
 
 	return function(input, prev_step) {
 		var check = versus(input, step.options.comparison, step.options.value);

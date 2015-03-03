@@ -13,12 +13,12 @@ function create(task, step) {
 	var defaults = {
 		selector: 'body'
 	};
-	step.options = tasklib.validate_step_options(step, defaults);
+	step.options = tasklib.normalize_step_options(step, defaults);
 
 	var data_defaults = {
 		prev_hash: ''
 	};
-	step.data = tasklib.validate_step_data(step, data_defaults);
+	step.data = tasklib.normalize_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		var req_options = {

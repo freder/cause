@@ -12,11 +12,11 @@ function create(task, step) {
 	var defaults = {
 		max: 5
 	};
-	step.options = tasklib.validate_step_options(step, defaults);
+	step.options = tasklib.normalize_step_options(step, defaults);
 	var data_defaults = {
 		collected: []
 	};
-	step.data = tasklib.validate_step_data(step, data_defaults);
+	step.data = tasklib.normalize_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		if (_.isArray(input)) {

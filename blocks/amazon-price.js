@@ -31,11 +31,11 @@ function create(task, step) {
 	var defaults = {
 		currency: 'EUR'
 	};
-	step.options = tasklib.validate_step_options(step, defaults);
+	step.options = tasklib.normalize_step_options(step, defaults);
 	var data_defaults = {
 		prev_price: 0
 	};
-	step.data = tasklib.validate_step_data(step, data_defaults);
+	step.data = tasklib.normalize_step_data(step, data_defaults);
 
 	return function(input, prev_step) {
 		// validation

@@ -73,27 +73,27 @@ describe('lib/', function() {
 			});
 		});
 
-		describe(f('#validate_step_flow()'), function() {
+		describe(f('#normalize_step_flow()'), function() {
 			it('should make sure everything is sane', function() {
 				var _flow, flow;
 				
 				_flow = {};
-				flow = tasklib.validate_step_flow(_flow);
+				flow = tasklib.normalize_step_flow(_flow);
 				assert(flow['if'] !== undefined);
 
 				_flow = 'test';
-				flow = tasklib.validate_step_flow(_flow);
+				flow = tasklib.normalize_step_flow(_flow);
 				assert(flow['if'] !== undefined);
 
 				_flow = null;
-				flow = tasklib.validate_step_flow(_flow);
+				flow = tasklib.normalize_step_flow(_flow);
 				assert(flow['if'] !== undefined);
 				assert(_.isArray(flow['if']));
 
 				_flow = {
 					'if': 'asdf'
 				};
-				flow = tasklib.validate_step_flow(_flow);
+				flow = tasklib.normalize_step_flow(_flow);
 				assert(flow['if'] !== undefined);
 			});
 		});
