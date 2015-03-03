@@ -31,6 +31,7 @@ TODO:
 		- https://www.npmjs.com/package/ramda
 	- switch templating engine to `liquid`?
 		- https://github.com/mattmccray/liquid.js
+		- or maybe nunchucks: https://mozilla.github.io/nunjucks/
 	- project logo
 	- basic documentation
 	- publish

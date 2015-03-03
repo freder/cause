@@ -3,3 +3,4 @@ config.js
 db.json
 web/bower_components
 .DS_Store
+coverage
