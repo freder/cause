@@ -29,6 +29,6 @@ var database = get();
 // override original save function
 database._saveSync = database.saveSync;
 database._save = database.save;
-database.save = database.saveSync = _.throttle(database._saveSync, 500);
+database.save = database.saveSync = _.throttle(database._saveSync, 500); // what does db.save() actually end up saving?
 
 module.exports = database;

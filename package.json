@@ -12,7 +12,6 @@
     "async": "^0.9.0",
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
-    "event-stream": "^3.2.2",
     "express": "^4.11.2",
     "feedparser": "^0.19.2",
     "jade": "^1.9.2",
@@ -31,14 +30,12 @@
     "request": "^2.53.0",
     "sf": "^0.1.7",
     "split": "^0.3.3",
-    "through2": "^0.6.3",
     "twit": "^1.1.20",
     "validator": "^3.30.0",
     "versus": "^0.2.0",
     "winston": "^0.9.0"
   },
   "devDependencies": {
-    "highland": "^2.4.0",
     "node-red": "^0.10.2",
     "node-red-node-pushover": "0.0.3"
   }

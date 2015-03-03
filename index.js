@@ -21,15 +21,14 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
+	- store tasks separately?
+		- as hjson maybe?
 	- blocks should be able to do logging themselves config: { log: false }
 	- validation
 	- different colors for different tasks
-		- white, grey, black, blue, cyan, green, magenta, red, yellow 
+		- white, grey, black, blue, cyan, green, magenta, red, yellow
 	- functional programming
 		- https://www.npmjs.com/package/ramda
-	- write tests
-	- store tasks separately?
-		- as hjson maybe?
 	- switch templating engine to `liquid`?
 		- https://github.com/mattmccray/liquid.js
 	- project logo
