@@ -23,13 +23,44 @@ describe('lib/', function() {
 		var tasklib = require('../lib/tasklib.js');
 
 		describe(f('#make_savable()'), function() {
-			it('should remove everything prefixed with \'_\'', function() {
+			it("should remove everything prefixed with '_'", function() {
 				var task = {
 					name: 'test task',
 					_internal: 'schedule'
 				};
 				var savable = tasklib.make_savable(task);
 				assert(savable._internal === undefined);
+			});
+		});
+
+		describe(f('#load_task()'), function() {
+			it("should not create a timer for tasks that don't specify an inteval", function() {
+				var task_data, task;
+
+				task_data = {
+					name: 'test task',
+					steps: [],
+					interval: null
+				};
+				task = tasklib.load_task(task_data);
+				assert(task._timer === undefined);
+
+				task_data.interval = false;
+				task = tasklib.load_task(task_data);
+				assert(task._timer === undefined);
+
+				task_data.interval = 'every 5 seconds';
+				task = tasklib.load_task(task_data);
+				assert(task._timer);
+
+				assert.throws(function() {
+					task_data.interval = 'asdf';
+					task = tasklib.load_task(task_data);					
+				});
+
+				delete task_data.interval;
+				task = tasklib.load_task(task_data);
+				assert(task._timer === undefined);
 			});
 		});
 
