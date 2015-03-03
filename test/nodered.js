@@ -1,13 +1,13 @@
 var _ = require('lodash');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-// var config = require('../config.js');
+
 var pushover = require('../node_modules/node-red-node-pushover/57-pushover.js');
 var jsfunction = require('../node_modules/node-red/nodes/core/core/80-function.js');
 
 
-function wrap(module, config, handlers, input) {
-	var config = config || {};
+function wrap(nodered_node, options, handlers, input) {
+	var options = options || {};
 	var input = input || null;
 	
 	var handlers = handlers || {};
@@ -31,12 +31,12 @@ function wrap(module, config, handlers, input) {
 		nodes: {
 			registerType: function(name, Constructor) {
 				util.inherits(Constructor, EventEmitter);
-				var node = new Constructor(config);
+				var node = new Constructor(options);
 				if (input) node.emit('input', { payload: input });
 			},
 
-			createNode: function(node, config) {
-				_.extend(node, config);
+			createNode: function(node, options) {
+				_.extend(node, options);
 
 				node.error = function(err_msg) {
 					// console.log(err_msg);
@@ -53,7 +53,7 @@ function wrap(module, config, handlers, input) {
 		}
 	};
 
-	module(RED);
+	nodered_node(RED);
 }
 
 
@@ -64,17 +64,23 @@ function wrap(module, config, handlers, input) {
 // 	credentials: {
 // 		pushkey: 'asdf',
 // 		deviceid: 'asdf'
-// 		// pushkey: config.pushover.api_key,
-// 		// deviceid: config.pushover.device
+// 		// pushkey: options.pushover.api_key,
+// 		// deviceid: options.pushover.device
 // 	}
 // });
 
 wrap(
 	jsfunction,
-	{ func: 'console.log("success!")' },
+	{ 
+		func: 'console.log("success!")'
+	},
 	{
-		handle_input: function(msg) { console.log('in:', msg); },
-		handle_output: function(results) { console.log('out:', results); }
+		handle_input: function(msg) { 
+			console.log('in:', msg); 
+		},
+		handle_output: function(results) { 
+			console.log('out:', results); 
+		}
 	},
 	'hello node-red'
 );
