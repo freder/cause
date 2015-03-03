@@ -1,28 +1,13 @@
 var path = require('path');
 var chalk = require('chalk');
-var sf = require('sf');
 var winston = require('winston');
+var sf = require('sf');
 var _ = require('lodash');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var db = require( path.join(global.paths.root, 'db.js') );
-
-
-function format_delta(delta) {
-	var arrow = chalk.white('');
-	var sign = '±';
-	if (delta > 0) {
-		arrow = chalk.green('▲');
-		sign = '+';
-	}
-	if (delta < 0) {
-		arrow = chalk.red('▼');
-		sign = '';
-	}
-	return sf('{0}{1:0.00} {2}', sign, delta, arrow);
-}
 
 
 function create(task, step) {
@@ -50,8 +35,12 @@ function create(task, step) {
 			var price = market.rates.last;
 			var output = price;
 			
-			// TODO: modules should be able to do their own logging
-			winston.warn( format_delta(price - step.data.prev_price) );
+			// custom logging
+			// TODO: check if { config: { log: false } } or so
+			var message_vars = helper.message_vars(task, input, step, prev_step);
+			var delta = helper.format_delta(price - step.data.prev_price);
+			var message = chalk.green(message_vars.format.money(price));
+			winston.info( sf('{0} {1} | {2}', chalk.bgBlue(task.name), delta, message) );
 
 			var flow_decision = tasklib.flow_decision_defaults;
 			tasklib.invoke_children(step, task, output, flow_decision);
