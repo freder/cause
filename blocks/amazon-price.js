@@ -71,8 +71,6 @@ function create(task, step) {
 			}
 
 			var flow_decision = tasklib.flow_decision(price_changed);
-
-			// invoke children
 			tasklib.invoke_children(step, task, output, flow_decision);
 			
 			step.data.prev_price = price;
