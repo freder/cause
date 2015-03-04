@@ -1,5 +1,4 @@
 var pushover = require('pushover-notifications');
-var winston = require('winston');
 var path = require('path');
 var _ = require('lodash');
 
@@ -21,36 +20,31 @@ function send(msg) {
 }
 
 
-function create(task, step) {
-	// https://pushover.net/api
-	var defaults = {
-		title: 'causality: <%=task.name%>',
-		message: '<%=prev_step.block>: <%=input%>'
-	};
-	step.options = tasklib.normalize_step_options(step, defaults);
-	step.data = tasklib.normalize_step_data(step);
+function fn(task, step, input, prev_step) {
+	var message_vars = helper.message_vars(task, input, step, prev_step);
 
-	return function(input, prev_step) {
-		var message_vars = helper.message_vars(task, input, step, prev_step);
+	var title = _.template(step.options.title)(message_vars);
+	var message = _.template(step.options.message)(message_vars);
+	send({
+		title: title,
+		message: message
+	});
 
-		var title = _.template(step.options.title)(message_vars);
-		var message = _.template(step.options.message)(message_vars);
-		send({
-			title: title,
-			message: message
-		});
+	var flow_decision = tasklib.flow_decision_defaults;
 
-		var flow_decision = tasklib.flow_decision_defaults;
+	// pass through
+	var output = input;
 
-		// pass through
-		var output = input;
-
-		// invoke children
-		tasklib.invoke_children(step, task, output, flow_decision);
-	};
+	// invoke children
+	tasklib.invoke_children(step, task, output, flow_decision);
 }
 
 
 module.exports = {
-	create: create
+	fn: fn,
+	defaults: {
+		title: 'causality: <%=task.name%>',
+		message: '<%=prev_step.block>: <%=input%>'
+	},
+	data_defaults: {}
 };

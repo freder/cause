@@ -25,14 +25,7 @@ var endpoint_defaults = {
 // };
 
 
-function create(task, step) {
-	var defaults = {
-		endpoint: 'user',
-	};
-	step.options = tasklib.normalize_step_options(step, defaults);
-	var data_defaults = {};
-	step.data = tasklib.normalize_step_data(step, data_defaults);
-
+var fn = (function(task, step) {
 	var client = twitter.create_client({
 		consumer_key: config.twitter.api_key,
 		consumer_secret: config.twitter.api_secret,
@@ -40,7 +33,7 @@ function create(task, step) {
 		access_token_secret: config.twitter.access_token_secret
 	});
 
-	return function(input, prev_step) {
+	return function(task, step, input, prev_step) {
 		var endpoint = step.options.endpoint;
 		var parameters = _.extend(
 			endpoint_defaults[endpoint],
@@ -75,9 +68,13 @@ function create(task, step) {
 			}
 		});
 	};
-}
+})();
 
 
 module.exports = {
-	create: create
+	fn: fn,
+	defaults: {
+		endpoint: 'user'
+	},
+	data_defaults: {}
 };

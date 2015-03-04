@@ -6,43 +6,38 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-function create(task, step) {
-	var defaults = {
-		// value: 0,
-		// comparison: '=='
-	};
-	step.options = tasklib.normalize_step_options(step, defaults);
-	var data_defaults = {
-		triggered: false
-	};
-	step.data = tasklib.normalize_step_data(step, data_defaults);
+function fn(task, step, input, prev_step) {
+	var output = input;
 
-	return function(input, prev_step) {
-		var output = input;
+	// has the threshold been crossed?
+	var check = versus(input, step.options.comparison, step.options.value);
+	var flow_decision = tasklib.flow_decision(check);
 
-		// has the threshold been crossed?
-		var check = versus(input, step.options.comparison, step.options.value);
-		var flow_decision = tasklib.flow_decision(check);
+	// trigger only once, when the threshold is reached,
+	// otherwise it would keep on triggering.
+	// TODO: maybe make desired behavior configurable
+	if (check && step.data.triggered) {
+		flow_decision['if'] = false;
+		flow_decision['else'] = false;
+	}
 
-		// trigger only once, when the threshold is reached,
-		// otherwise it would keep on triggering.
-		// TODO: maybe make desired behavior configurable
-		if (check && step.data.triggered) {
-			flow_decision['if'] = false;
-			flow_decision['else'] = false;
-		}
+	tasklib.invoke_children(step, task, output, flow_decision);
 
-		tasklib.invoke_children(step, task, output, flow_decision);
+	// mark as triggered, or not
+	step.data.triggered = check;
 
-		// mark as triggered, or not
-		step.data.triggered = check;
-
-		// TODO: save automatically from where this function is called?
-		tasklib.save_task(task);
-	};
+	// TODO: save automatically from where this function is called?
+	tasklib.save_task(task);
 }
 
 
 module.exports = {
-	create: create
+	fn: fn,
+	defaults: {
+		// value: 0,
+		// comparison: '=='
+	},
+	data_defaults: {
+		triggered: false
+	}
 };

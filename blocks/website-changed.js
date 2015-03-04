@@ -8,53 +8,47 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-function create(task, step) {
-	var defaults = {
-		selector: 'body'
+function fn(task, step, input, prev_step) {
+	var req_options = {
+		url: step.options.url
 	};
-	step.options = tasklib.normalize_step_options(step, defaults);
+	request(req_options, function(err, response, body) {
+		if (err) {
+			return helper.handle_error(err);
+		}
 
-	var data_defaults = {
-		prev_hash: ''
-	};
-	step.data = tasklib.normalize_step_data(step, data_defaults);
+		var $ = cheerio.load(body);
+		var selection = $(step.options.selector);
+		if (selection.length === 0) {
+			throw 'selection is empty';
+		} else if (selection.length > 1) {
+			winston.warn('selection contains more than one element — only using first one.');
+		}
+		var html = selection.first().html();
 
-	return function(input, prev_step) {
-		var req_options = {
-			url: step.options.url
-		};
-		request(req_options, function(err, response, body) {
-			if (err) {
-				return helper.handle_error(err);
-			}
+		var hash = crypto
+			.createHash('md5')
+			.update(html)
+			.digest('hex');
 
-			var $ = cheerio.load(body);
-			var selection = $(step.options.selector);
-			if (selection.length === 0) {
-				throw 'selection is empty';
-			} else if (selection.length > 1) {
-				winston.warn('selection contains more than one element — only using first one.');
-			}
-			var html = selection.first().html();
+		var output = input;
 
-			var hash = crypto
-				.createHash('md5')
-				.update(html)
-				.digest('hex');
-
-			var output = input;
-
-			var changed = (hash !== step.data.prev_hash);
-			var flow_decision = tasklib.flow_decision(changed);
-			tasklib.invoke_children(step, task, output, flow_decision);
-			
-			step.data.prev_hash = hash;
-			tasklib.save_task(task);
-		});
-	};
-}
+		var changed = (hash !== step.data.prev_hash);
+		var flow_decision = tasklib.flow_decision(changed);
+		tasklib.invoke_children(step, task, output, flow_decision);
+		
+		step.data.prev_hash = hash;
+		tasklib.save_task(task);
+	});
+};
 
 
 module.exports = {
-	create: create
+	fn: fn,
+	defaults: {
+		selector: 'body'
+	},
+	data_defaults: {
+		prev_hash: ''
+	}
 };
