@@ -1,6 +1,5 @@
 var fs = require('fs');
 var glob = require('glob');
-var hjson = require('hjson');
 var path = require('path');
 var chalk = require('chalk');
 var winston = require('winston');
@@ -13,7 +12,6 @@ global.paths = {
 
 require( path.join(global.paths.lib, 'log.js') ).init();
 
-var db = require( path.join(global.paths.root, 'db.js') );
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
 server.start();
@@ -26,9 +24,6 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
-	- store tasks separately
-		- get rid of db.js
-		- how to save?
 	- validation
 	- different colors for different tasks
 		- white, grey, black, blue, cyan, green, magenta, red, yellow
@@ -79,14 +74,14 @@ process.on('SIGINT', function() {
 });
 
 
-var task_path = path.join(global.paths.root, config.paths.tasks);
-winston.info('loading tasks from '+chalk.cyan(task_path));
+var tasks_path = path.join(global.paths.root, config.paths.tasks);
+winston.info('loading tasks from '+chalk.cyan(tasks_path));
 var tasks;
-glob(path.join(task_path, '*.hjson'), function(err, files) {
-	tasks = files
+glob(path.join(tasks_path, '*.json'), function(err, files) {
+	tasks = global.tasks = files
 		.map(function(file) {
 			var data = fs.readFileSync(file).toString();
-			var task = hjson.parse(data);
+			var task = JSON.parse(data);
 			task._file = file;
 			return task;
 		})

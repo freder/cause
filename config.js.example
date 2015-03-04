@@ -1,7 +1,7 @@
 module.exports = {
 
-	db: {
-		path: './db.json'
+	paths: {
+		tasks: './tasks'
 	},
 
 	server: {

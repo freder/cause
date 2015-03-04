@@ -99,7 +99,7 @@ describe('lib/', function() {
 		});
 	});
 
-
+	// ————————————————————
 
 	describe('helper.js', function() {
 		var glob = require('glob');

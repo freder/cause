@@ -19,7 +19,6 @@
     "jade": "^1.9.2",
     "later": "^1.1.6",
     "lodash": "^3.2.0",
-    "lowdb": "^0.7.1",
     "moment": "^2.9.0",
     "node-notifier": "^4.1.1",
     "node-uuid": "^1.4.2",

@@ -2,7 +2,6 @@ var path = require('path');
 var _ = require('lodash');
 var versus = require('versus');
 
-var db = require( path.join(global.paths.root, 'db.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
@@ -37,7 +36,9 @@ function create(task, step) {
 
 		// mark as triggered, or not
 		step.data.triggered = check;
-		db.save(); // TODO: save automatically from where this function is called?
+
+		// TODO: save automatically from where this function is called?
+		tasklib.save_task(task);
 	};
 }
 

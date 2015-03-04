@@ -5,7 +5,6 @@ var R = require('ramda');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-var db = require( path.join(global.paths.root, 'db.js') );
 
 
 function create(task, step) {
@@ -32,7 +31,7 @@ function create(task, step) {
 			step.data.collected = R.drop(step.options.max, step.data.collected);
 		}
 
-		db.save();
+		tasklib.save_task(task);
 	};
 }
 

@@ -1,24 +1,24 @@
 {
-	name: "adventure time",
-	interval: "every 2 hours",
-	steps: [
+	"name": "adventure time",
+	"interval": "every 2 hours",
+	"steps": [
 		{
-			id: "feedzzz",
-			block: "feed",
-			options: {
-				url: "http://www.watchcartoononline.com/anime/adventure-time/feed"
+			"id": "feedzzz",
+			"block": "feed",
+			"options": {
+				"url": "http://www.watchcartoononline.com/anime/adventure-time/feed"
 			},
-			flow: {
-				if: [
+			"flow": {
+				"if": [
 					"console",
 					"email"
 				],
-				else: [],
-				anyway: []
+				"else": [],
+				"anyway": []
 			},
-			data: {
-				last_pubdate: "2015-03-04T08:35:12.000Z",
-				seen_guids: [
+			"data": {
+				"last_pubdate": "2015-03-04T10:55:34.000Z",
+				"seen_guids": [
 					"http://www.watchcartoononline.com/adventure-time-season-6-episode-30-the-diary",
 					"http://www.watchcartoononline.com/adventure-time-season-6-episode-29-dark-purple",
 					"http://www.watchcartoononline.com/adventure-time-season-6-episode-28-the-mountain",
@@ -33,32 +33,32 @@
 			}
 		},
 		{
-			id: "console",
-			block: "log-console",
-			options: {
-				title: "new episodes",
-				message: "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>"
+			"id": "console",
+			"block": "log-console",
+			"options": {
+				"title": "new episodes",
+				"message": "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>"
 			},
-			flow: {
-				if: [],
-				else: [],
-				anyway: []
+			"flow": {
+				"if": [],
+				"else": [],
+				"anyway": []
 			},
-			data: {}
+			"data": {}
 		},
 		{
-			id: "email",
-			block: "email-notification",
-			options: {
-				title: "new adventure time episode(s)",
-				message: "<%_.each(input, function(ep) {%><a href=\"<%=ep.link%>\"><%=ep.title%></a><br><%})%>"
+			"id": "email",
+			"block": "email-notification",
+			"options": {
+				"title": "new adventure time episode(s)",
+				"message": "<%_.each(input, function(ep) {%><a href=\"<%=ep.link%>\"><%=ep.title%></a><br><%})%>"
 			},
-			flow: {
-				if: [],
-				else: [],
-				anyway: []
+			"flow": {
+				"if": [],
+				"else": [],
+				"anyway": []
 			},
-			data: {}
+			"data": {}
 		}
 	]
 }

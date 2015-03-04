@@ -4,7 +4,6 @@ var chalk = require('chalk');
 var express = require('express');
 
 var config = require( path.join(global.paths.root, 'config.js') );
-var db = require( path.join(global.paths.root, 'db.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
@@ -24,8 +23,7 @@ function start() {
 
 
 	app.get('/', function(req, res) {
-		var tasks = db.object['tasks'];
-		res.render('views/index', { tasks: tasks });
+		res.render('views/index', { tasks: global.tasks });
 	});
 
 

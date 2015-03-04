@@ -1,0 +1,38 @@
+{
+	"name": "new subbacultcha music",
+	"interval": "every 1 hours",
+	"steps": [
+		{
+			"id": "website-changed",
+			"block": "website-changed",
+			"options": {
+				"url": "http://subbacultcha.nl/mp3-of-the-day",
+				"selector": "#maincontent"
+			},
+			"flow": {
+				"if": [
+					"console"
+				],
+				"else": [],
+				"anyway": []
+			},
+			"data": {
+				"prev_hash": "fba4254384d99e6d2e430b76a0bbcc89"
+			}
+		},
+		{
+			"id": "console",
+			"block": "log-console",
+			"options": {
+				"title": "new",
+				"message": "music"
+			},
+			"flow": {
+				"if": [],
+				"else": [],
+				"anyway": []
+			},
+			"data": {}
+		}
+	]
+}

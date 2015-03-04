@@ -7,7 +7,6 @@ var FeedParser = require('feedparser');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-var db = require( path.join(global.paths.root, 'db.js') );
 
 
 function create(task, step) {
@@ -65,7 +64,7 @@ function create(task, step) {
 
 			step.data.seen_guids = current_guids;
 			step.data.last_pubdate = meta['pubdate'];
-			db.save();
+			tasklib.save_task(task);
 		});
 	};
 }

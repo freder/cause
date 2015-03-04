@@ -1,0 +1,29 @@
+{
+	"name": "counter",
+	"interval": "every 2 seconds",
+	"steps": [
+		{
+			"id": "tick",
+			"block": "tick",
+			"flow": {
+				"if": ["digest"]
+			},
+		},
+
+		{
+			"id": "digest",
+			"block": "digest",
+			"flow": {
+				"if": ["console"]
+			},
+		},
+
+		{
+			"id": "console",
+			"block": "log-console",
+			"options": {
+				"message": "<%=input%>"
+			}
+		},
+	]
+}
