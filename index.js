@@ -24,7 +24,10 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
+	- history data
 	- validation
+		- every block should specify what its input and output is
+			- this also helps documenting everything
 	- different colors for different tasks
 		- white, grey, black, blue, cyan, green, magenta, red, yellow
 	- project logo
@@ -34,6 +37,7 @@ TODO:
 
 # 2.0
 	- web frontend
+	- a plugin system for 3rd party blocks
 
 # NAH, MAYBE LATER
 	- write an example that uses node-red nodes

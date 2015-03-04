@@ -3,7 +3,7 @@
 	"interval": "every 2 hours",
 	"steps": [
 		{
-			"id": "feedzzz",
+			"id": "feed",
 			"block": "feed",
 			"options": {
 				"url": "http://www.watchcartoononline.com/anime/adventure-time/feed"
