@@ -1,0 +1,101 @@
+{
+	name: "dell monitor",
+	interval: "every 15 mins",
+	steps: [
+		{
+			id: "price",
+			block: "amazon-price",
+			options: {
+				url: "http://www.amazon.de/Dell-LED-Monitor-DisplayPort-Reaktionszeit-h%C3%B6henverstellbar/dp/B0091ME4A0/ref=sr_1_1?ie=UTF8&qid=1425372781&sr=8-1&keywords=u2713hm",
+				currency: "EUR"
+			},
+			flow: {
+				if: [
+					"console",
+					"desktop-notification",
+					"threshold"
+				],
+				else: [],
+				anyway: []
+			},
+			data: {
+				prev_price: 560.55
+			}
+		},
+		{
+			id: "console",
+			block: "log-console",
+			options: {
+				title: "price changed",
+				message: "<%=format.money(input)%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "threshold",
+			block: "threshold",
+			options: {
+				value: 400,
+				comparison: "<="
+			},
+			flow: {
+				if: [
+					"email",
+					"pushover"
+				],
+				else: [],
+				anyway: []
+			},
+			data: {
+				triggered: false
+			}
+		},
+		{
+			id: "email",
+			block: "email-notification",
+			options: {
+				title: "causality: <%=task.name%>",
+				message: "<%=prev_step.block%>: <%=input%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "desktop-notification",
+			block: "desktop-notification",
+			options: {
+				message: "<%=format.money(input)%>",
+				title: "causality: <%=task.name%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "pushover",
+			block: "pushover",
+			options: {
+				message: "dell monitor price: <%=format.money(input)%>",
+				title: "causality: <%=task.name%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		}
+	]
+}

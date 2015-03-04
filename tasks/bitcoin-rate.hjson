@@ -1,0 +1,85 @@
+{
+	name: "bitcoin rate",
+	interval: "every 10 mins",
+	steps: [
+		{
+			id: "price",
+			block: "bitcoin-rate",
+			options: {
+				market: "bitcoin_de"
+			},
+			flow: {
+				anyway: [
+					"threshold"
+				],
+				if: [],
+				else: []
+			},
+			data: {
+				prev_price: 251.31
+			}
+		},
+		{
+			id: "threshold",
+			block: "threshold",
+			options: {
+				value: 250,
+				comparison: ">="
+			},
+			flow: {
+				if: [
+					"desktop-notification",
+					"email",
+					"pushover"
+				],
+				else: [],
+				anyway: []
+			},
+			data: {
+				triggered: true
+			}
+		},
+		{
+			id: "email",
+			block: "email-notification",
+			options: {
+				title: "causality: <%=task.name%>",
+				message: "<%=prev_step.block%>: <%=input%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "desktop-notification",
+			block: "desktop-notification",
+			options: {
+				message: "<%=format.money(input)%>",
+				title: "causality: <%=task.name%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "pushover",
+			block: "pushover",
+			options: {
+				message: "bitcoin rate: <%=format.money(input)%>",
+				title: "causality: <%=task.name%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		}
+	]
+}

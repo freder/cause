@@ -1,0 +1,46 @@
+{
+	name: "job tweets",
+	interval: false,
+	steps: [
+		{
+			id: "tweet",
+			block: "new-tweet",
+			options: {
+				endpoint: "user",
+				keywords: [
+					{
+						type: "regex",
+						value: "hir(e|ing)",
+						flags: "i"
+					},
+					{
+						type: "string",
+						value: "job"
+					}
+				]
+			},
+			flow: {
+				if: [
+					"email"
+				],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		},
+		{
+			id: "email",
+			block: "email-notification",
+			options: {
+				title: "new job tweet",
+				message: "<b><%=input.user.screen_name%>:</b><br><%=input.text%>"
+			},
+			flow: {
+				if: [],
+				else: [],
+				anyway: []
+			},
+			data: {}
+		}
+	]
+}
