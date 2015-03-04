@@ -1,6 +1,5 @@
 var path = require('path');
 var _ = require('lodash');
-var cheerio = require('cheerio');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
