@@ -1,6 +1,4 @@
 var path = require('path');
-var chalk = require('chalk');
-var winston = require('winston');
 var _ = require('lodash');
 var request = require('request');
 var FeedParser = require('feedparser');
