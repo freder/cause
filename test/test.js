@@ -99,4 +99,34 @@ describe('lib/', function() {
 		});
 	});
 
+
+
+	describe('helper.js', function() {
+		var glob = require('glob');
+		var hjson = require('hjson');
+		var config = require('../config.js');
+		var helper = require('../lib/helper.js');
+
+		describe(f('#get_filename()'), function() {
+			it('should handle filenames correctly', function() {
+				var file;
+
+				file = '../asdf/asdfadf/filename.ext';
+				assert.equal(helper.get_filename(file), 'filename');
+				
+				file = 'filename.ext';
+				assert.equal(helper.get_filename(file), 'filename');
+				
+				file = 'filename.bla.ext';
+				assert.equal(helper.get_filename(file), 'filename.bla');
+				
+				file = '.ext';
+				assert.equal(helper.get_filename(file), '');
+
+				file = '../.ext';
+				assert.equal(helper.get_filename(file), '');
+			});
+		});
+	});
+
 });

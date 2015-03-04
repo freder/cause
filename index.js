@@ -1,5 +1,9 @@
+var fs = require('fs');
+var glob = require('glob');
+var hjson = require('hjson');
 var path = require('path');
 var chalk = require('chalk');
+var winston = require('winston');
 
 global.paths = {
 	root: __dirname,
@@ -10,6 +14,7 @@ global.paths = {
 require( path.join(global.paths.lib, 'log.js') ).init();
 
 var db = require( path.join(global.paths.root, 'db.js') );
+var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
 server.start();
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -21,8 +26,9 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
-	- store tasks separately?
-		- as hjson maybe?
+	- store tasks separately
+		- get rid of db.js
+		- how to save?
 	- validation
 	- different colors for different tasks
 		- white, grey, black, blue, cyan, green, magenta, red, yellow
@@ -30,10 +36,12 @@ TODO:
 	- basic documentation
 	- publish
 		- blog post
-	- write an example that uses node-red nodes
 
 # 2.0
 	- web frontend
+
+# NAH, MAYBE LATER
+	- write an example that uses node-red nodes
 */
 
 
@@ -71,36 +79,18 @@ process.on('SIGINT', function() {
 });
 
 
-// var testtasks = [{
-// 	"name": "counter",
-// 	"interval": 'every 2 seconds',
-// 	"steps": [
-// 		{
-// 			"id": "tick",
-// 			"block": "tick",
-// 			"flow": {
-// 				"if": ["digest"]
-// 			},
-// 		},
+var task_path = path.join(global.paths.root, config.paths.tasks);
+winston.info('loading tasks from '+chalk.cyan(task_path));
+var tasks;
+glob(path.join(task_path, '*.hjson'), function(err, files) {
+	tasks = files
+		.map(function(file) {
+			var data = fs.readFileSync(file).toString();
+			var task = hjson.parse(data);
+			task._file = file;
+			return task;
+		})
+		.map(tasklib.load_task);
 
-// 		{
-// 			"id": "digest",
-// 			"block": "digest",
-// 			"flow": {
-// 				"if": ["console"]
-// 			},
-// 		},
-
-// 		{
-// 			"id": "console",
-// 			"block": "log-console",
-// 			"options": {
-// 				"message": "<%=input%>"
-// 			}
-// 		},
-// 	]
-// }];
-
-// var tasks = tasklib.load_tasks(testtasks);
-var tasks = /*global.tasks =*/ tasklib.load_tasks(db.object.tasks);
-tasklib.run_all(tasks);
+	tasklib.run_all(tasks);
+});
