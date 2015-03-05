@@ -97,6 +97,21 @@ describe('lib/', function() {
 				assert(flow['if'] !== undefined);
 			});
 		});
+
+		describe(f('#normalize_step_data()'), function() {
+			it('should make sure everything is sane', function() {
+				var data;
+				var step = {
+					data: { test: [1, 2, 3] }
+				};
+				var defaults = {
+					test: []
+				};
+
+				data = tasklib.normalize_step_data(step, defaults);
+				assert(data.test.length > 0);
+			});
+		});
 	});
 
 	// ————————————————————
