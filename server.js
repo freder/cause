@@ -5,6 +5,7 @@ var express = require('express');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function start() {
@@ -30,8 +31,8 @@ function start() {
 	app.post('/run/:taskname', function(req, res) {
 		var ok = true;
 		var task = helper.get_by_name(global.tasks, req.params.taskname);
-		if (!task) ok = false; 
-		else task._run();
+		if (!task) ok = false;
+		else tasklib.run_task(task);
 		res.json({ ok: ok });
 	});
 }
