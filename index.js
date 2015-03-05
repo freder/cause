@@ -69,8 +69,6 @@ function exit(exit_code) {
 
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
-	// email.send('causality: '+err.name, err.stack);
-
 	exit(1);
 });
 

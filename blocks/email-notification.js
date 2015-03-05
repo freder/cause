@@ -15,7 +15,7 @@ function fn(task, step, input, prev_step) {
 
 	email.send({
 		subject: title,
-		content: message
+		html: message
 	});
 
 	var output = input;
