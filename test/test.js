@@ -98,7 +98,7 @@ describe('lib/', function() {
 			});
 		});
 
-		describe(f('#normalize_step_data()'), function() {
+		describe(f('#normalize()'), function() {
 			it('should make sure everything is sane', function() {
 				var data;
 				var step = {
@@ -108,7 +108,7 @@ describe('lib/', function() {
 					test: []
 				};
 
-				data = tasklib.normalize_step_data(step, defaults);
+				data = tasklib.normalize(step.data, defaults);
 				assert(data.test.length > 0);
 			});
 		});

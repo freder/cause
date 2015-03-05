@@ -59,9 +59,11 @@ function fn(task, step, input, prev_step) {
 
 module.exports = {
 	fn: fn,
-	defaults: {},
-	data_defaults: {
-		last_pubdate: null,
-		seen_guids: []
+	defaults: {
+		options: {},
+		data: {
+			last_pubdate: null,
+			seen_guids: []
+		}
 	}
 };

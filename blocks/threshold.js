@@ -34,10 +34,12 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		// value: 0,
-		// comparison: '=='
+		options: {
+			// value: 0,
+			// comparison: '=='
+		},
+		data: {
+			triggered: false
+		}
 	},
-	data_defaults: {
-		triggered: false
-	}
 };

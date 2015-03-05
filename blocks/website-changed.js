@@ -46,9 +46,11 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		selector: 'body'
+		options: {
+			selector: 'body'
+		},
+		data: {
+			prev_hash: ''
+		}
 	},
-	data_defaults: {
-		prev_hash: ''
-	}
 };

@@ -42,9 +42,11 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		market: 'bitcoin_de'
+		options: {
+			market: 'bitcoin_de'
+		},
+		data: {
+			prev_price: 0
+		}
 	},
-	data_defaults: {
-		prev_price: 0
-	}
 };

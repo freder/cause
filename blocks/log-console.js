@@ -32,8 +32,10 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		title: '<%=step.name%>',
-		message: '<%=input%>'
-	},
-	data_defaults: {}
+		options: {
+			title: '<%=step.name%>',
+			message: '<%=input%>'
+		},
+		data: {}
+	}
 };

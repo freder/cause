@@ -71,9 +71,11 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		currency: 'EUR'
-	},
-	data_defaults: {
-		prev_price: 0
+		options: {
+			currency: 'EUR'
+		},
+		data: {
+			prev_price: 0
+		}
 	}
 };

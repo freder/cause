@@ -18,6 +18,8 @@ var fn = (function() {
 
 module.exports = {
 	fn: fn,
-	defaults: {},
-	data_defaults: {}
+	defaults: {
+		options: {},
+		data: {}
+	}
 };

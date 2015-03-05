@@ -27,9 +27,11 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		max: 5
+		options: {
+			max: 5			
+		},
+		data: {
+			collected: []
+		}		
 	},
-	data_defaults: {
-		collected: []
-	}
 };

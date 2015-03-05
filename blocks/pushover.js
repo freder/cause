@@ -43,8 +43,10 @@ function fn(task, step, input, prev_step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		title: 'causality: <%=task.name%>',
-		message: '<%=prev_step.block>: <%=input%>'
-	},
-	data_defaults: {}
+		options: {
+			title: 'causality: <%=task.name%>',
+			message: '<%=prev_step.block>: <%=input%>'
+		},
+		data: {}
+	}
 };

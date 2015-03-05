@@ -74,7 +74,9 @@ var fn = (function(task, step) {
 module.exports = {
 	fn: fn,
 	defaults: {
-		endpoint: 'user'
-	},
-	data_defaults: {}
+		options: {
+			endpoint: 'user'
+		},
+		data: {}
+	}
 };
