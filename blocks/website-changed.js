@@ -8,6 +8,13 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
+// TODO: xpath is more powerful
+	// https://www.npmjs.com/package/xpath
+	// https://www.npmjs.com/package/scrapejs
+// TODO: and jquery syntax/functions more intuitive
+	// eval('$(#headline).parent().next("table")')
+
+
 function fn(task, step, input, prev_step) {
 	var req_options = {
 		url: step.options.url

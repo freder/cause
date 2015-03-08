@@ -45,7 +45,7 @@ var fn = (function(task, step) {
 			var text = tweet.text.toLowerCase();
 
 			var keywords = step.options.keywords;
-			var matches = keywords
+			var matches = keywords // TODO: remove @mentions first
 				.filter(function(kw) {
 					if (kw.type == 'string') {
 						return (text.indexOf(kw.value) > -1);
