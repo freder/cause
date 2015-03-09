@@ -8,6 +8,7 @@ var path = require('path');
 var R = require('ramda');
 var _ = require('lodash');
 
+var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
@@ -262,7 +263,9 @@ function fn(task, step, input, prev_step) {
 
 				email_content += txt;
 			});
+			var to = (step.options.email.to) ? step.options.email.to : config.email.to;
 			email.send({
+				to: to,
 				subject: sf('jaap.nl: {0} new houses', items.length),
 				html: email_content
 			});
