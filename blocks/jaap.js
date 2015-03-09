@@ -132,6 +132,12 @@ function get_items_from_page(body, kill_cb, step) {
 
 		if (!$this.attr('id') || $this.hasClass('.bottom-navigation')) return;
 
+		// images
+		var images = [];
+		$this.find('.property-photos img').each(function() {
+			images.push( ($this).attr('src') );
+		});
+
 		var $features = $this.find('.property-features .property-feature');
 		var info = _.compact([
 			$features.eq(0).text(),
@@ -140,10 +146,10 @@ function get_items_from_page(body, kill_cb, step) {
 		]).join(', ').replace('ᵐ', 'm').replace(/ +/g, ' ');
 		info = parse_info(info);
 
-		// TODO: include images
 		var item = {
 			id: $this.attr('id').split('_')[2],
 			street: $this.find('.property-address-street').text(),
+			images: images,
 			type: info.type,
 			rooms: info.rooms,
 			area: info.area,
@@ -239,6 +245,10 @@ function fn(task, step, input, prev_step) {
 
 				var street_link = sf('<a href="{0}">{1}</a>', item.maps_url, item.street);
 				txt += sf('{0}<br>', street_link);
+
+				item.images.forEach(function(img) {
+					txt += sf('<img src="{0}" style="display:inline-block;" />', img);
+				});
 
 				txt += sf('area: {0}<br>', item.area);
 				txt += sf('price: {0} EUR<br>', item.price);
