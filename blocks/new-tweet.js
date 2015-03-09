@@ -42,10 +42,12 @@ var fn = (function(task, step) {
 		var stream = client.stream(endpoint, parameters);
 
 		stream.on('tweet', function(tweet) {
+			// clean up tweet text a bit for further processing
 			var text = tweet.text.toLowerCase();
+			text = text.replace(/(@\w+)/ig); // remove @mentions
 
 			var keywords = step.options.keywords;
-			var matches = keywords // TODO: remove @mentions first
+			var matches = keywords
 				.filter(function(kw) {
 					if (kw.type == 'string') {
 						return (text.indexOf(kw.value) > -1);
@@ -58,9 +60,8 @@ var fn = (function(task, step) {
 				});
 
 			if (matches.length > 0) {
-				text = chalk.magenta(text);
 				console.log('@'+tweet.user.screen_name);
-				console.log(text);
+				console.log( chalk.magenta(tweet.text) );
 
 				var output = tweet;
 				var flow_decision = tasklib.flow_decision_defaults;
