@@ -6,6 +6,7 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
+// TODO: optional setting `flush_after`: "12 hours"
 function fn(task, step, input, prev_step) {
 	if (_.isArray(input)) {
 		step.data.collected = step.data.collected.concat(input);

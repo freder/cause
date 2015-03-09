@@ -20,13 +20,10 @@ function fn(task, step, input, prev_step) {
 		flow_decision['if'] = false;
 		flow_decision['else'] = false;
 	}
-
 	tasklib.invoke_children(step, task, output, flow_decision);
 
 	// mark as triggered, or not
 	step.data.triggered = check;
-
-	// TODO: save automatically from where this function is called?
 	tasklib.save_task(task);
 }
 

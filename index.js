@@ -24,6 +24,7 @@ TODO:
 		`npm version major|minor|patch [-m "commit message"]`
 
 # 1.0
+	- core functionality into ./lib
 	- validation
 		- every block should specify what its input and output is
 			- this also helps documenting everything
