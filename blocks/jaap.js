@@ -59,6 +59,33 @@ function make_googlemaps_url(street) {
 }
 
 
+function parse_info(info) {
+	var items = info.split(',');
+
+	var type = '';
+	var rooms = '';
+	var area = '';
+
+	items.forEach(function(item) {
+		item = item.trim();
+
+		if (item.indexOf('m²') > -1) {
+			area = item;
+		} else if (/^\d+ kamer/.test(item)) {
+			rooms = item.split(' ')[0];
+		} else {
+			type = item;
+		}
+	});
+
+	return {
+		type: type,
+		rooms: rooms,
+		area: area
+	};
+}
+
+
 function do_request(opts, cb) {
 	request(opts, function(err, response, body) {
 		cb(err, body);
@@ -111,13 +138,15 @@ function get_items_from_page(body, kill_cb, step) {
 			$features.eq(1).text(),
 			$features.eq(2).text()
 		]).join(', ').replace('ᵐ', 'm').replace(/ +/g, ' ');
+		info = parse_info(info);
 
 		// TODO: include images
-		// TODO: normalize item structure, so that they are the same for jaap and duinzigt
 		var item = {
 			id: $this.attr('id').split('_')[2],
 			street: $this.find('.property-address-street').text(),
-			info: info,
+			type: info.type,
+			rooms: info.rooms,
+			area: info.area,
 			price: $this.find('.property-price').text().replace('€', '').trim()
 		};
 
@@ -213,7 +242,9 @@ function fn(task, step, input, prev_step) {
 
 				txt += sf('area: {0}<br>', item.area);
 				txt += sf('price: {0} EUR<br>', item.price);
-				txt += sf('info: {0}<br>', item.info);
+				txt += sf('type: {0}<br>', item.type);
+				txt += sf('rooms: {0}<br>', item.rooms);
+				txt += sf('area: {0}<br>', item.area);
 
 				var info_link = sf('<a href="{0}">more info</a>', item.link);
 				txt += sf('{0}<br>', info_link);
@@ -247,4 +278,5 @@ module.exports = {
 			seen_ids: []
 		}
 	},
+	parse_info: parse_info
 };
