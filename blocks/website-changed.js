@@ -8,11 +8,20 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-// TODO: xpath is more powerful
-	// https://www.npmjs.com/package/xpath
-	// https://www.npmjs.com/package/scrapejs
-// TODO: and jquery syntax/functions more intuitive
-	// eval('$(#headline).parent().next("table")')
+function query(method, selector, html) {
+	method = method || 'css';
+	var $ = cheerio.load(html);
+	var result;
+	switch (method) {
+		case 'css':
+			result = $(selector);
+			break;
+		case 'jquery':
+			result = eval(selector);
+			break;
+	}
+	return result;
+}
 
 
 function fn(task, step, input, prev_step) {
@@ -24,8 +33,7 @@ function fn(task, step, input, prev_step) {
 			return helper.handle_error(err);
 		}
 
-		var $ = cheerio.load(body);
-		var selection = $(step.options.selector);
+		var selection = query(step.options.method, step.options.selector, body);
 		if (selection.length === 0) {
 			throw 'selection is empty';
 		} else if (selection.length > 1) {
@@ -54,10 +62,12 @@ module.exports = {
 	fn: fn,
 	defaults: {
 		options: {
-			selector: 'body'
+			selector: 'body',
+			method: 'css'
 		},
 		data: {
 			prev_hash: ''
 		}
 	},
+	query: query
 };

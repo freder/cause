@@ -144,6 +144,7 @@ describe('lib/', function() {
 		});
 	});
 
+	// ————————————————————
 
 	describe('jaap.js', function() {
 		var jaap = require('../blocks/jaap.js');
@@ -184,6 +185,33 @@ describe('lib/', function() {
 				info = '99 kamers';
 				data = jaap.parse_info(info);
 				assert(data.type == '' && data.rooms == '99' && data.area == '');
+			});
+		});
+	});
+
+	// ————————————————————
+
+	describe('scraping', function() {
+		var cheerio = require('cheerio');
+		var website_changed = require('../blocks/website-changed.js');
+
+		describe(f('#query()'), function() {
+			it('should work with css and jquery', function() {
+				var html = ' \
+					<div id="container"> \
+						<div class="div">div</div> \
+						<span>span</span> \
+					</div>';
+				var $ = cheerio.load(html);
+				var query, result;
+
+				query = '$("#container div").first()';
+				result = website_changed.query('jquery', query, html);
+				assert(result.text().trim() == 'div');
+
+				query = '#container span';
+				result = website_changed.query('css', query, html);
+				assert(result.text().trim() == 'span');
 			});
 		});
 	});
