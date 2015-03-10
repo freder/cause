@@ -268,7 +268,13 @@ function fn(task, step, input, prev_step) {
 
 				email_content += txt;
 			});
-			var to = (step.options.email.to) ? step.options.email.to : config.email.to;
+
+			// override email defaults
+			var to = config.email.to;
+			if (step.options.email && step.options.email.to) {
+				to = step.options.email.to;
+			}
+
 			email.send({
 				to: to,
 				subject: sf('jaap.nl: {0} new houses', items.length),
