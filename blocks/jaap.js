@@ -260,7 +260,6 @@ function fn(task, step, input, prev_step) {
 				txt += sf('price: {0} EUR<br>', item.price);
 				txt += sf('type: {0}<br>', item.type);
 				txt += sf('rooms: {0}<br>', item.rooms);
-				txt += sf('area: {0}<br>', item.area);
 
 				var info_link = sf('<a href="{0}">more info</a>', item.link);
 				txt += sf('{0}<br>', info_link);
