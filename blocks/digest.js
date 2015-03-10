@@ -48,7 +48,7 @@ function fn(task, step, input, prev_step) {
 		}
 	}
 
-	// TODO: maybe blocks like this should provide their own `setup()` function
+	// TODO: maybe blocks like this should provide their own `init()` function
 	// for all the things that go further than normalization ...
 	// on first run:
 	if (step.options.or_after && !step.data.next_flush) {

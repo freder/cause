@@ -47,7 +47,6 @@ TODO:
 process.stdin.on('data', function(data) {
 	var command = data.toString().trim().toLowerCase();
 	switch (command) {
-
 		case 'list':
 			helper.list_tasks();
 			break;
