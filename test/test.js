@@ -33,7 +33,7 @@ describe('lib/', function() {
 			});
 		});
 
-		describe(f('#load_task()'), function() {
+		describe(f('#prepare_task()'), function() {
 			it("should not create a timer for tasks that don't specify an inteval", function() {
 				var task_data, task;
 
@@ -42,24 +42,24 @@ describe('lib/', function() {
 					steps: [],
 					interval: null
 				};
-				task = tasklib.load_task(task_data);
+				task = tasklib.prepare_task(task_data);
 				assert(task._timer === undefined);
 
 				task_data.interval = false;
-				task = tasklib.load_task(task_data);
+				task = tasklib.prepare_task(task_data);
 				assert(task._timer === undefined);
 
 				task_data.interval = 'every 5 seconds';
-				task = tasklib.load_task(task_data);
+				task = tasklib.prepare_task(task_data);
 				assert(task._timer);
 
 				assert.throws(function() {
 					task_data.interval = 'asdf';
-					task = tasklib.load_task(task_data);					
+					task = tasklib.prepare_task(task_data);					
 				});
 
 				delete task_data.interval;
-				task = tasklib.load_task(task_data);
+				task = tasklib.prepare_task(task_data);
 				assert(task._timer === undefined);
 			});
 		});

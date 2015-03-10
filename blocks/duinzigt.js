@@ -97,6 +97,8 @@ function fn(task, step, input, prev_step) {
 			var line = sf('{0} {1} new houses', chalk.bgBlue('duinzigt'), matches.length);
 			winston.info(line);
 
+			// TODO: use same email template as jaap
+			// TODO: get images
 			var email_content = '';
 			matches.forEach(function(match) {
 				var txt = '<br><hr>';

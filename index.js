@@ -1,4 +1,3 @@
-var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
@@ -84,13 +83,8 @@ winston.info('loading tasks from '+chalk.cyan(tasks_path));
 var tasks;
 glob(path.join(tasks_path, '*.json'), function(err, files) {
 	tasks = global.tasks = files
-		.map(function(file) {
-			var data = fs.readFileSync(file).toString();
-			var task = JSON.parse(data);
-			task._file = file;
-			return task;
-		})
-		.map(tasklib.load_task);
+		.map(tasklib.load_task_from_file)
+		.map(tasklib.prepare_task);
 
-	tasklib.run_all(tasks);
+	tasks.forEach(tasklib.run_task);
 });
