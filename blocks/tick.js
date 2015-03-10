@@ -3,23 +3,24 @@ var path = require('path');
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-var fn = (function() {
-	var counter = 0;
+function fn(task, step, input, prev_step) {
+	console.log(step.data.counter);
+	
+	var output = step.data.counter;
+	var flow_decision = tasklib.flow_decision_defaults;
+	tasklib.invoke_children(step, task, output, flow_decision);
 
-	return function(task, step,input, prev_step) {
-		var flow_decision = tasklib.flow_decision_defaults;
-		var output = counter;
-		console.log(output);
-		tasklib.invoke_children(step, task, output, flow_decision);
-		counter++;
-	};
-})();
+	step.data.counter++;
+	tasklib.save_task(task);
+}
 
 
 module.exports = {
 	fn: fn,
 	defaults: {
 		options: {},
-		data: {}
+		data: {
+			counter: 0
+		}
 	}
 };

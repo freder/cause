@@ -1,6 +1,7 @@
 var assert = require('assert');
 var path = require('path');
 var chalk = require('chalk');
+var R = require('ramda');
 var _ = require('lodash');
 
 var root = path.resolve('./');
@@ -10,7 +11,7 @@ global.paths = {
 	lib: path.join(root, 'lib'),
 	blocks: path.join(root, 'blocks')
 };
-
+var tasklib = require('../lib/tasklib.js');
 
 function f(s) {
 	return chalk.bgBlue(s);
@@ -20,8 +21,6 @@ function f(s) {
 describe('lib/', function() {
 
 	describe('tasklib.js', function() {
-		var tasklib = require('../lib/tasklib.js');
-
 		describe(f('#make_savable()'), function() {
 			it("should remove everything prefixed with '_'", function() {
 				var task = {
@@ -146,11 +145,11 @@ describe('lib/', function() {
 
 	// ————————————————————
 
-	describe('jaap.js', function() {
+	describe('blocks/jaap.js', function() {
 		var jaap = require('../blocks/jaap.js');
 
 		describe(f('#parse_info()'), function() {
-			it('should work with inconsistens data', function() {
+			it('should work with inconsistent data', function() {
 				var info;
 				var data;
 
@@ -192,7 +191,7 @@ describe('lib/', function() {
 
 	// ————————————————————
 
-	describe('scraping', function() {
+	describe('blocks/website-changed.js', function() {
 		var cheerio = require('cheerio');
 		var website_changed = require('../blocks/website-changed.js');
 
@@ -215,6 +214,42 @@ describe('lib/', function() {
 				assert(result.text().trim() == 'span');
 			});
 		});
+	});
+
+	// ————————————————————
+
+	describe('blocks/digest.js', function() {
+		var digest = require('../blocks/digest.js');
+
+		// describe(f('#()'), function() {
+		// 	it('should', function() {
+		// 		var tick = tasklib.load_block('tick');
+		// 		var run = tasklib.create_step(tick, {}, {});
+		// 		run('input', {});
+		// 		run('input', {});
+		// 		run('input', {});
+		// 	});
+		// });
+
+		describe(f('#parse_time()'), function() {
+			it('should parse time', function() {
+				var parsed;
+				parsed = digest.parse_time('12 minutes');
+				assert(parsed.minutes === 12);
+
+				parsed = digest.parse_time('12 minutes ago');
+				assert(_.isEmpty(parsed));
+			});
+		});
+
+		// describe(f('#()'), function() {
+		// 	it('should', function() {
+		// 		var task_path = path.join(global.paths.root, 'tasks/test/digest-test-2.json');
+		// 		var task = tasklib.load_task_from_file(task_path);
+		// 		task = tasklib.prepare_task(task);
+		// 		tasklib.run_task(task);
+		// 	});
+		// });
 	});
 
 });
