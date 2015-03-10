@@ -156,35 +156,36 @@ describe('lib/', function() {
 
 				info = '';
 				data = jaap.parse_info(info);
-				assert(data.type == '' && data.rooms == '' && data.area == '');
+				assert(data.type == '' && data.rooms == undefined && data.area == '');
 
 				info = 'Appartement, 60m²';
 				data = jaap.parse_info(info);
-				assert(data.type == 'Appartement' && data.rooms == '' && data.area == '60m²');
+				assert(data.type == 'Appartement' && data.rooms == undefined && data.area == '60m²');
 
 				info = 'Appartement, 1 kamer';
 				data = jaap.parse_info(info);
-				assert(data.type == 'Appartement' && data.rooms == '1' && data.area == '');
+				assert(data.type == 'Appartement' && data.rooms == 1 && data.area == '');
 
 				info = '2 kamers, 60m²';
 				data = jaap.parse_info(info);
-				assert(data.type == '' && data.rooms == '2' && data.area == '60m²');
+				assert(data.type == '' && data.rooms == 2 && data.area == '60m²');
 
 				info = '60m²';
 				data = jaap.parse_info(info);
-				assert(data.type == '' && data.rooms == '' && data.area == '60m²');
+				assert(data.type == '' && data.rooms == undefined && data.area == '60m²');
 
 				info = 'Appartement, 1 kamer, 82m²';
 				data = jaap.parse_info(info);
-				assert(data.type == 'Appartement' && data.rooms == '1' && data.area == '82m²');
+				assert(data.type == 'Appartement' && data.rooms == 1 && data.area == '82m²');
 
 				info = 'Appartement';
 				data = jaap.parse_info(info);
-				assert(data.type == 'Appartement' && data.rooms == '' && data.area == '');
+				assert(data.type == 'Appartement' && data.rooms == undefined && data.area == '');
 
 				info = '99 kamers';
 				data = jaap.parse_info(info);
-				assert(data.type == '' && data.rooms == '99' && data.area == '');
+				assert(data.type == '' && data.rooms == 99 && data.area == '');
+				assert(typeof data.rooms == 'number');
 			});
 		});
 	});

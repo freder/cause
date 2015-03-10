@@ -64,7 +64,7 @@ function parse_info(info) {
 	var items = info.split(',');
 
 	var type = '';
-	var rooms = '';
+	var rooms = undefined;
 	var area = '';
 
 	items.forEach(function(item) {
@@ -74,6 +74,7 @@ function parse_info(info) {
 			area = item;
 		} else if (/^\d+ kamer/.test(item)) {
 			rooms = item.split(' ')[0];
+			rooms = parseInt(rooms);
 		} else {
 			type = item;
 		}
@@ -232,7 +233,11 @@ function fn(task, step, input, prev_step) {
 		// some additional filtering first:
 		// we want more than one room
 		items = items.filter(function(item) {
-			return (item.info.indexOf('1 kamer') < 0);
+			if (!item.rooms || item.rooms > 1) {
+				return true;
+			} else {
+				return false;
+			}
 		});
 
 		var new_ones = (items.length > 0);
