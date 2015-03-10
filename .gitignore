@@ -7,3 +7,4 @@ tasks/*.json
 causality.sublime-project
 causality.sublime-workspace
 tasks/test
+graphviz
