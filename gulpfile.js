@@ -18,6 +18,10 @@ global.paths = {
 var helper = require('./lib/helper.js');
 var tasklib = require('./lib/tasklib.js');
 gulp.task('graphviz', function() {
+	function cleanup(s) {
+		return s.replace(/ +/g, '-').replace(/\-/g, '_');
+	}
+
 	glob(path.join('./tasks/', '*.json'), function(err, files) {
 		files.forEach(function(filepath) {
 			var task = helper.load_json(filepath);
@@ -49,14 +53,19 @@ node [\n\
 	color = none\n\
 ];\n\
 \n\
+rankdir = TB;\n\
 overlap = false;\n\
 #splines = line;\n\
 splines = spline;\n\n';
+			
+			// task info
+			// http://www.graphviz.org/doc/info/attrs.html#k%3aescString
+			content += sf('node [labeljust = "l" label = "{name}\\l{interval}\\l" shape = box fillcolor = none color = "gray"]; task_info;\n', task);
 
 			task.steps.forEach(function(step) {
 				// node
-				var node_name = step.id.replace(/\-/, '_');
-				step_definitions += sf('node [label = "{0}" shape = box fillcolor = "yellow"]; {0};\n', node_name);
+				var node_name = cleanup(step.id);
+				step_definitions += sf('node [label = "{0}\\n({1}.js)" shape = box color = none fillcolor = "yellow"]; {2};\n', step.id, step.block, node_name);
 				
 				// edges
 				var flow = step.flow;
@@ -66,11 +75,11 @@ splines = spline;\n\n';
 				['if', 'else', 'anyway'].forEach(function(type) {
 					if (flow[type].length > 0) {
 						var flow_node = sf('{0}_{1}', node_name, type);
-						step_definitions += sf('node [label = "{0}" shape = diamond fillcolor = "gray"]; {1};\n', type, flow_node);
+						step_definitions += sf('node [label = "{0}" shape = diamond color = none fillcolor = "gray"]; {1};\n', type, flow_node);
 						connections += sf('{0} -> {1} [ minlen = 1.0 ];\n', node_name, flow_node);
 					}
 					flow[type].forEach(function(next) {
-						connections += sf('{0} -> {1};\n', flow_node, next.replace(/\-/, '_'));
+						connections += sf('{0} -> {1};\n', flow_node, cleanup(next));
 					});
 				});
 			});
