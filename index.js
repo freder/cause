@@ -13,7 +13,6 @@ require( path.join(global.paths.lib, 'log.js') ).init();
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
-server.start();
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
@@ -80,11 +79,12 @@ process.on('SIGINT', function() {
 
 var tasks_path = path.join(global.paths.root, config.paths.tasks);
 winston.info('loading tasks from '+chalk.cyan(tasks_path));
-var tasks;
 glob(path.join(tasks_path, '*.json'), function(err, files) {
-	tasks = global.tasks = files
+	var tasks = global.tasks = files
 		.map(tasklib.load_task_from_file)
 		.map(tasklib.prepare_task);
 
 	tasks.forEach(tasklib.run_task);
 });
+
+server.start();
