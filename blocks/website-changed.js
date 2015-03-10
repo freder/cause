@@ -1,27 +1,11 @@
 var path = require('path');
 var crypto = require('crypto');
-var cheerio = require('cheerio');
 var winston = require('winston');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-
-
-function query(method, selector, html) {
-	method = method || 'css';
-	var $ = cheerio.load(html);
-	var result;
-	switch (method) {
-		case 'css':
-			result = $(selector);
-			break;
-		case 'jquery':
-			result = eval(selector);
-			break;
-	}
-	return result;
-}
+var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 
 function fn(task, step, input, prev_step) {
@@ -33,13 +17,13 @@ function fn(task, step, input, prev_step) {
 			return helper.handle_error(err);
 		}
 
-		var selection = query(step.options.method, step.options.selector, body);
-		if (selection.length === 0) {
+		var $selection = scraping.query(step.options.method, step.options.selector, body);
+		if ($selection.length === 0) {
 			throw 'selection is empty';
-		} else if (selection.length > 1) {
+		} else if ($selection.length > 1) {
 			winston.warn('selection contains more than one element — only using first one.');
 		}
-		var html = selection.first().html();
+		var html = $selection.first().html();
 
 		var hash = crypto
 			.createHash('md5')
@@ -68,6 +52,5 @@ module.exports = {
 		data: {
 			prev_hash: ''
 		}
-	},
-	query: query
+	}
 };

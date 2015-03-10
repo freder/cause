@@ -14,10 +14,7 @@ function fn(task, step, input, prev_step) {
 		json: true
 	};
 	request(req_options, function(err, response, body) {
-		if (err) {
-			helper.handle_error(err);
-			return;
-		}
+		if (err) { return helper.handle_error(err); }
 
 		var market = body[step.options.market];
 		var price = market.rates.last;

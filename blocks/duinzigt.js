@@ -8,13 +8,13 @@ var FeedParser = require('feedparser');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
 
-
-function area_filter(white_list) {
+function neighborhood_filter(white_list) {
 	return function(item) {
-		return R.contains(item.area.toLowerCase(), white_list);		
+		return R.contains(item.neighborhood.toLowerCase(), white_list);		
 	}
 }
 
@@ -60,7 +60,7 @@ function fn(task, step, input, prev_step) {
 		var article;
 		while (article = this.read()) {
 			if (step.data.seen_guids.indexOf(article.guid) === -1) {
-				var data = R.pick(['rss:street_name', 'rss:price', 'rss:area', 'rss:city', 'rss:rooms', 'rss:link'], article);
+				var data = R.pick(['rss:street_name', 'rss:price', 'rss:neighborhood', 'rss:city', 'rss:rooms', 'rss:link'], article);
 				for (key in data) {
 					var new_key = key.replace('rss:', '');
 					var value = data[key]['#'];
@@ -74,7 +74,7 @@ function fn(task, step, input, prev_step) {
 	});
 
 	feedparser.on('end', function() {
-		var acceptable_areas = [
+		var acceptable_neighborhoods = [
 			'archipel',
 			'centrum',
 			'regentessekwartier',
@@ -86,7 +86,7 @@ function fn(task, step, input, prev_step) {
 		];
 		var matcher = R.pipe(
 			R.filter(city_filter('den haag')),
-			R.filter(area_filter(acceptable_areas)),
+			R.filter(neighborhood_filter(acceptable_neighborhoods)),
 			R.filter(price_filter(1000))
 		);
 		var matches = matcher( R.values(new_items) );
@@ -97,26 +97,8 @@ function fn(task, step, input, prev_step) {
 			var line = sf('{0} {1} new houses', chalk.bgBlue('duinzigt'), matches.length);
 			winston.info(line);
 
-			// TODO: use same email template as jaap
 			// TODO: get images
-			var email_content = '';
-			matches.forEach(function(match) {
-				var txt = '<br><hr>';
-
-				var maps_url = sf('http://www.google.com/maps/place/{0},+Den+Haag,+Netherlands/', match.street_name.replace(/ +/g, '+'));
-				var street_link = sf('<a href="{0}">{1}</a>', maps_url, match.street_name);
-				txt += sf('{0}<br>', street_link);
-
-				txt += sf('area: {0}<br>', match.area);
-				txt += sf('price: {0} EUR<br>', match.price);
-				txt += sf('rooms: {0} EUR<br>', match.rooms);
-
-				var info_link = sf('<a href="{0}">more info</a>', match.link);
-				txt += sf('{0}<br>', info_link);
-				txt += '<br>';
-
-				email_content += txt;
-			});
+			var email_content = realestate.email_template(matches);
 			email.send({
 				subject: sf('duinzigt: {0} new houses', matches.length),
 				html: email_content

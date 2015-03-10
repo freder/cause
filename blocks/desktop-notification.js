@@ -1,5 +1,4 @@
 var notifier = require('node-notifier');
-var winston = require('winston');
 var path = require('path');
 var _ = require('lodash');
 

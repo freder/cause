@@ -7,21 +7,6 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-function parse_time(s) {
-	// "12 minutes"
-
-	var parsed = {};
-	var tokens = s.split(' ');
-
-	if (tokens.length > 2) {
-		console.warn("can't recognize format.")
-	} else {
-		parsed[tokens[1]] = parseInt(tokens[0]);
-	}
-	return parsed;
-}
-
-
 function fn(task, step, input, prev_step) {
 	if (!_.isArray(input)) {
 		input = [input];
@@ -32,7 +17,7 @@ function fn(task, step, input, prev_step) {
 		var now = moment();
 		step.data.last_flush = now.format();
 
-		var parsed = parse_time(step.options.or_after);
+		var parsed = helper.parse_time(step.options.or_after);
 		var dur = moment.duration(parsed);
 		step.data.next_flush = now.add(dur).format();
 	}
@@ -84,6 +69,5 @@ module.exports = {
 			last_flush: 0,
 			// next_flush: undefined
 		}		
-	},
-	parse_time: parse_time
+	}
 };

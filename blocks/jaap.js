@@ -11,6 +11,7 @@ var _ = require('lodash');
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
 
@@ -21,7 +22,7 @@ var price_range = sf('{0}-{1}', price_min, price_max);
 var sort = 'sort4'; // new to old
 var page = 1;
 
-var areas = [
+var neighborhoods = [
 		'archipelbuurt', 
 		'centrum', 
 		'regentessekwartier', 
@@ -30,8 +31,8 @@ var areas = [
 		'willemspark', 
 		'transvaalkwartier', 
 		'valkenboskwartier'
-	].map(function(area) {
-		return area
+	].map(function(neighborhood) {
+		return neighborhood
 			.toLowerCase()
 			.replace(/ +/g, '+');
 	});
@@ -39,24 +40,19 @@ var areas = [
 
 function make_url(_data) {
 	var data = {
-		// area: area,
+		// neighborhood: neighborhood,
 		price_range: price_range,
 		sort: sort,
 		page: page
 	};
 	data = _.extend({}, data, _data);
-	var url = sf("http://www.jaap.nl/huurhuizen/zuid+holland/agglomeratie+'s-gravenhage/'s-gravenhage/{area}/{price_range}/{sort}/p{page}", data);
+	var url = sf("http://www.jaap.nl/huurhuizen/zuid+holland/agglomeratie+'s-gravenhage/'s-gravenhage/{neighborhood}/{price_range}/{sort}/p{page}", data);
 	return url;
 }
 
 
 function make_link(id) {
 	return sf('http://www.jaap.nl/te-huur/x/x/x/x/x/{0}/', id);
-}
-
-
-function make_googlemaps_url(street) {
-	return sf('http://www.google.com/maps/place/{0},+Den+Haag,+Netherlands/', street.replace(/ +/g, '+'));
 }
 
 
@@ -96,9 +92,9 @@ function do_request(opts, cb) {
 
 
 function get_page_nums(done) {
-	var funs = areas.map(function(area) {
+	var funs = neighborhoods.map(function(neighborhood) {
 		var opts = {
-			url: make_url({ area: area })
+			url: make_url({ neighborhood: neighborhood })
 		};
 
 		return function(result, cb) {
@@ -108,7 +104,7 @@ function get_page_nums(done) {
 				var $ = cheerio.load(body);
 				var $pageinfo = $('.page-info');
 				var num_pages = $pageinfo.first().text().trim().split(' van ')[1];
-				result[area] = parseInt(num_pages);
+				result[neighborhood] = parseInt(num_pages);
 				
 				cb(null, result);
 			});
@@ -159,14 +155,14 @@ function get_items_from_page(body, kill_cb, step) {
 		};
 
 		item.link = make_link(item.id);
-		item.maps_url = make_googlemaps_url(item.street);
+		item.maps_url = helper.make_googlemaps_url(item.street);
 
 		step.data.temp_seen_ids.push(item.id);
 		if (step.data.seen_ids.indexOf(item.id) < 0) {
 			collected.push(item);
 			// step.data.seen_ids.push(item.id);
 		} /*else {
-			// kill queue for this area after this page
+			// kill queue for this neighborhood after this page
 			kill_cb();
 		}*/
 	});
@@ -176,12 +172,12 @@ function get_items_from_page(body, kill_cb, step) {
 
 
 function scrape(done, step) {
-	get_page_nums(function(area_num) {
-		// for each area
-		var funs = _.keys(area_num).map(function(area) {
-			var num_pages = area_num[area];
+	get_page_nums(function(neighborhood_num) {
+		// for each neighborhood
+		var funs = _.keys(neighborhood_num).map(function(neighborhood) {
+			var num_pages = neighborhood_num[neighborhood];
 
-			return function(result, cb_area) {
+			return function(result, cb_neighborhood) {
 				var kill = false;
 				var kill_cb = function() { kill = true; };
 				var page = 1;
@@ -192,13 +188,13 @@ function scrape(done, step) {
 
 					// for each page
 					function(cb) {
-						var opts = { url: make_url({ area: area, page: page }) };
-						// console.log(area, page);
+						var opts = { url: make_url({ neighborhood: neighborhood, page: page }) };
+						// console.log(neighborhood, page);
 						do_request(opts, function(err, body) {
-							if (err) { cb_area(err); }
+							if (err) { cb_neighborhood(err); }
 							var items = get_items_from_page(body, kill_cb, step);
 							items.forEach(function(item) {
-								item.area = area.replace(/\+/g, ' ');
+								item.neighborhood = neighborhood.replace(/\+/g, ' ');
 							});
 							result = result.concat(items);
 							page++;
@@ -208,7 +204,7 @@ function scrape(done, step) {
 
 					// callback
 					function() {
-						cb_area(null, result);
+						cb_neighborhood(null, result);
 					}
 				);
 			};
@@ -245,31 +241,8 @@ function fn(task, step, input, prev_step) {
 			var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
 			winston.info(line);
 
-			var email_content = '';
-			items.forEach(function(item) {
-				var txt = '<br><hr>';
-
-				var street_link = sf('<a href="{0}">{1}</a>', item.maps_url, item.street);
-				txt += sf('{0}<br>', street_link);
-
-				item.images.forEach(function(img) {
-					txt += sf('<img src="{0}" style="display:inline-block;" />', img);
-				});
-
-				txt += sf('area: {0}<br>', item.area);
-				txt += sf('price: {0} EUR<br>', item.price);
-				txt += sf('type: {0}<br>', item.type);
-				txt += sf('rooms: {0}<br>', item.rooms);
-
-				var info_link = sf('<a href="{0}">more info</a>', item.link);
-				txt += sf('{0}<br>', info_link);
-				txt += '<br>';
-
-				email_content += txt;
-			});
-
-			// override email defaults
-			var to = config.email.to;
+			var email_content = realestate.email_template(items);
+			var to = config.email.to; // override email defaults
 			if (step.options.email && step.options.email.to) {
 				to = step.options.email.to;
 			}

@@ -17,29 +17,15 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
-TODO:
-	- versioning
-		`npm version major|minor|patch [-m "commit message"]`
-
-# 1.0
-	- core functionality into ./lib
-	- validation
+# ROADMAP
+	- 0.6: add, change, remove tasks while tool is running
+	- 0.7: validation
 		- every block should specify what its input and output is
 			- this also helps documenting everything
-	- project logo
-	- basic documentation
-	- publish
+	- 0.8: project logo
+	- 0.9: basic documentation / readme
+	- 1.0: publish
 		- blog post
-
-# 2.0
-	- web frontend
-	- a plugin system for 3rd party blocks
-
-# NAH, MAYBE LATER
-	- history data?
-	- write an example that uses node-red nodes
-	- different colors for different tasks
-		- white, grey, black, blue, cyan, green, magenta, red, yellow
 */
 
 

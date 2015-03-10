@@ -12,6 +12,7 @@ global.paths = {
 	blocks: path.join(root, 'blocks')
 };
 var tasklib = require('../lib/tasklib.js');
+var helper = require('../lib/helper.js');
 
 function f(s) {
 	return chalk.bgBlue(s);
@@ -191,9 +192,9 @@ describe('lib/', function() {
 
 	// ————————————————————
 
-	describe('blocks/website-changed.js', function() {
+	describe('lib/scraping.js', function() {
 		var cheerio = require('cheerio');
-		var website_changed = require('../blocks/website-changed.js');
+		var scraping = require('../lib/scraping.js');
 
 		describe(f('#query()'), function() {
 			it('should work with css and jquery', function() {
@@ -206,11 +207,11 @@ describe('lib/', function() {
 				var query, result;
 
 				query = '$("#container div").first()';
-				result = website_changed.query('jquery', query, html);
+				result = scraping.query('jquery', query, html);
 				assert(result.text().trim() == 'div');
 
 				query = '#container span';
-				result = website_changed.query('css', query, html);
+				result = scraping.query('css', query, html);
 				assert(result.text().trim() == 'span');
 			});
 		});
@@ -234,10 +235,10 @@ describe('lib/', function() {
 		describe(f('#parse_time()'), function() {
 			it('should parse time', function() {
 				var parsed;
-				parsed = digest.parse_time('12 minutes');
+				parsed = helper.parse_time('12 minutes');
 				assert(parsed.minutes === 12);
 
-				parsed = digest.parse_time('12 minutes ago');
+				parsed = helper.parse_time('12 minutes ago');
 				assert(_.isEmpty(parsed));
 			});
 		});
