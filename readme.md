@@ -1,12 +1,11 @@
 # causality
 
-> a web automation suite
+> an automation tool
 
-similar tools:
+## similar tools:
 - [ifttt](https://ifttt.com/)
 - [huginn](https://github.com/cantino/huginn)
 - [node-red](http://nodered.org/)
-- [no-flo](http://noflojs.org/)
 - [workflow](https://workflow.is/)
 
 ---
@@ -33,4 +32,20 @@ then edit `config.js` and fill in the `XXXXXXXXX`s.
 node index.js
 ```
 
-or use [nodemon](http://nodemon.io/), [forever](https://github.com/foreverjs/forever), [pm2](https://github.com/Unitech/pm2), etc.
+if you want to see [debug](https://www.npmjs.com/package/debug) messages:
+
+```shell
+DEBUG=* node index.js
+```
+
+or use [nodemon](http://nodemon.io/), [forever](https://github.com/foreverjs/forever), ...
+
+---
+
+## built-in blocks
+
+---
+
+## examples
+
+![](./task-example.png)
