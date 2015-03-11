@@ -2,6 +2,7 @@ var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
 var winston = require('winston');
+var _ = require('lodash');
 
 global.paths = {
 	root: __dirname,
@@ -18,7 +19,6 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 /*
 # ROADMAP
-	- 0.6: add, change, remove tasks while tool is running
 	- 0.7: validation
 		- every block should specify what its input and output is
 			- this also helps documenting everything
@@ -32,15 +32,41 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 // https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
 process.stdin.on('data', function(data) {
 	var command = data.toString().trim().toLowerCase();
-	switch (command) {
-		case 'list':
-			helper.list_tasks();
-			break;
-		
-		case 'quit':
-		case 'q':
-			exit();
-			break;
+
+	if (command == 'list' || command == 'ls') {
+		helper.list_tasks();
+	}
+
+	if (command == 'add') {
+		var task_data = {
+			name: 'test',
+			interval: false,
+			steps: []
+		};
+		tasklib.add_task(task_data);
+	}
+
+	if (/\w+ \d+/.test(command)) {
+		var splt = command.split(' ');
+		var cmd = splt[0];
+		var index = splt[1];
+		index = parseInt(index);
+
+		if (cmd == 'remove' || cmd == 'rm') {
+			tasklib.remove_task_by_index(index);
+		}
+		if (cmd == 'run') {
+			tasklib.run_task(global.tasks[index]);
+		}
+		if (cmd == 'reload') {
+			// var from_file = false;
+			var from_file = true;
+			tasklib.reload_task_by_index(index, from_file);
+		}
+	}
+	
+	if (command == 'quit' || command == 'q' || command == 'exit') {
+		exit();
 	}
 });
 
