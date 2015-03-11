@@ -1,5 +1,6 @@
 var path = require('path');
 var R = require('ramda');
+var _ = require('lodash');
 var winston = require('winston');
 var request = require('request');
 var chalk = require('chalk');
@@ -60,14 +61,33 @@ function fn(task, step, input, prev_step) {
 		var article;
 		while (article = this.read()) {
 			if (step.data.seen_guids.indexOf(article.guid) === -1) {
-				var data = R.pick(['rss:street_name', 'rss:price', 'rss:area', 'rss:city', 'rss:rooms', 'rss:link'], article);
+				var data = R.pick(['rss:street_name', 'rss:price', 'rss:sub_category', 'rss:area', 'rss:city', 'rss:rooms', 'rss:link'], article);
 				for (key in data) {
 					var new_key = key.replace('rss:', '');
 					var value = data[key]['#'];
 					delete data[key];
+
 					if (new_key == 'area') new_key = 'neighborhood';
+					if (new_key == 'street_name') new_key = 'street';
+					if (new_key == 'sub_category') new_key = 'type';
+
 					data[new_key] = value;
 				}
+
+				data.maps_url = helper.make_googlemaps_url(data.street);
+
+				if (article['rss:images']) {
+					var image_links = article['rss:images']['image_link'];
+					if (image_links) {
+						if (!_.isArray(image_links)) {
+							image_links = [image_links];
+						}
+						data.images = image_links.map(function(img_link) {
+							return img_link['#'];
+						});
+					}
+				}
+
 				new_items[article.guid] = data;
 			}
 			current_guids.push(article.guid);
@@ -75,6 +95,7 @@ function fn(task, step, input, prev_step) {
 	});
 
 	feedparser.on('end', function() {
+		// TODO: expose all criteria as options
 		var acceptable_neighborhoods = [
 			'archipel',
 			'centrum',
@@ -98,7 +119,6 @@ function fn(task, step, input, prev_step) {
 			var line = sf('{0} {1} new houses', chalk.bgBlue('duinzigt'), matches.length);
 			winston.info(line);
 
-			// TODO: get images
 			var email_content = realestate.email_template(matches);
 			email.send({
 				subject: sf('duinzigt: {0} new houses', matches.length),

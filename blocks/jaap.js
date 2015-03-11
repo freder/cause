@@ -22,6 +22,7 @@ var price_range = sf('{0}-{1}', price_min, price_max);
 var sort = 'sort4'; // new to old
 var page = 1;
 
+// TODO: expose all criteria as options
 var neighborhoods = [
 		'archipelbuurt', 
 		'centrum', 
