@@ -60,11 +60,12 @@ function fn(task, step, input, prev_step) {
 		var article;
 		while (article = this.read()) {
 			if (step.data.seen_guids.indexOf(article.guid) === -1) {
-				var data = R.pick(['rss:street_name', 'rss:price', 'rss:neighborhood', 'rss:city', 'rss:rooms', 'rss:link'], article);
+				var data = R.pick(['rss:street_name', 'rss:price', 'rss:area', 'rss:city', 'rss:rooms', 'rss:link'], article);
 				for (key in data) {
 					var new_key = key.replace('rss:', '');
 					var value = data[key]['#'];
 					delete data[key];
+					if (new_key == 'area') new_key = 'neighborhood';
 					data[new_key] = value;
 				}
 				new_items[article.guid] = data;
