@@ -17,13 +17,17 @@ var server = require( path.join(global.paths.root, 'server.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
+
 /*
 # ROADMAP
-	- 0.7: validation
-		- every block should specify what its input and output is
+	- 0.7: error handling
+		- proper error handling
+		- validation: every block should specify what its input and output is
 			- this also helps documenting everything
-	- 0.8: project logo
-	- 0.9: basic documentation / readme
+	- 0.8: basic documentation / readme
+	- 0.9: project logo
 	- 1.0: publish
 		- blog post
 */
@@ -80,7 +84,7 @@ process.on('SIGINT', function() {
 
 
 var tasks_path = path.join(global.paths.root, config.paths.tasks);
-winston.info('loading tasks from '+chalk.cyan(tasks_path));
+debug('loading tasks from '+chalk.cyan(tasks_path));
 glob(path.join(tasks_path, '*.json'), function(err, files) {
 	var tasks = global.tasks = files
 		.map(tasklib.load_task_from_file)

@@ -7,20 +7,27 @@ var request = require('request');
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
 
 function fn(task, step, input, prev_step) {
 	var req_options = {
 		url: 'https://api.bitcoinaverage.com/exchanges/EUR',
 		json: true
 	};
-	request(req_options, function(err, response, body) {
+	request(req_options, function(err, res, body) {
 		if (err) { return helper.handle_error(err); }
+
+		if (res.statusCode != 200) {
+			debug('status code: '+res.statusCode, task.name);
+			debug(req_options.url);
+			return;
+		}
 
 		var market = body[step.options.market];
 		var price = market.rates.last;
 		var output = price;
 		
-		// custom logging
 		// TODO: check if { config: { log: false } } or so
 		var message_vars = helper.message_vars(task, input, step, prev_step);
 		var delta = helper.format_delta(price - step.data.prev_price);

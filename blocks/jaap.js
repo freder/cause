@@ -14,6 +14,8 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
 
 var price_min = 400;
 var price_max = 1000;
@@ -85,17 +87,28 @@ function parse_info(info) {
 }
 
 
-function do_request(opts, cb) {
-	request(opts, function(err, response, body) {
-		cb(err, body);
-	});
+function do_request(req_options, cb) {
+	return request(req_options,
+		function(err, res, body) {
+			// if (err) { return helper.handle_error(err); }
+
+			if (res.statusCode != 200) {
+				var msg = 'status code: '+res.statusCode;
+				debug(msg, task.name);
+				debug(req_options.url);
+				return cb(new Error(msg));
+			}
+
+			cb(err, body);
+		});
 }
 
 
 function get_page_nums(done) {
 	var funs = neighborhoods.map(function(neighborhood) {
 		var opts = {
-			url: make_url({ neighborhood: neighborhood })
+			url: make_url({ neighborhood: neighborhood }),
+			timeout: 30*1000 // ms
 		};
 
 		return function(result, cb) {

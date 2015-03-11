@@ -8,6 +8,8 @@ noodle.configure({ debug: false });
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
 
 function fn(task, step, input, prev_step) {
 	// validation
@@ -25,7 +27,13 @@ function fn(task, step, input, prev_step) {
 	})
 	.fail(helper.handle_error)
 	.then(function(results) {
-		var text = results.results[0].results[0].text;
+		var text;
+		try {
+			text = results.results[0].results[0].text;
+		} catch (e) {
+			debug('no results', task.name);
+			return;
+		}
 		var price = helper.format_price(text, step.options);
 		price = parseFloat(price);
 		var output = price;

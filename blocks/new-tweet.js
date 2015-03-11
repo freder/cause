@@ -7,6 +7,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var twitter = require( path.join(global.paths.lib, 'twitter.js') );
 
 
+// TODO: more functionality
 var fn = (function(task, step) {
 	var client = twitter.create_client({
 		consumer_key: config.twitter.api_key,
@@ -46,7 +47,8 @@ module.exports = {
 	fn: fn,
 	defaults: {
 		options: {
-			endpoint: 'user'
+			endpoint: 'user',
+			keywords: []
 		},
 		data: {}
 	}

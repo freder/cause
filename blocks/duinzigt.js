@@ -12,6 +12,8 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
 
 function neighborhood_filter(white_list) {
 	return function(item) {
@@ -42,6 +44,13 @@ function fn(task, step, input, prev_step) {
 	var req = request(req_options);
 	req.on('error', helper.handle_error);
 	req.on('response', function(res) {
+		if (res.statusCode != 200) {
+			debug('status code: '+res.statusCode, task.name);
+			debug(req_options.url);
+			feedparser = null;
+			return;
+		}
+
 		res.pipe(feedparser);
 	});
 

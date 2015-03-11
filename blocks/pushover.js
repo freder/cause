@@ -15,7 +15,7 @@ var p = new pushover({
 
 function send(msg) {
 	p.send(msg, function(err, result) {
-		if (err) throw err;
+		if (err) { return helper.handle_error(err); }
 	});
 }
 

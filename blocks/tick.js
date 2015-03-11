@@ -1,10 +1,10 @@
 var path = require('path');
-
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var debug = require('debug')(path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {
-	console.log(step.data.counter);
+	debug(step.data.counter);
 	
 	var output = step.data.counter;
 	var flow_decision = tasklib.flow_decision_defaults;

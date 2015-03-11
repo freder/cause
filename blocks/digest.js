@@ -8,9 +8,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function fn(task, step, input, prev_step) {
-	if (!_.isArray(input)) {
-		input = [input];
-	}
+	if (!_.isArray(input)) input = [input];
 	step.data.collected = step.data.collected.concat(input);
 
 	function set_next_flush() {
