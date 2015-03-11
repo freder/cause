@@ -133,7 +133,10 @@ function get_items_from_page(body, kill_cb, step) {
 		// images
 		var images = [];
 		$this.find('.property-photos img').each(function() {
-			images.push( ($this).attr('src') );
+			var src = $(this).attr('src');
+			if (src != '/Content/images/Redesign/jaap_img_placeholder.png') {
+				images.push( $(this).attr('src') );
+			}
 		});
 
 		var $features = $this.find('.property-features .property-feature');
