@@ -158,6 +158,7 @@ function get_items_from_page(body, kill_cb, step) {
 			price: $this.find('.property-price').text().replace('€', '').trim()
 		};
 
+		item.street = item.street.replace(' 0 Ong', '');
 		item.link = make_link(item.id);
 		item.maps_url = helper.make_googlemaps_url(item.street);
 
