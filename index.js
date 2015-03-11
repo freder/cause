@@ -37,15 +37,6 @@ process.stdin.on('data', function(data) {
 		helper.list_tasks();
 	}
 
-	if (command == 'add') {
-		var task_data = {
-			name: 'test',
-			interval: false,
-			steps: []
-		};
-		tasklib.add_task(task_data);
-	}
-
 	if (/\w+ \d+/.test(command)) {
 		var splt = command.split(' ');
 		var cmd = splt[0];
