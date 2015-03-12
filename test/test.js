@@ -118,7 +118,6 @@ describe('lib/', function() {
 
 	describe('helper.js', function() {
 		var glob = require('glob');
-		var hjson = require('hjson');
 		var config = require('../config.js');
 		var helper = require('../lib/helper.js');
 
