@@ -24,6 +24,15 @@ var price_range = sf('{0}-{1}', price_min, price_max);
 var sort = 'sort4'; // new to old
 var page = 1;
 
+// TODO: filter by description text
+/*
+var re = /geschikt voor ([\d\w]+) \w+/i;
+var result = re.exec(description);
+if (result !== null) {
+	console.log(result[1]);
+}
+*/
+
 // TODO: expose all criteria as options
 var neighborhoods = [
 		'archipelbuurt', 

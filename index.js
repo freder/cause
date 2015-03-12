@@ -22,8 +22,9 @@ var debug = require('debug')(path.basename(__filename));
 
 /*
 # ROADMAP
-	- 0.7: error handling
-		- proper error handling
+	- feedparser should be a block
+		- use its output in duinzigt
+	- 0.7:
 		- validation: every block should specify what its input and output is
 			- this also helps documenting everything
 	- 0.8: basic documentation / readme
