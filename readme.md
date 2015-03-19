@@ -35,7 +35,7 @@ node index.js
 if you want to see [debug](https://www.npmjs.com/package/debug) messages:
 
 ```shell
-DEBUG=* node index.js
+DEBUG=-express:* node index.js
 ```
 
 or use [nodemon](http://nodemon.io/), [forever](https://github.com/foreverjs/forever), ...
