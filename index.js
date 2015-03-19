@@ -22,6 +22,8 @@ var debug = require('debug')(path.basename(__filename));
 
 /*
 # ROADMAP
+	- get rid of `noodle`
+	- a block to save history data
 	- feedparser should be a block
 		- use its output in duinzigt
 	- 0.7:

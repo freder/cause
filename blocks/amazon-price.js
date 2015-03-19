@@ -1,6 +1,7 @@
 var path = require('path');
 var validator = require('validator');
 var winston = require('winston');
+var chalk = require('chalk');
 var sf = require('sf');
 var noodle = require('../noodlejs');
 noodle.configure({ debug: false });
@@ -37,15 +38,18 @@ function fn(task, step, input, prev_step) {
 		var price = helper.format_price(text, step.options);
 		price = parseFloat(price);
 		var output = price;
-
 		var price_changed = (step.data.prev_price != price);
 		
 		// custom logging
 		if (price_changed) {
-			var message_vars = helper.message_vars(task, input, step, prev_step);
-			var delta = helper.format_delta(price - step.data.prev_price);
-			var message = chalk.green(message_vars.format.money(price));
-			winston.info( sf('{0} {1} | {2}', chalk.bgBlue(task.name), delta, message) );
+			try {
+				var message_vars = helper.message_vars(task, input, step, prev_step);
+				var delta = helper.format_delta(price - step.data.prev_price);
+				var message = chalk.green(message_vars.format.money(price));
+				winston.info( sf('{0} {1} | {2}', chalk.bgBlue(task.name), delta, message) );
+			} catch (e) {
+				console.log(e.stack);
+			}
 		}
 
 		var flow_decision = tasklib.flow_decision(price_changed);
