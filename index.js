@@ -15,6 +15,7 @@ require( path.join(global.paths.lib, 'log.js') ).init();
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
+var cli = require( path.join(global.paths.lib, 'cli.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
@@ -43,57 +44,18 @@ var debug = require('debug')(path.basename(__filename));
 
 // https://github.com/node-red/node-red/blob/master/red.js#L50
 
-// https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
-process.stdin.on('data', function(data) {
-	var command = data.toString().trim().toLowerCase();
 
-	if (command == 'list' || command == 'ls') {
-		helper.list_tasks();
-	}
-
-	if (command == 'open') {
-		open(server.url());
-	}
-
-	if (/\w+ \d+/.test(command)) {
-		var splt = command.split(' ');
-		var cmd = splt[0];
-		var index = splt[1];
-		index = parseInt(index);
-
-		if (cmd == 'remove' || cmd == 'rm') {
-			tasklib.remove_task_by_index(index);
-		}
-		if (cmd == 'run') {
-			tasklib.run_task(global.tasks[index]);
-		}
-		if (cmd == 'reload') {
-			// var from_file = false;
-			var from_file = true;
-			tasklib.reload_task_by_index(index, from_file);
-		}
-	}
-	
-	if (command == 'quit' || command == 'q' || command == 'exit') {
-		exit();
-	}
-});
-
-
-function exit(exit_code) {
-	console.info(chalk.yellow('\nexiting...'));
-	process.exit(exit_code || 0);
-}
+process.stdin.on('data', cli.handle_command);
 
 
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
-	exit(1);
+	cli.exit(1);
 });
 
 
 process.on('SIGINT', function() {
-	exit();
+	cli.exit();
 });
 
 

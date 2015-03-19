@@ -6,6 +6,7 @@ var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var cli = require( path.join(global.paths.lib, 'cli.js') );
 
 var debug = require('debug')(path.basename(__filename));
 
@@ -29,7 +30,7 @@ function fn(task, step, input, prev_step) {
 		var output = price;
 		
 		// TODO: check if { config: { log: false } } or so
-		helper.log_price_delta(price, step.data.prev_price, task);
+		cli.log_price_delta(price, step.data.prev_price, task);
 
 		var flow_decision = tasklib.flow_decision_defaults;
 		tasklib.invoke_children(step, task, output, flow_decision);
