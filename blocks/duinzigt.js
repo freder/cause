@@ -6,6 +6,8 @@ var request = require('request');
 var chalk = require('chalk');
 var sf = require('sf');
 var FeedParser = require('feedparser');
+var validator = require('validator');
+
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
@@ -35,6 +37,11 @@ function price_filter(threshold) {
 
 
 function fn(task, step, input, prev_step) {
+	// validation
+	if (!validator.isURL(step.options.url)) {
+		throw 'not a valid url: ' + step.options.url;
+	}
+	
 	var feedparser = new FeedParser();
 	feedparser.on('error', helper.handle_error);
 

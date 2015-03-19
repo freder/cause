@@ -2,6 +2,7 @@ var path = require('path');
 var _ = require('lodash');
 var request = require('request');
 var FeedParser = require('feedparser');
+var validator = require('validator');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
@@ -10,6 +11,11 @@ var debug = require('debug')(path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {
+	// validation
+	if (!validator.isURL(step.options.url)) {
+		throw 'not a valid url: ' + step.options.url;
+	}
+
 	var feedparser = new FeedParser();
 	feedparser.on('error', helper.handle_error);
 

@@ -5,6 +5,7 @@ var path = require('path');
 var crypto = require('crypto');
 var winston = require('winston');
 var request = require('request');
+var validator = require('validator');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
@@ -26,6 +27,11 @@ function fn(
 	// `step.options` and `step.data` are populated with
 	// values from the task config file, or with the defaults
 	// that the step defines itself. — see end of file.
+
+	// validation
+	if (!validator.isURL(step.options.url)) {
+		throw 'not a valid url: ' + step.options.url;
+	}
 
 	var req_options = {
 		url: step.options.url

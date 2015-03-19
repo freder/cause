@@ -16,8 +16,7 @@ var debug = require('debug')(path.basename(__filename));
 function fn(task, step, input, prev_step) {
 	// validation
 	if (!validator.isURL(step.options.url)) {
-		var msg = 'not a valid url: ' + step.options.url;
-		throw msg;
+		throw 'not a valid url: ' + step.options.url;
 	}
 
 	var req_options = {

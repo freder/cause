@@ -4,6 +4,7 @@ var _ = require('lodash');
 var ical = require('ical');
 var moment = require('moment');
 var sf = require('sf');
+var validator = require('validator');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
@@ -61,6 +62,11 @@ function process_event(e) {
 
 
 function fn(task, step, input, prev_step) {
+	// validation
+	if (!validator.isURL(step.options.url)) {
+		throw 'not a valid url: ' + step.options.url;
+	}
+
 	var req_options = {
 		url: step.options.url
 	};

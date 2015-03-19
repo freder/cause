@@ -1,9 +1,17 @@
 var path = require('path');
+var _ = require('lodash');
+
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+
 var debug = require('debug')(path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {
+	// validation
+	if (!_.isNumber(step.data.counter)) {
+		throw 'counter must be a number: ' + step.data.counter;
+	}
+
 	debug(step.data.counter);
 	
 	var output = step.data.counter;

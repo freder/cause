@@ -34,15 +34,14 @@ var debug = require('debug')(path.basename(__filename));
 		- buffer that releases items in intervals
 
 # ROADMAP
-	- 0.8:
-		- validation: every block should specify what its input and output is
-			- this also helps documenting everything
+	- 0.8: validation
+		- every block should validate its input
+		- and its options
 	- 0.9: project logo
+		- and some more interesting examples visualized
 	- 1.0: publish
 		- blog post
 */
-
-// https://github.com/node-red/node-red/blob/master/red.js#L50
 
 
 process.stdin.on('data', cli.handle_command);

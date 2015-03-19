@@ -12,6 +12,8 @@ var debug = require('debug')(path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {
+	// expects no input
+
 	var req_options = {
 		url: 'https://api.bitcoinaverage.com/exchanges/EUR',
 		json: true
@@ -29,7 +31,6 @@ function fn(task, step, input, prev_step) {
 		var price = market.rates.last;
 		var output = price;
 		
-		// TODO: check if { config: { log: false } } or so
 		cli.log_price_delta(price, step.data.prev_price, task);
 
 		var flow_decision = tasklib.flow_decision_defaults;
