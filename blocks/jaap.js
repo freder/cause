@@ -24,14 +24,22 @@ var price_range = sf('{0}-{1}', price_min, price_max);
 var sort = 'sort4'; // new to old
 var page = 1;
 
-// TODO: filter by description text
-/*
-var re = /geschikt voor ([\d\w]+) \w+/i;
-var result = re.exec(description);
-if (result !== null) {
-	console.log(result[1]);
+
+function text_filter(description) {
+	// "geschikt voor 1 persoon"
+	// "geschikt voor twee personen"
+	// etc.
+
+	var re = /geschikt voor ([\d\w]+) \w+/i;
+	var result = re.exec(description);
+
+	// if (result !== null) {
+	// 	console.log(result/*[1]*/);
+	// }
+
+	return !(result !== null);
 }
-*/
+
 
 // TODO: expose all criteria as options
 var neighborhoods = [
@@ -99,8 +107,6 @@ function parse_info(info) {
 function do_request(req_options, cb) {
 	return request(req_options,
 		function(err, res, body) {
-			// if (err) { return helper.handle_error(err); }
-
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
 				debug(msg, task.name);
@@ -117,7 +123,7 @@ function get_page_nums(done) {
 	var funs = neighborhoods.map(function(neighborhood) {
 		var opts = {
 			url: make_url({ neighborhood: neighborhood }),
-			timeout: 30*1000 // ms
+			timeout: 30*1000 // 30 seconds
 		};
 
 		return function(result, cb) {
@@ -200,6 +206,7 @@ function get_items_from_page(body, kill_cb, step) {
 
 function scrape(done, step) {
 	get_page_nums(function(neighborhood_num) {
+
 		// for each neighborhood
 		var funs = _.keys(neighborhood_num).map(function(neighborhood) {
 			var num_pages = neighborhood_num[neighborhood];
@@ -219,8 +226,10 @@ function scrape(done, step) {
 						// console.log(neighborhood, page);
 						do_request(opts, function(err, body) {
 							if (err) { cb_neighborhood(err); }
+
 							var items = get_items_from_page(body, kill_cb, step);
 							items.forEach(function(item) {
+								// plus to space
 								item.neighborhood = neighborhood.replace(/\+/g, ' ');
 							});
 							result = result.concat(items);
@@ -241,8 +250,6 @@ function scrape(done, step) {
 			[ function(cb) { cb(null, []); } ].concat(funs),
 			function(err, result) {
 				if (err) throw err;
-				// console.log(result);
-				// console.log(result.length);
 				done(result);
 			});
 	});
@@ -254,6 +261,7 @@ function fn(task, step, input, prev_step) {
 
 	scrape(function(items) {
 		// some additional filtering first:
+
 		// we want more than one room
 		items = items.filter(function(item) {
 			if (!item.rooms || item.rooms > 1) {
@@ -263,32 +271,59 @@ function fn(task, step, input, prev_step) {
 			}
 		});
 
-		var new_ones = (items.length > 0);
-		if (new_ones) {
-			var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
-			winston.info(line);
 
-			var email_content = realestate.email_template(items);
-			var to = config.email.to; // override email defaults
-			if (step.options.email && step.options.email.to) {
-				to = step.options.email.to;
+		// house should be suitable for more than one person
+		async.filterSeries(
+			items,
+
+			function filter(item, cb) {
+				var opts = {
+					url: item.link
+				};
+				do_request(opts, function(err, body) {
+					if (err) { return cb(err); }
+
+					var $ = cheerio.load(body);
+					var $description = $('#long-description');
+					var result = text_filter($description.text());
+					cb(result);
+				});
+			},
+
+			function done(filtered) {
+				finish(filtered);
+			}
+		);
+
+
+		function finish(items) {
+			var new_ones = (items.length > 0);
+			if (new_ones) {
+				var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
+				winston.info(line);
+
+				var email_content = realestate.email_template(items);
+				var to = config.email.to; // override email defaults
+				if (step.options.email && step.options.email.to) {
+					to = step.options.email.to;
+				}
+
+				email.send({
+					to: to,
+					subject: sf('jaap.nl: {0} new houses', items.length),
+					html: email_content
+				});
 			}
 
-			email.send({
-				to: to,
-				subject: sf('jaap.nl: {0} new houses', items.length),
-				html: email_content
-			});
+			var flow_decision = tasklib.flow_decision(new_ones);
+			var output = items;
+			tasklib.invoke_children(step, task, output, flow_decision);
+
+			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
+			delete step.data.temp_seen_ids;
+
+			tasklib.save_task(task);
 		}
-
-		var flow_decision = tasklib.flow_decision(new_ones);
-		var output = items;
-		tasklib.invoke_children(step, task, output, flow_decision);
-
-		step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
-		delete step.data.temp_seen_ids;
-
-		tasklib.save_task(task);
 	}, step);
 }
 
@@ -301,5 +336,7 @@ module.exports = {
 			seen_ids: []
 		}
 	},
-	parse_info: parse_info
+	parse_info: parse_info,
+	do_request: do_request,
+	text_filter: text_filter
 };

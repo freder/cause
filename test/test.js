@@ -147,6 +147,7 @@ describe('lib/', function() {
 
 	describe('blocks/jaap.js', function() {
 		var jaap = require('../blocks/jaap.js');
+		var cheerio = require('cheerio');
 
 		describe(f('#parse_info()'), function() {
 			it('should work with inconsistent data', function() {
@@ -185,6 +186,37 @@ describe('lib/', function() {
 				data = jaap.parse_info(info);
 				assert(data.type == '' && data.rooms == 99 && data.area == '');
 				assert(typeof data.rooms == 'number');
+			});
+		});
+
+		describe(f('#text_filter()'), function() {
+			it('should reject houses for less than 2 persons', function(done) {
+				// var opts = {
+				// 	url: 'http://www.jaap.nl/te-huur/x/x/x/x/x/14953138/overzicht/'
+				// };
+				// jaap.do_request(opts, function(err, body) {
+				// 	if (err) { throw err; }
+
+				// 	var $ = cheerio.load(body);
+				// 	var $description = $('#long-description');
+				// 	var result = jaap.text_filter($description.text());
+				// 	assert(result === false);
+
+				// 	done();
+				// });
+
+				var texts = [
+					'nope',
+					'Gehele woning is v.v. een laminaat vloer, raambedekking, verlichting en er kan gebruik worden gemaakt van de gezamenlijke wasmachine & droger middels muntsyteem. Geschikt voor 1 persoon! Het appartement kan in overleg ook eerder gehuurd worden.',
+					'no matches here'
+				];
+				var filtered = texts.filter(jaap.text_filter);
+				// console.log(filtered);
+				assert(filtered.length === 2);
+				assert(filtered.indexOf('nope') > -1);
+				assert(filtered.indexOf('no matches here') > -1);
+
+				done();
 			});
 		});
 	});
