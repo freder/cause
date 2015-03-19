@@ -18,7 +18,6 @@ requirements:
 
 ```shell
 npm install
-git clone https://github.com/dharmafly/noodle.git
 mv config.js.example config.js
 ```
 

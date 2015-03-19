@@ -21,11 +21,16 @@ var debug = require('debug')(path.basename(__filename));
 
 
 /*
-# ROADMAP
-	- get rid of `noodle`
-	- a block to save history data
+# TODO:
 	- feedparser should be a block
 		- use its output in duinzigt
+	- get rid of `noodle`
+		- a simple `request` + `cheerio` should be sufficient
+	- block ideas
+		- save history data
+		- file/dir watcher
+
+# ROADMAP
 	- 0.7:
 		- validation: every block should specify what its input and output is
 			- this also helps documenting everything

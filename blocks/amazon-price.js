@@ -3,11 +3,11 @@ var validator = require('validator');
 var winston = require('winston');
 var chalk = require('chalk');
 var sf = require('sf');
-var noodle = require('../noodlejs');
-noodle.configure({ debug: false });
+var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 var debug = require('debug')(path.basename(__filename));
 
@@ -19,22 +19,23 @@ function fn(task, step, input, prev_step) {
 		throw msg;
 	}
 
-	// do the work
-	noodle.query({
-		cache: false,
+	var req_options = {
 		url: step.options.url,
-		selector: '#priceblock_ourprice',
-		extract: ['text']
-	})
-	.fail(helper.handle_error)
-	.then(function(results) {
-		var text;
-		try {
-			text = results.results[0].results[0].text;
-		} catch (e) {
-			debug('no results', task.name);
-			return;
-		}
+
+	};
+	request(req_options, function(err, res, body) {
+		if (err) { return helper.handle_error(err); }
+
+		var $selection = scraping.query('css', '#priceblock_ourprice', body);
+		
+		// TODO: DRY
+		if ($selection.length === 0) {
+			throw 'selection is empty';
+		} else if ($selection.length > 1) {
+			winston.warn('selection contains more than one element — only using first one.');
+		} // TODO: should it also work with multiple elements?
+
+		var text = $selection.first().text();
 		var price = helper.format_price(text, step.options);
 		price = parseFloat(price);
 		var output = price;
