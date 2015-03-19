@@ -30,12 +30,13 @@ var debug = require('debug')(path.basename(__filename));
 	- block ideas
 		- save history data
 		- file/dir watcher
+		- buffer that releases items in intervals
 
 # ROADMAP
-	- 0.7:
+	- 0.7: basic documentation / readme
+	- 0.8:
 		- validation: every block should specify what its input and output is
 			- this also helps documenting everything
-	- 0.8: basic documentation / readme
 	- 0.9: project logo
 	- 1.0: publish
 		- blog post
