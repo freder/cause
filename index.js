@@ -28,15 +28,13 @@ var debug = require('debug')(path.basename(__filename));
 		- how often run
 	- feedparser should be a block
 		- use its output in duinzigt
+	- twitter block is incomplete
 	- block ideas
 		- save history data
 		- file/dir watcher
 		- buffer that releases items in intervals
 
 # ROADMAP
-	- 0.8: validation
-		- every block should validate its input
-		- and its options
 	- 0.9: project logo
 		- and some more interesting examples visualized
 	- 1.0: publish
