@@ -29,10 +29,7 @@ function fn(task, step, input, prev_step) {
 		var output = price;
 		
 		// TODO: check if { config: { log: false } } or so
-		var message_vars = helper.message_vars(task, input, step, prev_step);
-		var delta = helper.format_delta(price - step.data.prev_price);
-		var message = chalk.green(message_vars.format.money(price));
-		winston.info( sf('{0} {1} | {2}', chalk.bgBlue(task.name), delta, message) );
+		helper.log_price_delta(price, step.data.prev_price, task);
 
 		var flow_decision = tasklib.flow_decision_defaults;
 		tasklib.invoke_children(step, task, output, flow_decision);

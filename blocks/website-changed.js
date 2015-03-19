@@ -26,11 +26,9 @@ function fn(task, step, input, prev_step) {
 		}
 
 		var $selection = scraping.query(step.options.method, step.options.selector, body);
-		if ($selection.length === 0) {
-			throw 'selection is empty';
-		} else if ($selection.length > 1) {
+		if ($selection.length > 1) {
 			winston.warn('selection contains more than one element — only using first one.');
-		} // TODO: should it also work with multiple elements?
+		}
 		var html = $selection.first().html();
 
 		var hash = crypto

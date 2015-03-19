@@ -24,8 +24,6 @@ var debug = require('debug')(path.basename(__filename));
 # TODO:
 	- feedparser should be a block
 		- use its output in duinzigt
-	- get rid of `noodle`
-		- a simple `request` + `cheerio` should be sufficient
 	- block ideas
 		- save history data
 		- file/dir watcher

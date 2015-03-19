@@ -20,8 +20,7 @@ function fn(task, step, input, prev_step) {
 	}
 
 	var req_options = {
-		url: step.options.url,
-
+		url: step.options.url
 	};
 	request(req_options, function(err, res, body) {
 		if (err) { return helper.handle_error(err); }
@@ -29,9 +28,7 @@ function fn(task, step, input, prev_step) {
 		var $selection = scraping.query('css', '#priceblock_ourprice', body);
 		
 		// TODO: DRY
-		if ($selection.length === 0) {
-			throw 'selection is empty';
-		} else if ($selection.length > 1) {
+		if ($selection.length > 1) {
 			winston.warn('selection contains more than one element — only using first one.');
 		} // TODO: should it also work with multiple elements?
 
@@ -43,14 +40,7 @@ function fn(task, step, input, prev_step) {
 		
 		// custom logging
 		if (price_changed) {
-			try {
-				var message_vars = helper.message_vars(task, input, step, prev_step);
-				var delta = helper.format_delta(price - step.data.prev_price);
-				var message = chalk.green(message_vars.format.money(price));
-				winston.info( sf('{0} {1} | {2}', chalk.bgBlue(task.name), delta, message) );
-			} catch (e) {
-				console.log(e.stack);
-			}
+			helper.log_price_delta(price, step.data.prev_price, task);
 		}
 
 		var flow_decision = tasklib.flow_decision(price_changed);
