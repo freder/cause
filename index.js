@@ -3,6 +3,7 @@ var path = require('path');
 var chalk = require('chalk');
 var winston = require('winston');
 var _ = require('lodash');
+var open = require('open');
 
 global.paths = {
 	root: __dirname,
@@ -22,6 +23,8 @@ var debug = require('debug')(path.basename(__filename));
 
 /*
 # TODO:
+	- task meta data
+		- how often run
 	- feedparser should be a block
 		- use its output in duinzigt
 	- block ideas
@@ -38,6 +41,7 @@ var debug = require('debug')(path.basename(__filename));
 		- blog post
 */
 
+// https://github.com/node-red/node-red/blob/master/red.js#L50
 
 // https://github.com/remy/nodemon/blob/76445a628b79bc9dbf961334a6223f7951cc1d29/lib/nodemon.js#L91
 process.stdin.on('data', function(data) {
@@ -45,6 +49,10 @@ process.stdin.on('data', function(data) {
 
 	if (command == 'list' || command == 'ls') {
 		helper.list_tasks();
+	}
+
+	if (command == 'open') {
+		open(server.url());
 	}
 
 	if (/\w+ \d+/.test(command)) {

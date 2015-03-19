@@ -25,6 +25,7 @@
     "nodemailer-html-to-text": "^1.0.0",
     "nodemailer-mailgun-transport": "^1.0.0",
     "numeral": "^1.5.3",
+    "open": "0.0.5",
     "pushover-notifications": "^0.2.2",
     "ramda": "^0.10.0",
     "request": "^2.53.0",

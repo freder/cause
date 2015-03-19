@@ -7,6 +7,10 @@ var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
+var debug = require('debug')(path.basename(__filename));
+
+
+var app, server;
 
 function start() {
 	var app = express();
@@ -15,11 +19,8 @@ function start() {
 	app.set('view engine', 'jade');
 
 
-	var server = app.listen(config.server.port, function() {
-		// var host = server.address().address;
-		var host = 'localhost';
-		var port = server.address().port;
-		winston.info('listening at '+chalk.cyan('http://'+host+':'+port));
+	server = app.listen(config.server.port, function() {
+		winston.info('listening at '+chalk.cyan( url() ));
 	});
 
 
@@ -38,6 +39,20 @@ function start() {
 }
 
 
+function url() {
+	if (!server) {
+		debug('can\'t get address: server not running.');
+		return;
+	}
+
+	// var host = server.address().address;
+	var host = 'localhost';
+	var port = server.address().port;
+	return 'http://'+host+':'+port;
+}
+
+
 module.exports = {
-	start: start
+	start: start,
+	url: url
 };
