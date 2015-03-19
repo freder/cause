@@ -17,6 +17,7 @@ global.paths = {
 };
 var helper = require('./lib/helper.js');
 var tasklib = require('./lib/tasklib.js');
+var filesystem = require('./lib/filesystem.js');
 gulp.task('graphviz', function() {
 	function cleanup(s) {
 		return s.replace(/ +/g, '-').replace(/\-/g, '_');
@@ -24,7 +25,7 @@ gulp.task('graphviz', function() {
 
 	glob(path.join('./tasks/', '*.json'), function(err, files) {
 		files.forEach(function(filepath) {
-			var task = helper.load_json(filepath);
+			var task = filesystem.load_json(filepath);
 			var basename = helper.get_filename(filepath);
 			var content = 'digraph '+basename.replace(/\-/, '_')+' {\n';
 			var step_definitions = '';
