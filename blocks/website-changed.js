@@ -30,7 +30,7 @@ function fn(
 
 	// validation
 	if (!validator.isURL(step.options.url)) {
-		throw 'not a valid url: ' + step.options.url;
+		throw new Error('not a valid url: ' + step.options.url);
 	}
 
 	var req_options = {

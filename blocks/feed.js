@@ -13,7 +13,7 @@ var debug = require('debug')(path.basename(__filename));
 function fn(task, step, input, prev_step) {
 	// validation
 	if (!validator.isURL(step.options.url)) {
-		throw 'not a valid url: ' + step.options.url;
+		throw new Error('not a valid url: ' + step.options.url);
 	}
 
 	var feedparser = new FeedParser();

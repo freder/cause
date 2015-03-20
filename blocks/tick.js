@@ -9,7 +9,7 @@ var debug = require('debug')(path.basename(__filename));
 function fn(task, step, input, prev_step) {
 	// validation
 	if (!_.isNumber(step.data.counter)) {
-		throw 'counter must be a number: ' + step.data.counter;
+		throw new Error('counter must be a number: ' + step.data.counter);
 	}
 
 	debug(step.data.counter);
