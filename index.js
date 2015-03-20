@@ -22,26 +22,6 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var debug = require('debug')(path.basename(__filename));
 
 
-/*
-# TODO:
-	- task meta data
-		- how often run
-	- feedparser should be a block
-		- use its output in duinzigt
-	- twitter block is incomplete
-	- block ideas
-		- save history data
-		- file/dir watcher
-		- buffer that releases items in intervals
-
-# ROADMAP
-	- 0.9: project logo
-		- and some more interesting examples visualized
-	- 1.0: publish
-		- blog post
-*/
-
-
 process.stdin.on('data', cli.handle_command);
 
 
