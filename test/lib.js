@@ -1,9 +1,11 @@
 var assert = require('assert');
 var path = require('path');
+var fs = require('fs');
 var chalk = require('chalk');
 var _ = require('lodash');
 var glob = require('glob');
 var cheerio = require('cheerio');
+var FeedParser = require('feedparser');
 
 
 var util = require('./util.js');
@@ -15,6 +17,7 @@ var tasklib = require('../lib/tasklib.js');
 var helper = require('../lib/helper.js');
 var filesystem = require('../lib/filesystem.js');
 var scraping = require('../lib/scraping.js');
+var feed = require('../lib/feed.js');
 
 var jaap = require('../blocks/jaap.js');
 var digest = require('../blocks/digest.js');
@@ -178,6 +181,35 @@ describe(util.f1('lib/'), function() {
 				query = '#nope';
 				assert.throws(function() {
 					scraping.query('css', query, html);
+				});
+			});
+		});
+
+	});
+
+
+	// ############################################################
+	describe(util.f2('feed.js'), function() {
+
+		describe(util.f3('.process_feed()'), function() {
+			it('should work', function(done) {
+				var feedparser = new FeedParser();
+				fs.createReadStream('test/files/feed.xml')
+					.pipe(feedparser);
+
+				feed.process_feed({
+					feedparser: feedparser,
+					seen_guids: ['1111'],
+					seen_pubdate: undefined
+				},
+				function(err, result) {
+					if (err) { throw err; }
+
+					assert(result.items.length === 3);
+					assert(result.new_items.length === 2);
+					assert(result.new_items.indexOf('1111') === -1);
+
+					done();
 				});
 			});
 		});
