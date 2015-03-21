@@ -1,6 +1,7 @@
-# coz
+# 'cause
+
 > an automation tool
->
+
 
 ---
 

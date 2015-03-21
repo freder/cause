@@ -44,8 +44,8 @@ module.exports = {
 	fn: fn,
 	defaults: {
 		options: {
-			title: 'causality: <%=task.name%>',
-			message: '<%=prev_step.block>: <%=input%>'
+			title: "'cause: <%=task.name%>",
+			message: "<%=prev_step.block>: <%=input%>"
 		},
 		data: {}
 	}
