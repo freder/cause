@@ -9,7 +9,7 @@
 				"market": "bitcoin_de"
 			},
 			"flow": {
-				"anyway": [
+				"always": [
 					"threshold"
 				],
 				"if": [],
@@ -33,7 +33,7 @@
 					"pushover"
 				],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {
 				"triggered": true
@@ -49,7 +49,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -63,7 +63,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -77,7 +77,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		}

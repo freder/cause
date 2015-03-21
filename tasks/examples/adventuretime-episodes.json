@@ -14,7 +14,7 @@
 					"email"
 				],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {
 				"last_pubdate": "2015-03-04T10:55:34.000Z",
@@ -42,7 +42,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -56,7 +56,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		}

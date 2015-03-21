@@ -62,7 +62,7 @@ function fn(
 		// check if anything has changed
 		var changed = (hash !== step.data.prev_hash);
 		// based on this, it is decided on which of the
-		// block's three outlets (`if`, `else`, `anyway`)
+		// block's three outlets (`if`, `else`, `always`)
 		// the flow continues.
 		var flow_decision = tasklib.flow_decision(changed);
 

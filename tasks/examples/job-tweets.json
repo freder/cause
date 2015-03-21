@@ -24,7 +24,7 @@
 					"email"
 				],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -38,7 +38,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		}

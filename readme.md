@@ -1,13 +1,6 @@
-# causality
-
+# coz
 > an automation tool
-
-## similar tools:
-- [`ifttt`](https://ifttt.com/)
-- [`huginn`](https://github.com/cantino/huginn)
-- [`node-red`](http://nodered.org/)
-- [`workflow`](https://workflow.is/)
-
+>
 
 ---
 
@@ -71,3 +64,13 @@ task configuration files live in `tasks/`. [`tasks/examples/`](./tasks/examples/
 # writing your own blocks
 
 is pretty straight-forward. — look at [`blocks/website-changed.js`](./blocks/website-changed.js) for a documented example.
+
+
+---
+
+
+## similar tools:
+- [`ifttt`](https://ifttt.com/)
+- [`huginn`](https://github.com/cantino/huginn)
+- [`node-red`](http://nodered.org/)
+- [`workflow`](https://workflow.is/)

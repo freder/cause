@@ -16,7 +16,7 @@
 					"threshold"
 				],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {
 				"prev_price": 560.55
@@ -32,7 +32,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -49,7 +49,7 @@
 					"pushover"
 				],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {
 				"triggered": false
@@ -65,7 +65,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -79,7 +79,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		},
@@ -93,7 +93,7 @@
 			"flow": {
 				"if": [],
 				"else": [],
-				"anyway": []
+				"always": []
 			},
 			"data": {}
 		}

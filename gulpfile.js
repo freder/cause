@@ -72,8 +72,8 @@ splines = spline;\n\n';
 				var flow = step.flow;
 				flow.if = flow.if || [];
 				flow.else = flow.else || [];
-				flow.anyway = flow.anyway || [];
-				['if', 'else', 'anyway'].forEach(function(type) {
+				flow.always = flow.always || [];
+				['if', 'else', 'always'].forEach(function(type) {
 					if (flow[type].length > 0) {
 						var flow_node = sf('{0}_{1}', node_name, type);
 						step_definitions += sf('node [label = "{0}" shape = diamond color = none fillcolor = "gray"]; {1};\n', type, flow_node);

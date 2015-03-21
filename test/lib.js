@@ -74,7 +74,7 @@ describe(util.f1('lib/'), function() {
 				tasklib.flow_decision(false);
 				assert(tasklib.flow_decision_defaults['if'] === true);
 				// assert(tasklib.flow_decision_defaults['else'] === true);
-				// assert(tasklib.flow_decision_defaults['anyway'] === true);
+				// assert(tasklib.flow_decision_defaults['always'] === true);
 			});
 		});
 
