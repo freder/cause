@@ -1,5 +1,6 @@
 body
 	font-family: sans-serif
+	text-align: center
 
 
 hr
@@ -19,3 +20,27 @@ hr
 	color: white
 	padding: 0.2em
 	padding-bottom: 0.1em
+	margin-bottom: 0.5em
+
+button
+	margin-left: 1em
+
+// graphs
+.visualization
+	display: flex-box
+	margin-top: 1em
+	margin-bottom: 5em
+
+.node
+	&.task rect
+		stroke: gray
+		stroke-width: 2px
+		fill: none
+
+	&.step rect
+		fill: yellow
+		stroke: none
+
+.edgePath path
+	stroke: black
+	stroke-width: 2px

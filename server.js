@@ -3,6 +3,7 @@ var winston = require('winston');
 var chalk = require('chalk');
 var express = require('express');
 var open = require('open');
+var sf = require('sf');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -26,7 +27,17 @@ function start() {
 
 
 	app.get('/', function(req, res) {
-		res.render('views/index', { tasks: global.tasks });
+		var o = {};
+		global.tasks.forEach(function(t) {
+			o[t.name] = tasklib.make_savable(t);
+		});
+		var json = JSON.stringify(o);
+
+		res.render('views/index', {
+			// tasks: global.tasks,
+			tasks: global.tasks.map(tasklib.make_savable),
+			tasks_json: json,
+		});
 	});
 
 

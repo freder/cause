@@ -41,6 +41,16 @@ or use [`nodemon`](http://nodemon.io/), [`forever`](https://github.com/foreverjs
 ---
 
 
+## web frontend
+
+as you start the tool, it opens the web frontend in the browser.
+
+![](./screenshot-web-frontend.png)
+
+
+---
+
+
 ## [`built-in blocks`](./blocks/)
 
 
@@ -54,9 +64,9 @@ task configuration files live in `tasks/`. [`tasks/examples/`](./tasks/examples/
 ---
 
 
-## examples
+## cool examples
 
-![](./task-example.png)
+TODO:
 
 
 ---

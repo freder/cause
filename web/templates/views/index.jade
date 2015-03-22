@@ -2,19 +2,17 @@ extends ../layouts/default
 
 
 mixin task(t)
-	div
-		div
-			b.task-name #{t.name}
-			br
-			br
+	div(id=t.slug)
+		.task-name
+			| #{t.name}
 			if t.interval
 				button(onclick='run_task("#{t.slug}")') run now
-			br
-			br
+		if t.interval
+			| interval: #{t.interval}
+		.code
 			//- textarea.codemirror #{JSON.stringify(t, null, 4)}
-			br
-			br
-			br
+		.visualization
+			svg
 
 
 block content
@@ -26,8 +24,16 @@ block content
 
 
 block js
+	script(src='/bower_components/d3/d3.min.js')
+	script(src='/bower_components/graphlib/dist/graphlib.core.js')
+	script(src='/bower_components/dagre/dist/dagre.core.js')
+	script(src='/bower_components/dagre-d3/dist/dagre-d3.core.js')
+
 	script(src='/bower_components/codemirror/lib/codemirror.js')
 	script(src='/bower_components/codemirror/mode/javascript/javascript.js')
 	script(src='/bower_components/codemirror/addon/selection/active-line.js')
 
 	script(src='/js/index.js')
+
+	script.
+		var tasks = !{tasks_json};
