@@ -2,6 +2,7 @@ var path = require('path');
 var winston = require('winston');
 var chalk = require('chalk');
 var express = require('express');
+var open = require('open');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -36,6 +37,8 @@ function start() {
 		else tasklib.run_task(task);
 		res.json({ ok: ok });
 	});
+
+	open_browser();
 }
 
 
@@ -49,6 +52,11 @@ function url() {
 	var host = 'localhost';
 	var port = server.address().port;
 	return 'http://'+host+':'+port;
+}
+
+
+function open_browser() {
+	open(url());
 }
 
 
