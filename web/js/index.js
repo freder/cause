@@ -30,6 +30,10 @@ function make_graph(task) {
 		.setGraph({});
 		// .setDefaultEdgeLabel(function() { return {}; });
 
+	g.graph().rankdir = "LR";
+	// g.graph().ranksep = 15;
+	// g.graph().nodesep = 15;
+
 	// g.setNode(task.slug, {
 	// 	label: task.name,
 	// 	class: 'task'
