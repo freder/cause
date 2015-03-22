@@ -1,13 +1,14 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var notifier = require('node-notifier');
-
-
+var path = require('path');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
 var glob = require('glob');
 var fs = require('fs');
-var path = require('path');
 var sf = require('sf');
 var exec = require('child_process').exec;
+
 
 var root = path.resolve('./');
 global.paths = {
@@ -18,6 +19,37 @@ global.paths = {
 var helper = require('./lib/helper.js');
 var tasklib = require('./lib/tasklib.js');
 var filesystem = require('./lib/filesystem.js');
+
+
+var dirname = {
+	public: 'web',
+	css: 'css',
+	sass: 'sass'
+};
+
+
+paths = {
+	css: path.join(__dirname, dirname.public, dirname.css),
+	sass: path.join(__dirname, dirname.public, dirname.sass)
+};
+
+var pattern = {
+	sass: '*.{sass,scss}',
+	sass_main: '!(_)*.{sass,scss}'
+};
+
+var options = {
+	sass: {
+		indentedSyntax: true,
+		errLogToConsole: true
+	},
+
+	autoprefixer: {
+		browsers: ['last 2 versions']
+	}
+};
+
+
 gulp.task('graphviz', function() {
 	function cleanup(s) {
 		return s.replace(/ +/g, '-').replace(/\-/g, '_');
@@ -105,6 +137,17 @@ splines = spline;\n\n';
 });
 
 
+
+gulp.task('sass', function() {
+	return gulp.src( path.join(paths.sass, pattern.sass_main) )
+		.pipe(sass(options.sass))
+		.pipe(autoprefixer(options.autoprefixer))
+		.pipe(
+			gulp.dest( path.join(paths.css) )
+		);
+});
+
+
 gulp.task('mocha', function() {
 	return gulp.src('test/test.js', { read: false })
 		.pipe(mocha())
@@ -117,13 +160,15 @@ gulp.task('mocha', function() {
 });
 
 
-gulp.task('default', ['mocha'], function() {
-	gulp.watch([
-			'./*.js',
-			'./lib/*.js',
-			'./blocks/*.js',
-			'./test/*.js'
-		],
-		['mocha']
-	);
+gulp.task('default', [/*'mocha',*/ 'sass'], function() {
+	// gulp.watch([
+	// 		'./*.js',
+	// 		'./lib/*.js',
+	// 		'./blocks/*.js',
+	// 		'./test/*.js'
+	// 	],
+	// 	['mocha']
+	// );
+
+	gulp.watch('./web/sass/**/*.{sass,scss}', ['sass']);
 });

@@ -1,5 +1,6 @@
 extends ../layouts/default
 
+
 mixin task(t)
 	hr
 	div
@@ -7,13 +8,15 @@ mixin task(t)
 			b.task-name #{t.name}
 			br
 			br
-			button(onclick='run_task("#{t.name}")') run now
+			if t.interval
+				button(onclick='run_task("#{t.name}")') run now
 			br
 			br
-			textarea.codemirror #{JSON.stringify(t, null, 4)}
+			//- textarea.codemirror #{JSON.stringify(t, null, 4)}
 			br
 			br
 			br
+
 
 block content
 	h1 'cause
@@ -21,3 +24,11 @@ block content
 	h2 #{tasks.length} tasks
 	for t in tasks
 		+task(t)
+
+
+block js
+	script(src='/bower_components/codemirror/lib/codemirror.js')
+	script(src='/bower_components/codemirror/mode/javascript/javascript.js')
+	script(src='/bower_components/codemirror/addon/selection/active-line.js')
+
+	script(src='/js/index.js')
