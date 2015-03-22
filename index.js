@@ -43,6 +43,7 @@ glob(path.join(tasks_path, '*.json'), function(err, files) {
 		.map(tasklib.prepare_task);
 
 	tasks.forEach(tasklib.run_task);
+	cli.list_tasks();
 });
 
 server.start();
