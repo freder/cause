@@ -1,6 +1,6 @@
 {
   "name": "cause",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "private": true,
   "description": "web automation",
   "main": "index.js",
