@@ -17,6 +17,23 @@ var email = require( path.join(global.paths.lib, 'email.js') );
 var debug = require('debug')(path.basename(__filename));
 
 
+// TODO: cleaner re-write
+// - rate limit requests
+// - https://github.com/fent/timequeue.js
+/*
+make a queue
+for each neighborhood
+	queue(first page)
+		look at all items on page
+		if already seen
+			return
+		if end of page
+			if there is a next page
+				queue(next page)
+
+*/
+
+
 var price_min = 400;
 var price_max = 1000;
 var price_range = sf('{0}-{1}', price_min, price_max);
@@ -119,7 +136,7 @@ function do_request(req_options, cb) {
 }
 
 
-function get_page_nums(done) {
+function get_number_of_pages(done) {
 	var funs = neighborhoods.map(function(neighborhood) {
 		var opts = {
 			url: make_url({ neighborhood: neighborhood }),
@@ -205,7 +222,7 @@ function get_items_from_page(body, kill_cb, step) {
 
 
 function scrape(done, step) {
-	get_page_nums(function(neighborhood_num) {
+	get_number_of_pages(function(neighborhood_num) {
 
 		// for each neighborhood
 		var funs = _.keys(neighborhood_num).map(function(neighborhood) {
@@ -298,22 +315,23 @@ function fn(task, step, input, prev_step) {
 
 		function finish(items) {
 			var new_ones = (items.length > 0);
-			if (new_ones) {
-				var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
-				winston.info(line);
+			
+			// if (new_ones) {
+			// 	var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
+			// 	winston.info(line);
 
-				var email_content = realestate.email_template(items);
-				var to = config.email.to; // override email defaults
-				if (step.options.email && step.options.email.to) {
-					to = step.options.email.to;
-				}
+			// 	var email_content = realestate.email_template(items);
+			// 	var to = config.email.to; // override email defaults
+			// 	if (step.options.email && step.options.email.to) {
+			// 		to = step.options.email.to;
+			// 	}
 
-				email.send({
-					to: to,
-					subject: sf('jaap.nl: {0} new houses', items.length),
-					html: email_content
-				});
-			}
+			// 	email.send({
+			// 		to: to,
+			// 		subject: sf('jaap.nl: {0} new houses', items.length),
+			// 		html: email_content
+			// 	});
+			// }
 
 			var flow_decision = tasklib.flow_decision(new_ones);
 			var output = items;

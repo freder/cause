@@ -35,8 +35,6 @@ function fn(task, step, input, prev_step) {
 		}
 	}
 
-	// TODO: maybe blocks like this should provide their own `init()` function
-	// for all the things that go further than normalization ...
 	// on first run:
 	if (step.options.or_after && !step.data.next_flush) {
 		set_next_flush();
@@ -44,12 +42,14 @@ function fn(task, step, input, prev_step) {
 
 	if (step.data.next_flush) {
 		var now = moment();
-		var then = moment(step.data.next_flush);
-		if (now >= then && step.data.collected.length >= step.options.at_least) {
+		var time_to_flush = moment(step.data.next_flush);
+		if (now >= time_to_flush && step.data.collected.length >= step.options.at_least) {
 			flush();
 		}
 	}
 
+	// TODO: should it flush multiple times
+	// or simply everything all at once?
 	while (step.data.collected.length >= step.options.limit) {
 		flush();
 	}
