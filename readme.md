@@ -32,10 +32,20 @@ node index.js
 if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
 
 ```shell
-EBUG=cause:* node index.js
+DEBUG=cause:* node index.js
 ```
 
 or use [`nodemon`](http://nodemon.io/), [`forever`](https://github.com/foreverjs/forever), ...
+
+
+---
+
+
+## web frontend
+
+as you start the tool, it opens the web frontend in the browser.
+
+![](./screenshot-web-frontend.png)
 
 
 ---
@@ -54,9 +64,9 @@ task configuration files live in `tasks/`. [`tasks/examples/`](./tasks/examples/
 ---
 
 
-## examples
+## cool examples
 
-![](./task-example.png)
+TODO:
 
 
 ---

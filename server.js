@@ -2,6 +2,8 @@ var path = require('path');
 var winston = require('winston');
 var chalk = require('chalk');
 var express = require('express');
+var open = require('open');
+var sf = require('sf');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -25,17 +27,29 @@ function start() {
 
 
 	app.get('/', function(req, res) {
-		res.render('views/index', { tasks: global.tasks });
+		var o = {};
+		global.tasks.forEach(function(t) {
+			o[t.name] = tasklib.make_savable(t);
+		});
+		var json = JSON.stringify(o);
+
+		res.render('views/index', {
+			// tasks: global.tasks,
+			tasks: global.tasks.map(tasklib.make_savable),
+			tasks_json: json,
+		});
 	});
 
 
-	app.post('/run/:taskname', function(req, res) {
+	app.post('/run/:slug', function(req, res) {
 		var ok = true;
-		var task = helper.get_by_name(global.tasks, req.params.taskname);
+		var task = helper.get_first_by(global.tasks, 'slug', req.params.slug);
 		if (!task) ok = false;
 		else tasklib.run_task(task);
 		res.json({ ok: ok });
 	});
+
+	open_browser();
 }
 
 
@@ -49,6 +63,11 @@ function url() {
 	var host = 'localhost';
 	var port = server.address().port;
 	return 'http://'+host+':'+port;
+}
+
+
+function open_browser() {
+	open(url());
 }
 
 
