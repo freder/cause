@@ -9,7 +9,7 @@ var validator = require('validator');
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function organizer(orga) {

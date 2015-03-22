@@ -7,7 +7,7 @@ var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:'+path.basename(__filename));
 
 
 var app, server;

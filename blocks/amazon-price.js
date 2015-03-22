@@ -10,7 +10,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var cli = require( path.join(global.paths.lib, 'cli.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {

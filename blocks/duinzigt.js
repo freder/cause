@@ -15,7 +15,7 @@ var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var feed = require( path.join(global.paths.lib, 'feed.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function neighborhood_filter(white_list) {

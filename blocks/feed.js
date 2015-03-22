@@ -4,7 +4,7 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var feed = require( path.join(global.paths.lib, 'feed.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step) {

@@ -18,7 +18,7 @@ var cli = require( path.join(global.paths.lib, 'cli.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:'+path.basename(__filename));
 
 
 process.stdin.on('data', cli.handle_command);

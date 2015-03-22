@@ -14,7 +14,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
-var debug = require('debug')(path.basename(__filename));
+var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 // TODO: cleaner re-write
