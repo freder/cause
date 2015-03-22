@@ -29,9 +29,9 @@ function start() {
 	});
 
 
-	app.post('/run/:taskname', function(req, res) {
+	app.post('/run/:slug', function(req, res) {
 		var ok = true;
-		var task = helper.get_by_name(global.tasks, req.params.taskname);
+		var task = helper.get_first_by(global.tasks, 'slug', req.params.slug);
 		if (!task) ok = false;
 		else tasklib.run_task(task);
 		res.json({ ok: ok });

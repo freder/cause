@@ -2,14 +2,13 @@ extends ../layouts/default
 
 
 mixin task(t)
-	hr
 	div
 		div
 			b.task-name #{t.name}
 			br
 			br
 			if t.interval
-				button(onclick='run_task("#{t.name}")') run now
+				button(onclick='run_task("#{t.slug}")') run now
 			br
 			br
 			//- textarea.codemirror #{JSON.stringify(t, null, 4)}

@@ -18,8 +18,8 @@ for (var i = 0; i < elems.length; i++) {
 }
 
 
-function run_task(name) {
-	$.post('/run/'+name, {}, function(res) {
+function run_task(slug) {
+	$.post('/run/'+slug, {}, function(res) {
 		console.log(res.ok);
 	});
 }
