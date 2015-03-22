@@ -3,7 +3,6 @@ var path = require('path');
 var chalk = require('chalk');
 var winston = require('winston');
 var _ = require('lodash');
-var open = require('open');
 
 global.paths = {
 	root: __dirname,

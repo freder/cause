@@ -26,7 +26,7 @@ gulp.task('graphviz', function() {
 	glob(path.join('./tasks/', '*.json'), function(err, files) {
 		files.forEach(function(filepath) {
 			var task = filesystem.load_json(filepath);
-			var basename = helper.get_filename(filepath);
+			var basename = filesystem.get_filename(filepath);
 			var content = 'digraph '+basename.replace(/\-/, '_')+' {\n';
 			var step_definitions = '';
 			var connections = '';
