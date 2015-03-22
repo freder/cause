@@ -14,6 +14,12 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 
 var app, server;
 
+
+function open_browser() {
+	open(url());
+}
+
+
 function start() {
 	var app = express();
 	app.use(express.static(path.join(global.paths.root, 'web')));
@@ -66,12 +72,8 @@ function url() {
 }
 
 
-function open_browser() {
-	open(url());
-}
-
-
 module.exports = {
 	start: start,
-	url: url
+	url: url,
+	open_browser: open_browser
 };
