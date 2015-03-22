@@ -122,8 +122,11 @@ function parse_info(info) {
 
 
 function do_request(req_options, cb) {
-	return request(req_options,
+	return request(
+		req_options,
 		function(err, res, body) {
+			if (err) { return cb(err); }
+			
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
 				debug(msg, task.name);
@@ -131,7 +134,7 @@ function do_request(req_options, cb) {
 				return cb(new Error(msg));
 			}
 
-			cb(err, body);
+			cb(null, body);
 		});
 }
 
