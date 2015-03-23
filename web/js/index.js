@@ -40,8 +40,13 @@ function make_graph(task) {
 	// });
 
 	task.steps.forEach(function(step) {
+		var label = step.block;
+		if (step._description) {
+			// label += '\n'+step._description;
+			label = step._description;
+		}
 		g.setNode(step.id, {
-			label: step.block,
+			label: label,
 			class: 'step'
 		});
 

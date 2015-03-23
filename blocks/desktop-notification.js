@@ -30,6 +30,7 @@ module.exports = {
 			title: "'cause: <%=task.name%>",
 			message: "<%=prev_step.block%>: <%=input%>"			
 		},
-		data: {}
+		data: {},
+		description: "desktop notification"
 	},
 };
