@@ -63,12 +63,11 @@ function url() {
 	if (!server) {
 		debug('can\'t get address: server not running.');
 		return;
+	} else {
+		// var host = server.address().address;
+		var host = 'localhost';
+		return 'http://'+host+':'+config.server.port;		
 	}
-
-	// var host = server.address().address;
-	var host = 'localhost';
-	var port = server.address().port;
-	return 'http://'+host+':'+port;
 }
 
 
