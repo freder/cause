@@ -97,6 +97,10 @@ module.exports = {
 		// data to be persisted between executions
 		data: {
 			prev_hash: ''
-		}
+		},
+
+		// underscore template that describes the step.
+		// can access step fields like this: `<%=options.method%>`
+		description: "website changed"
 	}
 };

@@ -29,6 +29,7 @@ module.exports = {
 		options: {},
 		data: {
 			counter: 0
-		}
+		},
+		description: "tick counter"
 	}
 };

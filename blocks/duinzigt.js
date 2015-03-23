@@ -167,7 +167,8 @@ module.exports = {
 		data: {
 			seen_pubdate: null,
 			seen_guids: []
-		}
+		},
+		description: "duinzigt.nl"
 	},
 
 	rename_keys: rename_keys,

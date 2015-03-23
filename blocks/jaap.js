@@ -369,7 +369,8 @@ module.exports = {
 		options: {},
 		data: {
 			seen_ids: []
-		}
+		},
+		description: "jaap.nl"
 	},
 	parse_info: parse_info,
 	do_request: do_request,

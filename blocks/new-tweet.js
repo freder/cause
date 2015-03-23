@@ -50,6 +50,7 @@ module.exports = {
 			endpoint: 'user',
 			keywords: []
 		},
-		data: {}
+		data: {},
+		description: "new tweet"
 	}
 };
