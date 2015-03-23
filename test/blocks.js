@@ -11,6 +11,7 @@ global.paths = util.get_paths();
 var tasklib = require('../lib/tasklib.js');
 
 var jaap = require('../blocks/jaap.js');
+var duinzigt = require('../blocks/duinzigt.js');
 var digest = require('../blocks/digest.js');
 
 
@@ -91,10 +92,47 @@ describe(util.f1('blocks/'), function() {
 		});
 	});
 
+
+	// ############################################################
+	describe(util.f2('duinzigt.js'), function() {
+
+		describe(util.f3('.rename_keys()'), function() {
+			it('should remove "rss:" and rename special cases', function() {
+				var item = {
+					'rss:city': { '#': 'den haag'},
+					'rss:area': { '#': 'zeeheldenkwartier'},
+					'street_name': { '#': 'fake street'}
+				};
+				var result = duinzigt.rename_keys(item);
+				assert(result.city == 'den haag');
+				assert(result.neighborhood == 'zeeheldenkwartier');
+				assert(result.street == 'fake street');
+			});
+		});
+
+		describe(util.f3('.{city,neighborhood,price}_filter()'), function() {
+			it('should work', function() {
+				var items = [
+					{ city: 'amsterdam', price: 750, neighborhood: 'zeeheldenkwartier' },
+					{ city: 'den haag', price: 1200, neighborhood: 'zeeheldenkwartier' },
+					{ city: 'den haag', price: 800, neighborhood: 'zeeheldenkwartier' },
+					{ city: 'den haag', price: 800, neighborhood: 'bad neighborhood' }
+				];
+				var result = items
+					.filter(duinzigt.price_filter(400, 1000))
+					.filter(duinzigt.city_filter('den haag'))
+					.filter(duinzigt.neighborhood_filter(['zeeheldenkwartier']))
+					;
+				assert(result.length === 1);
+			});
+		});
+
+	});
+
 	
 	// ############################################################
 	describe(util.f2('digest.js'), function() {
-		// describe(util.f1('.()'), function() {
+		// describe(util.f3('.()'), function() {
 		// 	it('should', function() {
 		// 		var task_path = path.join(global.paths.root, 'tasks/test/digest-test-2.json');
 		// 		var task = tasklib.load_task_from_file(task_path);
@@ -102,12 +140,132 @@ describe(util.f1('blocks/'), function() {
 		// 		tasklib.run_task(task);
 		// 	});
 		// });
+
+
+		// describe(util.f3('.fn()'), function() {
+		// 	it('should ignore falsey input', function() {
+		// 		var digest = tasklib.load_block('digest');
+		// 		var task = {};
+		// 		var step = {};
+		// 		var run = tasklib.create_step(digest, task, step);
+		// 		var input = null;
+		// 		run(input, {});
+		// 	});
+		// });
+
+		describe(util.f3('.fn()'), function() {
+			it('should flush when saturated', function() {
+				var digest = tasklib.load_block('digest');
+				var task = {};
+				var step = {
+					options: {
+						limit: 3,
+						// at_least: 1,
+						// or_after: false
+					}
+				};
+				var run = tasklib.create_step(digest, task, step);
+
+				var callback_counter = 0;
+				var done = function(output) {
+					// console.log(output);
+					callback_counter++;
+				};
+
+				run('input', {}, done);
+				run('input', {}, done);
+				run('input', {}, done);
+
+				run('input', {}, done);
+				run('input', {}, done);
+				run('input', {}, done);
+
+				run('input', {}, done);
+
+				assert(callback_counter === 2);
+			});
+		});
+
+		describe(util.f3('.fn()'), function() {
+			it('should obey "at_least" option', function() {
+				var digest = tasklib.load_block('digest');
+				var task = {};
+				var step = {
+					options: {
+						limit: 1,
+						at_least: 2,
+						// or_after: false
+					}
+				};
+				var run = tasklib.create_step(digest, task, step);
+
+				var callback_counter = 0;
+				var done = function(output) {
+					// console.log(output);
+					callback_counter++;
+				};
+
+				run('input', {}, done);
+				run('input', {}, done);
+				run('input', {}, done);
+
+				assert(callback_counter === 1);
+			});
+		});
+
+		describe(util.f3('.fn()'), function() {
+			it('should flush all at once, when "limit" is succeeded', function() {
+				var digest = tasklib.load_block('digest');
+				var task = {};
+				var step = {
+					options: {
+						limit: 2
+					}
+				};
+				var run = tasklib.create_step(digest, task, step);
+
+				var input = ['input', 'input', 'input', 'input', 'input'];
+				var cb = function(output) {
+					assert(output.length === input.length);
+				};
+				run(input, {}, cb);
+			});
+		});
+
+		// describe(util.f3('.fn()'), function() {
+		// 	it('should obey "or_after" option', function(done) {
+		// 		var digest = tasklib.load_block('digest');
+		// 		var task = {};
+		// 		var step = {
+		// 			options: {
+		// 				limit: 999,
+		// 				at_least: 1,
+		// 				or_after: '1 seconds'
+		// 			}
+		// 		};
+		// 		var run = tasklib.create_step(digest, task, step);
+
+		// 		var cb = function(output) {
+		// 			clearInterval(id);
+		// 			// console.log(output);
+		// 			// console.log(output.length);
+		// 			assert(output.length === 2);
+		// 			done();
+		// 		};
+
+		// 		var counter = 0;
+		// 		var id = setInterval(function() {
+		// 			counter++;
+		// 			run(counter, {}, cb);
+		// 		}, 800);
+		// 	});
+		// });
 	});
 
 
 	// ############################################################
 	describe(util.f2('tick.js'), function() {
-		// describe(util.f1('.()'), function() {
+		// describe(util.f3('.()'), function() {
 		// 	it('should', function() {
 		// 		var tick = tasklib.load_block('tick');
 		// 		var run = tasklib.create_step(tick, {}, {});

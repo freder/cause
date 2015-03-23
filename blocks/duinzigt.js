@@ -26,14 +26,13 @@ function neighborhood_filter(white_list) {
 
 function city_filter(city) {
 	return function(item) {
-		return item.city.toLowerCase() == city.toLowerCase();		
+		return item.city.toLowerCase() == city.toLowerCase();
 	}
 }
 
 function price_filter(min_price, max_price) {
 	return function(item) {
-		var price = parseInt(item.price);
-		return (min_price <= price) && (price <= max_price);
+		return (min_price <= item.price) && (item.price <= max_price);
 	}
 }
 
@@ -41,32 +40,39 @@ function price_filter(min_price, max_price) {
 function rename_keys(data) {
 	for (key in data) {
 		var new_key = key.replace('rss:', '');
-		var value = data[key]['#'];
-		delete data[key];
 
+		// rename some special cases
 		if (new_key == 'area') new_key = 'neighborhood';
 		if (new_key == 'street_name') new_key = 'street';
 		if (new_key == 'sub_category') new_key = 'type';
 
-		data[new_key] = value;
+		data[new_key] = data[key]['#'];
+
+		if (new_key != key) {
+			delete data[key]; // delete old entry
+		}
 	}
 	return data;
 }
 
 
 function prepare_item(item) {
-	var data = R.pick([
-		'rss:street_name',
-		'rss:price',
-		'rss:sub_category',
-		'rss:area',
-		'rss:city',
-		'rss:rooms',
-		'rss:link'],
-	item);
+	var data = R.pick(
+		[
+			'rss:street_name',
+			'rss:price',
+			'rss:sub_category',
+			'rss:area',
+			'rss:city',
+			'rss:rooms',
+			'rss:link'
+		], item
+	);
 
 	// remove the 'rss:' part
-	rename_keys(data);
+	data = rename_keys(data);
+
+	data.price = parseInt(data.price);
 
 	// make google maps url
 	data.maps_url = helper.make_googlemaps_url(data.street);
@@ -84,7 +90,7 @@ function prepare_item(item) {
 		}
 	}
 
-	return item;
+	return data;
 }
 
 
@@ -101,13 +107,19 @@ function fn(task, step, input, prev_step) {
 	function(err, result) {
 		if (err) { return helper.handle_error(err); }
 
-		var matcher = R.pipe(
-			R.filter(city_filter('den haag')),
-			R.filter(neighborhood_filter(step.options.neighborhoods)),
-			R.filter(price_filter(step.options.min_price, step.options.max_price))
+		var new_matches = result.new_items
+			.map(prepare_item)
+			.filter(city_filter('den haag'))
+			.filter(neighborhood_filter(step.options.neighborhoods))
+			.filter(price_filter(step.options.min_price, step.options.max_price));
+
+		debug(
+			sf('{0} items, {1} new ones, {2} matches',
+				result.items.length,
+				result.new_items.length,
+				new_matches.length
+			)
 		);
-		var new_matches = matcher(result.new_items)
-			.map(prepare_item);
 
 		var new_ones = (new_matches.length > 0);
 
@@ -156,5 +168,10 @@ module.exports = {
 			seen_pubdate: null,
 			seen_guids: []
 		}
-	}
+	},
+
+	rename_keys: rename_keys,
+	price_filter: price_filter,
+	city_filter: city_filter,
+	neighborhood_filter: neighborhood_filter
 };

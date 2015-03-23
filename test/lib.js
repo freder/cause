@@ -19,9 +19,6 @@ var filesystem = require('../lib/filesystem.js');
 var scraping = require('../lib/scraping.js');
 var feed = require('../lib/feed.js');
 
-var jaap = require('../blocks/jaap.js');
-var digest = require('../blocks/digest.js');
-
 
 describe(util.f1('lib/'), function() {
 
