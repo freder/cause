@@ -27,12 +27,12 @@ function run_task(slug) {
 
 function make_graph(task) {
 	var g = new dagreD3.graphlib.Graph()
-		.setGraph({});
+		.setGraph({
+			rankdir: 'LR',
+			// ranksep: 15,
+			// nodesep: 15
+		});
 		// .setDefaultEdgeLabel(function() { return {}; });
-
-	g.graph().rankdir = "LR";
-	// g.graph().ranksep = 15;
-	// g.graph().nodesep = 15;
 
 	// g.setNode(task.slug, {
 	// 	label: task.name,
@@ -49,8 +49,19 @@ function make_graph(task) {
 		var flow = step.flow;
 		['if', 'else', 'always'].forEach(function(type) {
 			var f = flow[type] || [];
+
+			if (f.length > 0) {
+				var flow_node_id = step.id+'-'+task.slug;
+				g.setNode(flow_node_id, {
+					label: type,
+					class: 'flow',
+					shape: 'diamond'
+				});
+			}
+
 			f.forEach(function(next_id) {
-				g.setEdge(step.id, next_id, { label: type });
+				g.setEdge(step.id, flow_node_id, { arrowhead: 'undirected' });
+				g.setEdge(flow_node_id, next_id, { /*label: type*/ });
 			});
 		});
 	});
