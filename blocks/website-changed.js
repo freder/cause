@@ -22,7 +22,7 @@ function fn(
 		input,		// the previous step's output is this step's input
 		prev_step,	// the previous step
 		done		// callback function(ouput)
-		) {
+	) {
 
 	// when a step is created,
 	// `step.options` and `step.data` are populated with
