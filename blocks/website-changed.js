@@ -20,7 +20,8 @@ function fn(
 		task,		// the task this step is part of
 		step,		// the current step
 		input,		// the previous step's output is this step's input
-		prev_step	// the previous step
+		prev_step,	// the previous step
+		done		// callback function(ouput)
 		) {
 
 	// when a step is created,
@@ -68,6 +69,9 @@ function fn(
 
 		// this block simply passes through its input
 		var output = input;
+
+		// callback: handy for testing
+		if (done) done(ouput);
 
 		// invoke child steps
 		tasklib.invoke_children(step, task, output, flow_decision);
