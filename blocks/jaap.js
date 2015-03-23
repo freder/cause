@@ -33,6 +33,8 @@ for each neighborhood
 
 */
 
+var timeout = 500;
+
 
 var price_min = 400;
 var price_max = 1000;
@@ -242,20 +244,25 @@ function scrape(done, step) {
 
 					// for each page
 					function(cb) {
-						var opts = { url: make_url({ neighborhood: neighborhood, page: page }) };
-						// console.log(neighborhood, page);
-						do_request(opts, function(err, body) {
-							if (err) { cb_neighborhood(err); }
+						var url = make_url({ neighborhood: neighborhood, page: page });
+						var opts = { url: url };
 
-							var items = get_items_from_page(body, kill_cb, step);
-							items.forEach(function(item) {
-								// plus to space
-								item.neighborhood = neighborhood.replace(/\+/g, ' ');
+						debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
+
+						setTimeout(function() {
+							do_request(opts, function(err, body) {
+								if (err) { cb_neighborhood(err); }
+
+								var items = get_items_from_page(body, kill_cb, step);
+								items.forEach(function(item) {
+									// plus to space
+									item.neighborhood = neighborhood.replace(/\+/g, ' ');
+								});
+								result = result.concat(items);
+								page++;
+								cb();
 							});
-							result = result.concat(items);
-							page++;
-							cb();
-						});
+						}, timeout); // throttle requests a bit
 					},
 
 					// callback
@@ -279,11 +286,11 @@ function scrape(done, step) {
 function fn(task, step, input, prev_step) {
 	step.data.temp_seen_ids = [];
 
-	scrape(function(items) {
+	scrape(function(new_items) {
 		// some additional filtering first:
 
 		// we want more than one room
-		items = items.filter(function(item) {
+		var filtered = new_items.filter(function(item) {
 			if (!item.rooms || item.rooms > 1) {
 				return true;
 			} else {
@@ -294,7 +301,7 @@ function fn(task, step, input, prev_step) {
 
 		// house should be suitable for more than one person
 		async.filterSeries(
-			items,
+			filtered,
 
 			function filter(item, cb) {
 				var opts = {
@@ -310,20 +317,20 @@ function fn(task, step, input, prev_step) {
 				});
 			},
 
-			function done(filtered) {
-				finish(filtered);
+			function done(new_matches) {
+				finish(new_items, new_matches);
 			}
 		);
 
 
-		function finish(items) {
-			var new_ones = (items.length > 0);
+		function finish(new_items, new_matches) {
+			var new_ones = (new_matches.length > 0);
 			
 			// if (new_ones) {
-			// 	var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), items.length);
+			// 	var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), new_matches.length);
 			// 	winston.info(line);
 
-			// 	var email_content = realestate.email_template(items);
+			// 	var email_content = realestate.email_template(new_matches);
 			// 	var to = config.email.to; // override email defaults
 			// 	if (step.options.email && step.options.email.to) {
 			// 		to = step.options.email.to;
@@ -331,13 +338,20 @@ function fn(task, step, input, prev_step) {
 
 			// 	email.send({
 			// 		to: to,
-			// 		subject: sf('jaap.nl: {0} new houses', items.length),
+			// 		subject: sf('jaap.nl: {0} new houses', new_matches.length),
 			// 		html: email_content
 			// 	});
 			// }
 
+			debug(
+				sf('{0} new ones, {1} matches',
+					new_items.length,
+					new_matches.length
+				)
+			);
+
 			var flow_decision = tasklib.flow_decision(new_ones);
-			var output = items;
+			var output = new_matches;
 			tasklib.invoke_children(step, task, output, flow_decision);
 
 			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
