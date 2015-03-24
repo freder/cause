@@ -11,7 +11,7 @@ var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step, done) {
-	// sanity check
+	// sanity check: `limit` must be >= `at_least`
 	step.options.limit = Math.max(step.options.limit, step.options.at_least);
 
 	if (!_.isEmpty(input)) {
@@ -29,7 +29,7 @@ function fn(task, step, input, prev_step, done) {
 			)
 		);
 	} else {
-		debug('got empty input.');
+		debug('ignoring empty input: '+input);
 	}
 
 	// TODO: should it flush multiple times, or simply everything all at once?
@@ -68,6 +68,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
+			debug(step.options.or_after+' have passed — flushing ...');
 			flush();
 		}
 	}
