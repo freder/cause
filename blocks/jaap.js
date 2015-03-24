@@ -198,6 +198,9 @@ function get_items_from_page(body, kill_cb, step) {
 		]).join(', ').replace('ᵐ', 'm').replace(/ +/g, ' ');
 		info = parse_info(info);
 
+		var price = $this.find('.property-price').text().replace('€', '').trim();
+		price = parseInt(price);
+
 		var item = {
 			id: $this.attr('id').split('_')[2],
 			street: $this.find('.property-address-street').text(),
@@ -205,7 +208,7 @@ function get_items_from_page(body, kill_cb, step) {
 			type: info.type,
 			rooms: info.rooms,
 			area: info.area,
-			price: $this.find('.property-price').text().replace('€', '').trim()
+			price: price
 		};
 
 		item.street = item.street.replace(' 0 Ong', '');
