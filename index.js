@@ -12,9 +12,19 @@ global.paths = {
 
 require( path.join(global.paths.lib, 'log.js') ).init();
 
+// command line
+var cli = require( path.join(global.paths.lib, 'cli.js') );
+var nopt = require('nopt');
+var args = global.args = nopt(cli.opts, cli.shorthands, process.argv, 2);
+if (args.help) cli.show_help();
+if (args.version) cli.show_version();
+if (
+	args.help ||
+	args.version
+) { cli.exit(0, true); }
+
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
-var cli = require( path.join(global.paths.lib, 'cli.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 

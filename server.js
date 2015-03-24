@@ -55,7 +55,9 @@ function start() {
 		res.json({ ok: ok });
 	});
 
-	open_browser();
+	if (args['open-frontend']) {
+		open_browser();		
+	}
 }
 
 
