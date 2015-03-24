@@ -39,6 +39,7 @@ module.exports = {
 		data: {
 			seen_pubdate: null,
 			seen_guids: []
-		}
+		},
+		description: "new rss item(s)"
 	}
 };

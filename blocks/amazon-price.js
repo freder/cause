@@ -60,6 +60,7 @@ module.exports = {
 		},
 		data: {
 			prev_price: 0
-		}
+		},
+		description: "amazon product\nprice changed"
 	}
 };

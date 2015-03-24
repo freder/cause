@@ -50,6 +50,7 @@ module.exports = {
 		},
 		data: {
 			prev_price: 0
-		}
+		},
+		description: "฿ rate on\n<%=options.market%>"
 	},
 };

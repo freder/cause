@@ -33,15 +33,13 @@ function start() {
 
 
 	app.get('/', function(req, res) {
-		var o = {};
+		var obj = {};
 		global.tasks.forEach(function(t) {
-			o[t.name] = tasklib.make_savable(t);
+			obj[t.name] = tasklib.make_savable(t, true);
 		});
-		var json = JSON.stringify(o);
+		var json = JSON.stringify(obj);
 
 		res.render('views/index', {
-			// tasks: global.tasks,
-			tasks: global.tasks.map(tasklib.make_savable),
 			tasks_json: json,
 		});
 	});

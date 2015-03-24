@@ -37,6 +37,7 @@ module.exports = {
 		},
 		data: {
 			triggered: false
-		}
+		},
+		description: '<%=options.comparison%> <%=options.value%>'
 	},
 };

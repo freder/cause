@@ -93,6 +93,7 @@ module.exports = {
 			collected: [],
 			last_flush: 0,
 			// next_flush: undefined
-		}		
+		},
+		description: "digest: <%=options.limit%>\n<%if (options.at_least > 1) {%>at least: <%=options.at_least%><%}%>\n<%if (options.or_after) {%>or after: <%=options.or_after%><%}%>"
 	}
 };

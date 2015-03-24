@@ -108,7 +108,8 @@ module.exports = {
 		options: {},
 		data: {
 			seen_events: []
-		}
+		},
+		description: "new ical event"
 	},
 	organizer: organizer
 };

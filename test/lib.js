@@ -28,10 +28,18 @@ describe(util.f1('lib/'), function() {
 			it("should remove everything prefixed with '_'", function() {
 				var task = {
 					name: 'test task',
-					_internal: 'schedule'
+					_internal: 'schedule',
+					steps: [
+						{
+							block: 'block',
+							_description: '_description',
+						}
+					]
 				};
-				var savable = tasklib.make_savable(task);
+				var skip_steps = false;
+				var savable = tasklib.make_savable(task, skip_steps);
 				assert(savable._internal === undefined);
+				assert(savable.steps[0]._description === undefined);
 			});
 		});
 

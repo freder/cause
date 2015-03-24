@@ -36,6 +36,7 @@ module.exports = {
 			title: '<%=step.name%>',
 			message: '<%=input%>'
 		},
-		data: {}
+		data: {},
+		description: "log to console"
 	}
 };
