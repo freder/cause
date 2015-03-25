@@ -48,8 +48,10 @@ function fn(task, step, input, prev_step, done) {
 		var take_n = step.options.limit;
 		if (all_at_once) take_n = step.data.collected.length;
 
+		debug('flushing ...');
+
 		var output = R.take(take_n, step.data.collected);
-		if (done) { done(output); }
+		if (done) done(null, output);
 		var flow_decision = tasklib.flow_decision(true);
 		tasklib.invoke_children(step, task, output, flow_decision);
 		step.data.collected = R.drop(take_n, step.data.collected);
@@ -68,7 +70,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
-			debug(step.options.or_after+' have passed — flushing ...');
+			debug(step.options.or_after+' have passed');
 			flush();
 		}
 	}
