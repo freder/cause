@@ -1,6 +1,7 @@
 var assert = require('assert');
 var path = require('path');
 var chalk = require('chalk');
+var async = require('async');
 var _ = require('lodash');
 
 
@@ -167,7 +168,7 @@ describe(util.f1('blocks/'), function() {
 				var run = tasklib.create_step(digest, task, step);
 
 				var callback_counter = 0;
-				var done = function(output) {
+				var done = function(err, output) {
 					// console.log(output);
 					callback_counter++;
 				};
@@ -225,7 +226,7 @@ describe(util.f1('blocks/'), function() {
 				var run = tasklib.create_step(digest, task, step);
 
 				var input = ['input', 'input', 'input', 'input', 'input'];
-				var cb = function(output) {
+				var cb = function(err, output) {
 					assert(output.length === input.length);
 				};
 				run(input, {}, cb);
@@ -290,6 +291,121 @@ describe(util.f1('blocks/'), function() {
 
 				step.data.counter = 12;
 				run('input', prev_step);
+			});
+		});
+	});
+
+
+	// ############################################################
+	describe(util.f2('multi-threshold.js'), function() {
+		describe(util.f3('.fn()'), function() {
+			it('should work up', function() {
+				var multithresh = tasklib.load_block('multi-threshold');
+				var task = {};
+				var step = {
+					options: {
+						offset: 0,
+						step: 1
+					},
+					data: {
+						prev_value: 0.6
+					}
+				};
+				var run = tasklib.create_step(multithresh, task, step);
+				var counter = 0;
+
+				async.eachSeries([0.6, 1.1],
+					function(value, callback) {
+						run(value, {}, function(err, output) {
+							assert(output.down === false);
+							if (counter === 0) assert(output.up === false);
+							if (counter === 1) assert(output.up === true);
+							counter++;
+							callback(null);
+						});
+					}
+				);
+			});
+
+			it('should work down', function() {
+				var multithresh = tasklib.load_block('multi-threshold');
+				var task = {};
+				var step = {
+					options: {
+						offset: 0,
+						step: 1
+					},
+					data: {
+						prev_value: 0.6
+					}
+				};
+				var run = tasklib.create_step(multithresh, task, step);
+				var counter = 0;
+
+				async.eachSeries([0.6, -0.3],
+					function(value, callback) {
+						run(value, {}, function(err, output) {
+							assert(output.up === false);
+							if (counter === 0) assert(output.down === false);
+							if (counter === 1) assert(output.down === true);
+							counter++;
+							callback(null);
+						});
+					}
+				);
+			});
+
+			it('should obey the "offset"', function() {
+				var multithresh = tasklib.load_block('multi-threshold');
+				var task = {};
+				var step = {
+					options: {
+						offset: 0.5,
+						step: 1
+					},
+					data: {
+						prev_value: 0.6
+					}
+				};
+				var run = tasklib.create_step(multithresh, task, step);
+				var counter = 0;
+
+				async.eachSeries([0.6, 0.4],
+					function(value, callback) {
+						run(value, {}, function(err, output) {
+							if (counter === 1) assert(output.down === true);
+							counter++;
+							callback(null);
+						});
+					}
+				);
+			});
+
+			it('should work with arbitrary "step" sizes', function() {
+				var multithresh = tasklib.load_block('multi-threshold');
+				var task = {};
+				var step = {
+					options: {
+						offset: 0.799098,
+						step: 10.2345345
+					}
+				};
+				var threshold = step.options.offset + (3 * step.options.step);
+				var values = [threshold+0.1, threshold-0.1];
+				step.data = { prev_value: values[0] };
+
+				var run = tasklib.create_step(multithresh, task, step);
+				var counter = 0;
+
+				async.eachSeries(values,
+					function(value, callback) {
+						run(value, {}, function(err, output) {
+							if (counter === 1) assert(output.down === true);
+							counter++;
+							callback(null);
+						});
+					}
+				);
 			});
 		});
 	});
