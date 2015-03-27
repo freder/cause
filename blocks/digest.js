@@ -66,18 +66,19 @@ function fn(task, step, input, prev_step, done) {
 		set_next_flush();
 	}
 
+	// flush after a certain time, no matter if threshold
+	// has been reached or not.
 	if (step.data.next_flush) {
 		var now = moment();
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
 			debug(step.options.or_after+' have passed');
-			flush();
+			if (step.data.collected.length > 0) flush();
 		}
 	}
 
-	if (step.data.collected.length >= step.options.limit) {
-		flush();
-	}
+	// flush, once threshold is reached
+	if (step.data.collected.length >= step.options.limit) flush();
 
 	tasklib.save_task(task);
 }
