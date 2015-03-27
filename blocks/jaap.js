@@ -250,7 +250,7 @@ function scrape(done, step) {
 						var url = make_url({ neighborhood: neighborhood, page: page });
 						var opts = { url: url };
 
-						debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
+						// debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
 
 						setTimeout(function() {
 							do_request(opts, function(err, body) {

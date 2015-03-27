@@ -16,7 +16,9 @@ var app, server;
 
 
 function open_browser() {
-	open(url());
+	var url = url();
+	debug('opening '+url+' in browser')
+	open(url);
 }
 
 
