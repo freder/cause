@@ -25,10 +25,10 @@ function fn(task, step, input, prev_step, done) {
 
 	var check = crossed_down || crossed_up;
 
+	var threshold = (crossed_down)
+		? floor_prev * step.options.step + step.options.offset
+		: floor_current * step.options.step + step.options.offset;
 	if (check) {
-		var threshold = (crossed_down)
-			? floor_prev * step.options.step + step.options.offset
-			: floor_current * step.options.step + step.options.offset;
 		var arrow = (crossed_up) ? '▲' : '▼';
 		debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+step.data.prev_value, ''+input, chalk.inverse(arrow)) );
 	}
@@ -36,6 +36,8 @@ function fn(task, step, input, prev_step, done) {
 	var output = {
 		up: crossed_up,
 		down: crossed_down,
+		threshold: threshold,
+		value: input
 	};
 
 	if (done) done(null, output);
