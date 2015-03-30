@@ -291,15 +291,21 @@ function fn(task, step, input, prev_step) {
 
 	scrape(function(new_items) {
 		// some additional filtering first:
-
-		// we want more than one room
-		var filtered = new_items.filter(function(item) {
-			if (!item.rooms || item.rooms > 1) {
-				return true;
-			} else {
-				return false;
-			}
-		});
+		var filtered = new_items
+			.filter(function(item) { // we want more than one room
+				if (!item.rooms || item.rooms > 1) {
+					return true;
+				} else {
+					return false;
+				}
+			})
+			.filter(function(item) { // no single rooms
+				if (item.type || /kamer/i.test(item.type)) {
+					return false;
+				} else {
+					return true;
+				}
+			});
 
 
 		// house should be suitable for more than one person
