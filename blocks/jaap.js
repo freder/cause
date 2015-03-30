@@ -98,20 +98,20 @@ function make_link(id) {
 function parse_info(info) {
 	var items = info.split(',');
 
-	var type = '';
+	var type = undefined;
 	var rooms = undefined;
-	var area = '';
+	var area = undefined;
 
 	items.forEach(function(item) {
 		item = item.trim();
 
 		if (item.indexOf('m²') > -1) {
-			area = item;
+			area = (item === '') ? undefined : item;
 		} else if (/^\d+ kamer/.test(item)) {
 			rooms = item.split(' ')[0];
 			rooms = parseInt(rooms);
 		} else {
-			type = item;
+			type = (item === '') ? undefined : item;
 		}
 	});
 
