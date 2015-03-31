@@ -43,6 +43,7 @@ function start() {
 
 		res.render('views/index', {
 			tasks_json: json,
+			websocket_port: config.server.websocket_port
 		});
 	});
 
@@ -54,6 +55,22 @@ function start() {
 		else tasklib.run_task(task);
 		res.json({ ok: ok });
 	});
+
+
+	// websockets
+	var io = require('socket.io').listen(config.server.websocket_port);
+	debug('websocket on port', config.server.websocket_port);
+
+	io.sockets.on('connection', function(socket) {
+		function redirect(data) {
+			socket.emit('console_data', chalk.stripColor(data));
+		}
+
+		var Hook = require('hook-stdio');
+		/*var unhook = */Hook.stdout(redirect, true);
+		/*var unhook = */Hook.stderr(redirect, true);
+	});
+	
 
 	if (args['open-frontend']) {
 		open_browser();		

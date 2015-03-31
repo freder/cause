@@ -5,7 +5,8 @@ module.exports = {
 	},
 
 	server: {
-		port: 3030
+		port: 3030,
+		websocket_port: 3031
 	},
 
 	pushover: {
