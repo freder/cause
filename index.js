@@ -33,12 +33,10 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 
 process.stdin.on('data', cli.handle_command);
 
-
 process.on('uncaughtException', function(err) {
 	helper.handle_error(err);
 	cli.exit(1);
 });
-
 
 process.on('SIGINT', function() {
 	cli.exit();
