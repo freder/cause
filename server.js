@@ -15,8 +15,20 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 var app, server;
 
 
+function get_url() {
+	if (!server) {
+		debug('can\'t get address: server not running.');
+		return;
+	} else {
+		// var host = server.address().address;
+		var host = 'localhost';
+		return 'http://'+host+':'+config.server.port;
+	}
+}
+
+
 function open_browser() {
-	var url = url();
+	var url = get_url();
 	debug('opening '+url+' in browser')
 	open(url);
 }
@@ -30,7 +42,7 @@ function start() {
 
 
 	server = app.listen(config.server.port, function() {
-		winston.info('listening at '+chalk.cyan( url() ));
+		winston.info('listening at '+chalk.cyan( get_url() ));
 	});
 
 
@@ -55,26 +67,18 @@ function start() {
 		res.json({ ok: ok });
 	});
 
+
+	
+
+
 	if (args['open-frontend']) {
-		open_browser();		
-	}
-}
-
-
-function url() {
-	if (!server) {
-		debug('can\'t get address: server not running.');
-		return;
-	} else {
-		// var host = server.address().address;
-		var host = 'localhost';
-		return 'http://'+host+':'+config.server.port;		
+		open_browser();
 	}
 }
 
 
 module.exports = {
 	start: start,
-	url: url,
+	get_url: get_url,
 	open_browser: open_browser
 };
