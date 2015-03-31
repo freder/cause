@@ -410,4 +410,28 @@ describe(util.f1('blocks/'), function() {
 		});
 	});
 
+	
+	// ############################################################
+	describe(util.f2('js-function.js'), function() {
+		describe(util.f3('.fn()'), function() {
+			it('should work', function(cb) {
+				var jsfun = tasklib.load_block('js-function');
+				var task = {};
+				var step = {
+					options: {
+						func: 'function() { output = 999; }'
+					}
+				};
+				var prev_step = {};
+				var run = tasklib.create_step(jsfun, task, step);
+				var input = 123;
+
+				run(input, prev_step, function(err, output) {
+					assert(output === 999);
+					cb();
+				});
+			});
+		});
+	});
+
 });
