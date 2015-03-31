@@ -16,6 +16,8 @@ mixin task(t)
 
 
 block content
+	div#console
+
 	img(src='/img/logo.svg')#logo
 
 	h1 'cause
@@ -31,6 +33,8 @@ block js
 	script(src='/bower_components/dagre/dist/dagre.core.js')
 	script(src='/bower_components/dagre-d3/dist/dagre-d3.core.js')
 
+	script(src='/bower_components/socket.io-client/socket.io.js')
+
 	script(src='/bower_components/codemirror/lib/codemirror.js')
 	script(src='/bower_components/codemirror/mode/javascript/javascript.js')
 	script(src='/bower_components/codemirror/addon/selection/active-line.js')
@@ -39,3 +43,4 @@ block js
 
 	script.
 		var tasks = !{tasks_json};
+		var websocket_port = !{websocket_port};
