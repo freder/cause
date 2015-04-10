@@ -1,7 +1,6 @@
 var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
-var winston = require('winston');
 var _ = require('lodash');
 
 global.paths = {
@@ -22,6 +21,7 @@ if (
 	args.help ||
 	args.version
 ) { cli.exit(0, true); }
+
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
