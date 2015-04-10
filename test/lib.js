@@ -76,22 +76,31 @@ describe(util.f1('lib/'), function() {
 			it("should keep track of currently executing steps", function(cb) {
 				var block = {
 					fn: function(task, step, input, prev_step, done) {
-						setTimeout(done, 100);
+						setTimeout(function() {
+							var output = null;
+							done(null, output);
+							var flow_decision = tasklib.flow_decision_defaults;
+							tasklib.invoke_children(step, task, output, flow_decision);
+						}, 100);
 					}
 				};
+
 				var task = tasklib.prepare_task({
-					name: 'test task',
-					_done: function() {
-						// task done
-					}
+					name: 'test task'
 				});
+
 				var step = { id: 'test-step' };
-				step._execute = tasklib.create_step_function(block, task, step);
-				step._execute(null, null, function() {
+				step._execute = tasklib.create_step_function(block, task, step );
+
+				task.steps = [step];
+				task._done = function() {
+					// console.log(task._currently_executing_steps);
 					assert(_.keys(task._currently_executing_steps).length === 0);
 					cb();
-				});
+				};
+				tasklib.run_task(task);
 				assert(_.keys(task._currently_executing_steps).length === 1);
+				// console.log(task._currently_executing_steps);
 			});
 		});
 
