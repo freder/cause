@@ -148,7 +148,7 @@ describe(util.f1('blocks/'), function() {
 		// 		var digest = tasklib.load_block('digest');
 		// 		var task = {};
 		// 		var step = {};
-		// 		var run = tasklib.create_step(digest, task, step);
+		// 		var run = tasklib.create_step_function(digest, task, step);
 		// 		var input = null;
 		// 		run(input, {});
 		// 	});
@@ -165,7 +165,7 @@ describe(util.f1('blocks/'), function() {
 						// or_after: false
 					}
 				};
-				var run = tasklib.create_step(digest, task, step);
+				var run = tasklib.create_step_function(digest, task, step);
 
 				var callback_counter = 0;
 				var done = function(err, output) {
@@ -198,7 +198,7 @@ describe(util.f1('blocks/'), function() {
 						// or_after: false
 					}
 				};
-				var run = tasklib.create_step(digest, task, step);
+				var run = tasklib.create_step_function(digest, task, step);
 
 				var callback_counter = 0;
 				var done = function(output) {
@@ -223,7 +223,7 @@ describe(util.f1('blocks/'), function() {
 						limit: 2
 					}
 				};
-				var run = tasklib.create_step(digest, task, step);
+				var run = tasklib.create_step_function(digest, task, step);
 
 				var input = ['input', 'input', 'input', 'input', 'input'];
 				var cb = function(err, output) {
@@ -244,7 +244,7 @@ describe(util.f1('blocks/'), function() {
 		// 				or_after: '1 seconds'
 		// 			}
 		// 		};
-		// 		var run = tasklib.create_step(digest, task, step);
+		// 		var run = tasklib.create_step_function(digest, task, step);
 
 		// 		var cb = function(output) {
 		// 			clearInterval(id);
@@ -269,7 +269,7 @@ describe(util.f1('blocks/'), function() {
 		// describe(util.f3('.()'), function() {
 		// 	it('should', function() {
 		// 		var tick = tasklib.load_block('tick');
-		// 		var run = tasklib.create_step(tick, {}, {});
+		// 		var run = tasklib.create_step_function(tick, {}, {});
 		// 		run('input', {});
 		// 		run('input', {});
 		// 		run('input', {});
@@ -283,7 +283,7 @@ describe(util.f1('blocks/'), function() {
 				var step = { data: { counter: '12' } };
 				var prev_step = {};
 
-				var run = tasklib.create_step(tick, task, step);
+				var run = tasklib.create_step_function(tick, task, step);
 
 				assert.throws(function() {
 					run('input', prev_step);
@@ -311,7 +311,7 @@ describe(util.f1('blocks/'), function() {
 						prev_value: 0.6
 					}
 				};
-				var run = tasklib.create_step(multithresh, task, step);
+				var run = tasklib.create_step_function(multithresh, task, step);
 				var counter = 0;
 
 				async.eachSeries([0.6, 1.1],
@@ -339,7 +339,7 @@ describe(util.f1('blocks/'), function() {
 						prev_value: 0.6
 					}
 				};
-				var run = tasklib.create_step(multithresh, task, step);
+				var run = tasklib.create_step_function(multithresh, task, step);
 				var counter = 0;
 
 				async.eachSeries([0.6, -0.3],
@@ -367,7 +367,7 @@ describe(util.f1('blocks/'), function() {
 						prev_value: 0.6
 					}
 				};
-				var run = tasklib.create_step(multithresh, task, step);
+				var run = tasklib.create_step_function(multithresh, task, step);
 				var counter = 0;
 
 				async.eachSeries([0.6, 0.4],
@@ -394,7 +394,7 @@ describe(util.f1('blocks/'), function() {
 				var values = [threshold+0.1, threshold-0.1];
 				step.data = { prev_value: values[0] };
 
-				var run = tasklib.create_step(multithresh, task, step);
+				var run = tasklib.create_step_function(multithresh, task, step);
 				var counter = 0;
 
 				async.eachSeries(values,
@@ -423,7 +423,7 @@ describe(util.f1('blocks/'), function() {
 					}
 				};
 				var prev_step = {};
-				var run = tasklib.create_step(jsfun, task, step);
+				var run = tasklib.create_step_function(jsfun, task, step);
 				var input = 123;
 
 				run(input, prev_step, function(err, output) {

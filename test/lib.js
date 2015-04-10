@@ -72,6 +72,27 @@ describe(util.f1('lib/'), function() {
 				task = tasklib.prepare_task(task_data);
 				assert(task._timer === undefined);
 			});
+
+			it("should keep track of currently executing steps", function(cb) {
+				var block = {
+					fn: function(task, step, input, prev_step, done) {
+						setTimeout(done, 100);
+					}
+				};
+				var task = tasklib.prepare_task({
+					name: 'test task',
+					_done: function() {
+						// task done
+					}
+				});
+				var step = { id: 'test-step' };
+				step._execute = tasklib.create_step_function(block, task, step);
+				step._execute(null, null, function() {
+					assert(_.keys(task._currently_executing_steps).length === 0);
+					cb();
+				});
+				assert(_.keys(task._currently_executing_steps).length === 1);
+			});
 		});
 
 		describe(util.f3('.flow_decision()'), function() {
