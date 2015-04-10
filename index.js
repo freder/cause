@@ -42,16 +42,26 @@ process.on('SIGINT', function() {
 	cli.exit();
 });
 
+if (args.task) {
+	debug('running '+chalk.cyan(args.task));
+	var task_data = tasklib.load_task_from_file(args.task)
+	task_data.interval = undefined;
+	task = tasklib.prepare_task(task_data);
+	tasklib.run_task(task, function(err, result) {
+		process.exit();
+	});
+} else {
+	var tasks_path = path.join(global.paths.root, config.paths.tasks);
+	debug('loading tasks from '+chalk.cyan(tasks_path));
+	glob(path.join(tasks_path, '*.json'), function(err, files) {
+		var tasks = global.tasks = files
+			.map(tasklib.load_task_from_file)
+			.map(tasklib.prepare_task);
 
-var tasks_path = path.join(global.paths.root, config.paths.tasks);
-debug('loading tasks from '+chalk.cyan(tasks_path));
-glob(path.join(tasks_path, '*.json'), function(err, files) {
-	var tasks = global.tasks = files
-		.map(tasklib.load_task_from_file)
-		.map(tasklib.prepare_task);
+		tasks.forEach(tasklib.run_task);
+		
+		cli.list_tasks();
+		server.start();
+	});	
+}
 
-	tasks.forEach(tasklib.run_task);
-	
-	cli.list_tasks();
-	server.start();
-});
