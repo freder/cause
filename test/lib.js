@@ -213,10 +213,10 @@ describe(util.f1('lib/'), function() {
 				$result = scraping.query('css', query, html);
 				assert($result.text().trim() == 'span');
 
-				query = '#nope';
-				assert.throws(function() {
-					scraping.query('css', query, html);
-				});
+				// query = '#nope';
+				// assert.throws(function() {
+				// 	scraping.query('css', query, html);
+				// });
 			});
 		});
 

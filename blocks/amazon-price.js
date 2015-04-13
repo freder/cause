@@ -32,6 +32,11 @@ function fn(task, step, input, prev_step) {
 			winston.warn('selection contains more than one element — only using first one.');
 		} // TODO: should it also work with multiple elements?
 
+		if ($selection.length === 0) {
+			winston.error( sf('{0} {1}', chalk.bgBlue(task.name), 'selection is empty') );
+			return; // stop here
+		}
+
 		var text = $selection.first().text();
 		var price = helper.format_price(text, step.options);
 		price = parseFloat(price);
