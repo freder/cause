@@ -27,6 +27,7 @@ function fn(task, step, input, prev_step, done) {
 		var new_ones = (result.new_items.length > 0);
 		var flow_decision = tasklib.flow_decision(new_ones);
 		var output = result.new_items;
+		if (done) done(null, output);
 		tasklib.invoke_children(step, task, output, flow_decision);
 
 		step.data.seen_guids = result.guids;
