@@ -57,7 +57,7 @@ function rename_keys(data) {
 
 
 function prepare_item(item) {
-	var data = R.pick(
+	var new_item = R.pick(
 		[
 			'rss:street_name',
 			'rss:price',
@@ -70,12 +70,13 @@ function prepare_item(item) {
 	);
 
 	// remove the 'rss:' part
-	data = rename_keys(data);
+	new_item = rename_keys(new_item);
 
-	data.price = parseInt(data.price);
+	new_item.price = parseInt(new_item.price);
+	new_item.source = 'duinzigt';
 
 	// make google maps url
-	data.maps_url = helper.make_googlemaps_url(data.street);
+	new_item.maps_url = helper.make_googlemaps_url(new_item.street);
 
 	// prepare images
 	if (item['rss:images']) {
@@ -84,13 +85,19 @@ function prepare_item(item) {
 			if (!_.isArray(image_links)) {
 				image_links = [image_links];
 			}
-			data.images = image_links.map(function(img_link) {
+			new_item.images = image_links.map(function(img_link) {
 				return img_link['#'];
 			});
 		}
 	}
 
-	return data;
+	// duinzigt links could still work, even though the item
+	// is not available (listed on the website) anymore.
+	new_item._link = new_item.link;
+	var search_template = 'http://www.duinzigt.nl/aanbod.php?zoek_adres={0}&button=Zoeken&zoek_objectsoort=0&zoek_buurt=0&zoek_inrichting=6&zoek_minprice=0&zoek_maxprice=100000000&zoek_min_kamers=1&zoek_max_personen=1&button=Zoeken';
+	new_item.link = sf(search_template, new_item.street.replace(/ /ig, '+'));
+
+	return new_item;
 }
 
 

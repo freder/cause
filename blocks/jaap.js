@@ -207,6 +207,7 @@ function get_items_from_page(body, kill_cb, step) {
 		price = parseInt(price);
 
 		var item = {
+			source: 'jaap.nl',
 			id: $this.attr('id').split('_')[2],
 			street: $this.find('.property-address-street').text(),
 			images: images,
