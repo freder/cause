@@ -13,6 +13,7 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
+var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 var debug = require('debug')('cause:block:'+path.basename(__filename));
 
@@ -123,16 +124,20 @@ function parse_info(info) {
 }
 
 
-function do_request(req_options, cb) {
+function do_request(req_opts, cb) {
+	req_opts = _.defaults(
+		req_opts,
+		scraping.request_defaults()
+	);
 	return request(
-		req_options,
+		req_opts,
 		function(err, res, body) {
 			if (err) { return cb(err); }
 			
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
 				debug(msg, task.name);
-				debug(req_options.url);
+				debug(req_opts.url);
 				return cb(new Error(msg));
 			}
 

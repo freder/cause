@@ -3,6 +3,7 @@ var validator = require('validator');
 var winston = require('winston');
 var chalk = require('chalk');
 var sf = require('sf');
+var _ = require('lodash');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
@@ -19,10 +20,11 @@ function fn(task, step, input, prev_step) {
 		throw new Error('not a valid url: ' + step.options.url);
 	}
 
-	var req_options = {
-		url: step.options.url
-	};
-	request(req_options, function(err, res, body) {
+	var req_opts = _.defaults(
+		{ url: step.options.url },
+		scraping.request_defaults()
+	);
+	request(req_opts, function(err, res, body) {
 		if (err) { return helper.handle_error(err); }
 
 		var $selection = scraping.query('css', '#priceblock_ourprice', body);
