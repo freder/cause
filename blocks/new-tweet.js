@@ -18,26 +18,37 @@ var fn = (function(task, step) {
 
 	return function(task, step, input, prev_step) {
 		var endpoint = step.options.endpoint;
+		var endpoint_path = twitter.endpoints[endpoint];
+
 		var parameters = _.extend(
 			twitter.endpoint_defaults[endpoint],
-			_.pick(step.options, 'track', 'follow')
+			_.pick(step.options, 'track', 'follow', 'locations'/*, 'delimited', 'stall_warnings'*/)
 		);
-		var stream = client.stream(endpoint, parameters);
+
+		var stream = client.stream(endpoint_path, parameters);
+
+		function end(tweet) {
+			twitter.print_tweet(tweet);
+			var output = tweet;
+			var flow_decision = tasklib.flow_decision_defaults;
+			tasklib.invoke_children(step, task, output, flow_decision);
+		}
 
 		stream.on('tweet', function(tweet) {
-			// clean up tweet text a bit for further processing
-			var text = tweet.text.toLowerCase();
-			text = twitter.remove_at_mentions(text);
-
 			var keywords = step.options.keywords;
-			var matches = keywords.filter( R.curry(twitter.keyword_filter, text) );
+			if (!!keywords) {
+				// clean up tweet text a bit for further processing
+				var text = tweet.text.toLowerCase();
+				text = twitter.remove_at_mentions(text);
 
-			if (matches.length > 0) {
-				twitter.print_tweet(tweet);
-				var output = tweet;
-				var flow_decision = tasklib.flow_decision_defaults;
-				tasklib.invoke_children(step, task, output, flow_decision);
-			}
+				var matches = keywords.filter( R.curry(twitter.keyword_filter, text) );
+
+				if (matches.length > 0) {
+					end(tweet);
+				}
+			} else {
+				end(tweet);
+			}		
 		});
 	};
 })();
