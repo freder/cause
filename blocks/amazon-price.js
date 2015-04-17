@@ -28,15 +28,19 @@ function fn(task, step, input, prev_step) {
 		if (err) { return helper.handle_error(err); }
 
 		var $selection = scraping.query('css', '#priceblock_ourprice', body);
-		
-		// TODO: DRY
-		if ($selection.length > 1) {
-			winston.warn('selection contains more than one element — only using first one.');
-		} // TODO: should it also work with multiple elements?
 
+		if (!$selection) {
+			winston.error( helper.format_msg(task.name, 'scraping failed') );
+			return;
+		}
+		
 		if ($selection.length === 0) {
-			winston.error( sf('{0} {1}', chalk.bgBlue(task.name), 'selection is empty') );
-			return; // stop here
+			winston.error( helper.format_msg(task.name, 'selection is empty') );
+			return;
+		}
+
+		if ($selection.length > 1) {
+			winston.warn( helper.format_msg(task.name, 'more than one element selected — only using first one') );
 		}
 
 		var text = $selection.first().text();

@@ -342,7 +342,7 @@ function fn(task, step, input, prev_step) {
 			var new_ones = (new_matches.length > 0);
 			
 			// if (new_ones) {
-			// 	var line = sf('{0} {1} new houses', chalk.bgBlue('jaap.nl'), new_matches.length);
+				// var line = helper.format_msg('jaap.nl', sf('{0} new houses', new_matches.length));
 			// 	winston.info(line);
 
 			// 	var email_content = realestate.email_template(new_matches);

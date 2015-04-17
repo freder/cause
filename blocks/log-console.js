@@ -16,7 +16,7 @@ function fn(task, step, input, prev_step) {
 
 	var line = sf(
 		'{0} {1} {2}: {3}',
-		chalk.bgBlue(task.name),
+		helper.format_msg(task.name),
 		chalk.blue(prev_step.block),
 		chalk.white(title),
 		chalk.green(message)

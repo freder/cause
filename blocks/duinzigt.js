@@ -131,7 +131,7 @@ function fn(task, step, input, prev_step) {
 		var new_ones = (new_matches.length > 0);
 
 		// if (new_ones) {
-		// 	var line = sf('{0} {1} new houses', chalk.bgBlue('duinzigt'), new_matches.length);
+			// var line = helper.format_msg('duinzigt', sf('{0} new houses', new_matches.length));
 		// 	winston.info(line);
 
 		// 	var email_content = realestate.email_template(new_matches);
