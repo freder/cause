@@ -4,6 +4,7 @@ var winston = require('winston');
 var sf = require('sf');
 var _ = require('lodash');
 var request = require('request');
+var mout = require('mout');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
@@ -33,7 +34,15 @@ function fn(task, step, input, prev_step) {
 		}
 
 		var market = body[step.options.market];
-		var price = market.rates.last;
+		var price = mout.object.get(market, 'rates.last');
+		if (!price) {
+			var message = "couldn't retrieve price";
+			winston.error(message);
+			console.log(market);
+			done(new Error(message));
+			return;
+		}
+
 		var output = price;
 		
 		cli.log_price_delta(price, step.data.prev_price, task);
