@@ -10,7 +10,6 @@
   "author": "",
   "dependencies": {
     "async": "^0.9.0",
-    "browser-agents": "^0.1.0",
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
     "debug": "^2.1.2",
@@ -33,6 +32,7 @@
     "open": "0.0.5",
     "pushover-notifications": "^0.2.2",
     "ramda": "^0.10.0",
+    "random-useragent": "^0.1.1",
     "request": "^2.53.0",
     "sf": "^0.1.7",
     "slug": "^0.8.0",
