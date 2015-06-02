@@ -24,6 +24,17 @@ function fn(task, step, input, prev_step) {
 		{ url: step.options.url },
 		scraping.request_defaults()
 	);
+	req_opts.headers = _.merge(req_opts.headers, {
+		'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+		// 'Accept-Encoding': 'gzip, deflate, sdch',
+		'Accept-Language': 'en-US,en;q=0.8,de;q=0.6',
+		'Cache-Control': 'no-cache',
+		'Connection': 'keep-alive',
+		'DNT': '1',
+		'Pragma': 'no-cache',
+		'Referer': 'http://www.amazon.de'
+	});
+
 	request(req_opts, function(err, res, body) {
 		if (err) { return helper.handle_error(err); }
 
