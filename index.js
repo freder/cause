@@ -34,8 +34,19 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 process.stdin.on('data', cli.handle_command);
 
 process.on('uncaughtException', function(err) {
+	var email = require( path.join(global.paths.lib, 'email.js') );
+	email.send(
+		{
+			subject: "'cause crashed",
+			html: err.stack
+		},
+		function(/*err, info*/) {
+			cli.exit(1);
+		}
+	);
+
 	helper.handle_error(err);
-	cli.exit(1);
+	// cli.exit(1);
 });
 
 process.on('SIGINT', function() {
