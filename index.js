@@ -33,12 +33,12 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 
 process.stdin.on('data', cli.handle_command);
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function(err) {	
 	var email = require( path.join(global.paths.lib, 'email.js') );
 	email.send(
 		{
 			subject: "'cause crashed",
-			html: err.stack
+			html: '<pre>'+err.stack+'</pre>'
 		},
 		function(/*err, info*/) {
 			cli.exit(1);
