@@ -78,9 +78,8 @@ describe(util.f1('lib/'), function() {
 					fn: function(task, step, input, prev_step, done) {
 						setTimeout(function() {
 							var output = null;
-							done(null, output);
-							var flow_decision = tasklib.flow_decision_defaults;
-							tasklib.invoke_children(step, task, output, flow_decision);
+							var decision = true;
+							done(null, output, decision);
 						}, 100);
 					}
 				};
@@ -90,7 +89,7 @@ describe(util.f1('lib/'), function() {
 				});
 
 				var step = { id: 'test-step' };
-				step._execute = tasklib.create_step_function(block, task, step );
+				step._execute = tasklib.create_step_function(block, task, step);
 
 				task.steps = [step];
 				task._done = function() {

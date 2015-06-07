@@ -51,9 +51,8 @@ function fn(task, step, input, prev_step, done) {
 		debug('flushing ...');
 
 		var output = R.take(take_n, step.data.collected);
-		if (done) done(null, output);
-		var flow_decision = tasklib.flow_decision(true);
-		tasklib.invoke_children(step, task, output, flow_decision);
+		var decision = true;
+		if (done) done(null, output, decision);
 		step.data.collected = R.drop(take_n, step.data.collected);
 
 		if (step.options.or_after) {

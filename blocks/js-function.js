@@ -19,11 +19,8 @@ function fn(task, step, input, prev_step, done) {
 	}
 	
 	output = output || input;
-	done(null, output);
-
 	decision = decision || false;
-	var flow_decision = tasklib.flow_decision(decision);
-	tasklib.invoke_children(step, task, output, flow_decision);
+	done(null, output, decision);
 
 	tasklib.save_task(task);
 }
@@ -36,6 +33,6 @@ module.exports = {
 			func: 'function() { console.log(input); }'
 		},
 		data: {},
-		description: ""
+		description: ''
 	},
 };

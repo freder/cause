@@ -24,11 +24,9 @@ function fn(task, step, input, prev_step, done) {
 	function(err, result) {
 		if (err) { return helper.handle_error(err); }
 
-		var new_ones = (result.new_items.length > 0);
-		var flow_decision = tasklib.flow_decision(new_ones);
 		var output = result.new_items;
-		if (done) done(null, output);
-		tasklib.invoke_children(step, task, output, flow_decision);
+		var new_ones = (result.new_items.length > 0);
+		if (done) done(null, output, new_ones);
 
 		step.data.seen_guids = result.guids;
 		step.data.seen_pubdate = result.meta['pubdate'];
@@ -45,6 +43,6 @@ module.exports = {
 			seen_pubdate: null,
 			seen_guids: []
 		},
-		description: "new rss item(s)"
+		description: 'new rss item(s)'
 	}
 };

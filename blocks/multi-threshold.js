@@ -40,10 +40,7 @@ function fn(task, step, input, prev_step, done) {
 		value: input
 	};
 
-	if (done) done(null, output);
-
-	var flow_decision = tasklib.flow_decision(check);
-	tasklib.invoke_children(step, task, output, flow_decision);
+	done(null, output, check);
 
 	step.data.prev_value = input;
 	tasklib.save_task(task);
