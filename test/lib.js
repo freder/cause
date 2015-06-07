@@ -113,32 +113,32 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-		describe(util.f3('.normalize_step_flow()'), function() {
+		describe(util.f3('.prepare_flow()'), function() {
 			it('should make sure everything is sane', function() {
 				var _flow, flow;
 				
 				_flow = {};
-				flow = tasklib.normalize_step_flow(_flow);
+				flow = tasklib.prepare_flow(_flow);
 				assert(flow['if'] !== undefined);
 
 				_flow = 'test';
-				flow = tasklib.normalize_step_flow(_flow);
+				flow = tasklib.prepare_flow(_flow);
 				assert(flow['if'] !== undefined);
 
 				_flow = null;
-				flow = tasklib.normalize_step_flow(_flow);
+				flow = tasklib.prepare_flow(_flow);
 				assert(flow['if'] !== undefined);
 				assert(_.isArray(flow['if']));
 
 				_flow = {
 					'if': 'asdf'
 				};
-				flow = tasklib.normalize_step_flow(_flow);
+				flow = tasklib.prepare_flow(_flow);
 				assert(flow['if'] !== undefined);
 			});
 		});
 
-		describe(util.f3('.normalize()'), function() {
+		describe(util.f3('._prepare()'), function() {
 			it('should make sure everything is sane', function() {
 				var data;
 				var step = {
@@ -148,7 +148,7 @@ describe(util.f1('lib/'), function() {
 					test: []
 				};
 
-				data = tasklib.normalize(step.data, defaults);
+				data = tasklib._prepare(step.data, defaults);
 				assert(data.test.length > 0);
 			});
 		});
