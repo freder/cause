@@ -20,7 +20,7 @@ function send(msg) {
 }
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	var message_vars = helper.message_vars(task, input, step, prev_step);
 
 	var title = _.template(step.options.title)(message_vars);
@@ -30,13 +30,9 @@ function fn(task, step, input, prev_step) {
 		message: message
 	});
 
-	var flow_decision = tasklib.flow_decision_defaults;
-
 	// pass through
 	var output = input;
-
-	// invoke children
-	tasklib.invoke_children(step, task, output, flow_decision);
+	done(null, output, null);
 }
 
 

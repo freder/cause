@@ -52,7 +52,7 @@ function fn(task, step, input, prev_step, done) {
 
 		var output = R.take(take_n, step.data.collected);
 		var decision = true;
-		if (done) done(null, output, decision);
+		done(null, output, decision);
 		step.data.collected = R.drop(take_n, step.data.collected);
 
 		if (step.options.or_after) {

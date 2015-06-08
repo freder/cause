@@ -16,7 +16,7 @@ var fn = (function(task, step) {
 		access_token_secret: config.twitter.access_token_secret
 	});
 
-	return function(task, step, input, prev_step) {
+	return function(task, step, input, prev_step, done) {
 		var endpoint = step.options.endpoint;
 		var endpoint_path = twitter.endpoints[endpoint];
 
@@ -30,8 +30,7 @@ var fn = (function(task, step) {
 		function end(tweet) {
 			twitter.print_tweet(tweet);
 			var output = tweet;
-			var flow_decision = tasklib.flow_decision_defaults;
-			tasklib.invoke_children(step, task, output, flow_decision);
+			done(null, output, null);
 		}
 
 		stream.on('tweet', function(tweet) {

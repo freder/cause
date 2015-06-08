@@ -292,7 +292,7 @@ function scrape(done, step) {
 }
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	step.data.temp_seen_ids = [];
 
 	scrape(function(new_items) {
@@ -365,9 +365,8 @@ function fn(task, step, input, prev_step) {
 				)
 			);
 
-			var flow_decision = tasklib.flow_decision(new_ones);
 			var output = new_matches;
-			tasklib.invoke_children(step, task, output, flow_decision);
+			done(null, output, new_ones);
 
 			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
 			delete step.data.temp_seen_ids;

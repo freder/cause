@@ -18,8 +18,7 @@ function fn(task, step, input, prev_step) {
 	});
 
 	var output = input;
-	var flow_decision = tasklib.flow_decision_defaults;
-	tasklib.invoke_children(step, task, output, flow_decision);
+	done(null, output, null);
 }
 
 

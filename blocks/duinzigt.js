@@ -101,7 +101,7 @@ function prepare_item(item) {
 }
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	var feedparser = feed.request_feedparser({
 		url: step.options.url
 	});
@@ -141,9 +141,8 @@ function fn(task, step, input, prev_step) {
 		// 	});
 		// }
 
-		var flow_decision = tasklib.flow_decision(new_ones);
 		var output = new_matches;
-		tasklib.invoke_children(step, task, output, flow_decision);
+		done(null, output, new_ones);
 
 		step.data.seen_guids = result.guids;
 		step.data.seen_pubdate = result.meta['pubdate'];

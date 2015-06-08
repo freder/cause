@@ -62,7 +62,7 @@ function process_event(e) {
 }
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	// validation
 	if (!validator.isURL(step.options.url)) {
 		throw new Error('not a valid url: ' + step.options.url);
@@ -94,9 +94,8 @@ function fn(task, step, input, prev_step) {
 
 		var new_items_array = _.values(new_items);
 		var new_ones = (new_items_array.length > 0);
-		var flow_decision = tasklib.flow_decision(new_ones);
 		var output = new_items_array;
-		tasklib.invoke_children(step, task, output, flow_decision);
+		done(null, output, new_ones);
 
 		step.data.seen_events = current_events;
 		tasklib.save_task(task);

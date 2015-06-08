@@ -6,21 +6,21 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	var output = input;
 
 	// has the threshold been crossed?
 	var check = versus(input, step.options.comparison, step.options.value);
-	var flow_decision = tasklib.flow_decision(check);
+	var decision = tasklib.flow_decision(check);
 
 	// trigger only once, when the threshold is reached,
 	// otherwise it would keep on triggering.
 	// TODO: maybe make desired behavior configurable
 	if (check && step.data.triggered) {
-		flow_decision['if'] = false;
-		flow_decision['else'] = false;
+		decision['if'] = false;
+		decision['else'] = false;
 	}
-	tasklib.invoke_children(step, task, output, flow_decision);
+	done(null, output, decision);
 
 	// mark as triggered, or not
 	step.data.triggered = check;

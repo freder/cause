@@ -26,7 +26,7 @@ function fn(task, step, input, prev_step, done) {
 
 		var output = result.new_items;
 		var new_ones = (result.new_items.length > 0);
-		if (done) done(null, output, new_ones);
+		done(null, output, new_ones);
 
 		step.data.seen_guids = result.guids;
 		step.data.seen_pubdate = result.meta['pubdate'];
