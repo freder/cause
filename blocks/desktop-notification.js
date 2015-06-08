@@ -6,7 +6,7 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
-function fn(task, step, input, prev_step) {
+function fn(task, step, input, prev_step, done) {
 	var message_vars = helper.message_vars(task, input, step, prev_step);
 
 	var title = _.template(step.options.title)(message_vars);
