@@ -7,10 +7,10 @@ var R = require('ramda');
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	// sanity check: `limit` must be >= `at_least`
 	step.options.limit = Math.max(step.options.limit, step.options.at_least);
 
@@ -21,7 +21,7 @@ function fn(task, step, input, prev_step, done) {
 
 		// add input to buffer
 		step.data.collected = step.data.collected.concat(input);
-		debug(
+		that.debug(
 			sf('received {0} items, now: {1} / {2}',
 				input.length,
 				step.data.collected.length,
@@ -29,7 +29,7 @@ function fn(task, step, input, prev_step, done) {
 			)
 		);
 	} else {
-		debug('ignoring empty input: '+input);
+		that.debug('ignoring empty input: '+input);
 	}
 
 	// TODO: should it flush multiple times, or simply everything all at once?
@@ -48,7 +48,7 @@ function fn(task, step, input, prev_step, done) {
 		var take_n = step.options.limit;
 		if (all_at_once) take_n = step.data.collected.length;
 
-		debug('flushing ...');
+		that.debug('flushing ...');
 
 		var output = R.take(take_n, step.data.collected);
 		var decision = true;
@@ -71,7 +71,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
-			debug(step.options.or_after+' have passed');
+			that.debug(step.options.or_after+' have passed');
 			if (step.data.collected.length > 0) flush();
 		}
 	}
@@ -79,7 +79,7 @@ function fn(task, step, input, prev_step, done) {
 	// flush, once threshold is reached
 	if (step.data.collected.length >= step.options.limit) flush();
 
-	this.save();
+	that.save();
 }
 
 

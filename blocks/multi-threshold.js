@@ -6,8 +6,6 @@ var chalk = require('chalk');
 var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 /*
 detects, if a threshold is crossed upwards or downwards.
@@ -17,6 +15,8 @@ for instance "every 7.5 units, relative to 0.33"
 */
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	var floor_prev = Math.floor((step.data.prev_value - step.options.offset) / step.options.step);
 	var floor_current = Math.floor((input - step.options.offset) / step.options.step);
 
@@ -30,7 +30,7 @@ function fn(task, step, input, prev_step, done) {
 		: floor_current * step.options.step + step.options.offset;
 	if (check) {
 		var arrow = (crossed_up) ? '▲' : '▼';
-		debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+step.data.prev_value, ''+input, chalk.inverse(arrow)) );
+		that.debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+step.data.prev_value, ''+input, chalk.inverse(arrow)) );
 	}
 
 	var output = {
@@ -41,7 +41,7 @@ function fn(task, step, input, prev_step, done) {
 	};
 
 	step.data.prev_value = input;
-	this.save();
+	that.save();
 
 	done(null, output, check);
 }

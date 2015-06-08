@@ -5,10 +5,9 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var cli = require( path.join(global.paths.lib, 'cli.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
 	var output;
 	var decision;
 
@@ -21,7 +20,7 @@ function fn(task, step, input, prev_step, done) {
 	output = output || input;
 	decision = decision || false;
 
-	this.save();
+	that.save();
 	done(null, output, decision);
 }
 

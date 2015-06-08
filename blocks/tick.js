@@ -3,21 +3,21 @@ var _ = require('lodash');
 
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+	
 	// validation
 	if (!_.isNumber(step.data.counter)) {
 		throw new Error('counter must be a number: ' + step.data.counter);
 	}
 
-	debug(step.data.counter);
+	that.debug(step.data.counter);
 	
 	var output = step.data.counter;
 
 	step.data.counter++;
-	this.save();
+	that.save();
 	
 	done(null, output, null);
 }

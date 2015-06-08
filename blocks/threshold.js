@@ -7,6 +7,7 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
 	var output = input;
 
 	// has the threshold been crossed?
@@ -23,7 +24,7 @@ function fn(task, step, input, prev_step, done) {
 
 	// mark as triggered, or not
 	step.data.triggered = check;
-	this.save();
+	that.save();
 	
 	done(null, output, decision);
 }

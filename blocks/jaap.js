@@ -15,8 +15,6 @@ var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 // TODO: cleaner re-write
 // - rate limit requests
@@ -136,8 +134,8 @@ function do_request(req_opts, cb) {
 			
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
-				debug(msg, task.name);
-				debug(req_opts.url);
+				that.debug(msg, task.name);
+				that.debug(req_opts.url);
 				return cb(new Error(msg));
 			}
 
@@ -256,7 +254,7 @@ function scrape(done, step) {
 						var url = make_url({ neighborhood: neighborhood, page: page });
 						var opts = { url: url };
 
-						// debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
+						// that.debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
 
 						setTimeout(function() {
 							do_request(opts, function(err, body) {
@@ -360,7 +358,7 @@ function fn(task, step, input, prev_step, done) {
 			// 	});
 			// }
 
-			debug(
+			that.debug(
 				sf('{0} new ones, {1} matches',
 					new_items.length,
 					new_matches.length

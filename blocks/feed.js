@@ -6,8 +6,6 @@ var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var feed = require( path.join(global.paths.lib, 'feed.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function fn(task, step, input, prev_step, done) {
 	var that = this;

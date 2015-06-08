@@ -10,8 +10,6 @@ var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function organizer(orga) {
 	return orga.params.map(function(item) {
@@ -78,8 +76,8 @@ function fn(task, step, input, prev_step, done) {
 		if (err) { return helper.handle_error(err); }
 
 		if (res.statusCode != 200) {
-			debug('status code: '+res.statusCode, task.name);
-			debug(req_opts.url);
+			that.debug('status code: '+res.statusCode, task.name);
+			that.debug(req_opts.url);
 			return;
 		}
 

@@ -15,8 +15,6 @@ var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var feed = require( path.join(global.paths.lib, 'feed.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
-var debug = require('debug')('cause:block:'+path.basename(__filename));
-
 
 function neighborhood_filter(white_list) {
 	return function(item) {
@@ -102,53 +100,57 @@ function prepare_item(item) {
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	var feedparser = feed.request_feedparser({
 		url: step.options.url
 	});
 
-	feed.process_feed({
-		feedparser: feedparser,
-		seen_guids: step.data.seen_guids,
-		seen_pubdate: step.data.seen_pubdate
-	},
-	function(err, result) {
-		if (err) { return helper.handle_error(err); }
+	feed.process_feed(
+		{
+			feedparser: feedparser,
+			seen_guids: step.data.seen_guids,
+			seen_pubdate: step.data.seen_pubdate
+		},
+		function(err, result) {
+			if (err) { return helper.handle_error(err); }
 
-		var new_matches = result.new_items
-			.map(prepare_item)
-			.filter(city_filter('den haag'))
-			.filter(neighborhood_filter(step.options.neighborhoods))
-			.filter(price_filter(step.options.min_price, step.options.max_price));
+			var new_matches = result.new_items
+				.map(prepare_item)
+				.filter(city_filter('den haag'))
+				.filter(neighborhood_filter(step.options.neighborhoods))
+				.filter(price_filter(step.options.min_price, step.options.max_price));
 
-		debug(
-			sf('{0} items, {1} new ones, {2} matches',
-				result.items.length,
-				result.new_items.length,
-				new_matches.length
-			)
-		);
+			that.debug(
+				sf('{0} items, {1} new ones, {2} matches',
+					result.items.length,
+					result.new_items.length,
+					new_matches.length
+				)
+			);
 
-		var new_ones = (new_matches.length > 0);
+			var new_ones = (new_matches.length > 0);
 
-		// if (new_ones) {
-			// var line = helper.format_msg('duinzigt', sf('{0} new houses', new_matches.length));
-		// 	winston.info(line);
+			// if (new_ones) {
+				// var line = helper.format_msg('duinzigt', sf('{0} new houses', new_matches.length));
+			// 	winston.info(line);
 
-		// 	var email_content = realestate.email_template(new_matches);
-		// 	email.send({
-		// 		subject: sf('duinzigt: {0} new houses', new_matches.length),
-		// 		html: email_content
-		// 	});
-		// }
+			// 	var email_content = realestate.email_template(new_matches);
+			// 	email.send({
+			// 		subject: sf('duinzigt: {0} new houses', new_matches.length),
+			// 		html: email_content
+			// 	});
+			// }
 
-		var output = new_matches;
-		
-		step.data.seen_guids = result.guids;
-		step.data.seen_pubdate = result.meta['pubdate'];
-		this.save();
+			var output = new_matches;
+			
+			step.data.seen_guids = result.guids;
+			step.data.seen_pubdate = result.meta['pubdate'];
+			that.save();
 
-		done(null, output, new_ones);
-	});
+			done(null, output, new_ones);
+		}
+	);
 }
 
 
