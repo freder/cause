@@ -6,8 +6,8 @@ var open = require('open');
 var sf = require('sf');
 
 var config = require( path.join(global.paths.root, 'config.js') );
-var helper = require( path.join(global.paths.lib, 'helper.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var utils = require( path.join(global.paths.lib, 'utils.js') );
 
 var debug = require('debug')('cause:'+path.basename(__filename));
 
@@ -61,7 +61,7 @@ function start() {
 
 	app.post('/run/:slug', function(req, res) {
 		var ok = true;
-		var task = helper.get_first_by(global.tasks, 'slug', req.params.slug);
+		var task = utils.get_first_by(global.tasks, 'slug', req.params.slug);
 		if (!task) ok = false;
 		else tasklib.run_task(task);
 		res.json({ ok: ok });

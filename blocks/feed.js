@@ -1,9 +1,4 @@
-var path = require('path');
 var _ = require('lodash');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var feed = require( path.join(global.paths.lib, 'feed.js') );
-var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 
 function fn(task, step, input, prev_step, done) {
@@ -11,18 +6,18 @@ function fn(task, step, input, prev_step, done) {
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		scraping.request_defaults()
+		that.scraping.request_defaults()
 	);
-	var feedparser = feed.request_feedparser(req_opts);
+	var feedparser = that.feed.request_feedparser(req_opts);
 
-	feed.process_feed(
+	that.feed.process_feed(
 		{
 			feedparser: feedparser,
 			seen_guids: step.data.seen_guids,
 			seen_pubdate: step.data.seen_pubdate
 		},
 		function(err, result) {
-			if (err) { return helper.handle_error(err); }
+			if (err) { return that.handle_error(err); }
 
 			var output = result.new_items;
 			var new_ones = (result.new_items.length > 0);

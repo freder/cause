@@ -16,8 +16,6 @@ global.paths = {
 	lib: path.join(root, 'lib'),
 	blocks: path.join(root, 'blocks')
 };
-var helper = require('./lib/helper.js');
-var tasklib = require('./lib/tasklib.js');
 var filesystem = require('./lib/filesystem.js');
 
 

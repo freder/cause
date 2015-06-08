@@ -25,7 +25,7 @@ if (
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.root, 'server.js') );
-var helper = require( path.join(global.paths.lib, 'helper.js') );
+var utils = require( path.join(global.paths.lib, 'utils.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 var debug = require('debug')('cause:'+path.basename(__filename));
@@ -45,7 +45,7 @@ process.on('uncaughtException', function(err) {
 		}
 	);
 
-	helper.handle_error(err);
+	utils.handle_error(err);
 	// cli.exit(1);
 });
 

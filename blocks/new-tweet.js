@@ -16,6 +16,8 @@ var fn = (function(task, step) {
 	});
 
 	return function(task, step, input, prev_step, done) {
+		var that = this;
+		
 		var endpoint = step.options.endpoint;
 		var endpoint_path = twitter.endpoints[endpoint];
 

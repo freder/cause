@@ -1,10 +1,7 @@
-var path = require('path');
 var moment = require('moment');
 var sf = require('sf');
 var _ = require('lodash');
 var R = require('ramda');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 function fn(task, step, input, prev_step, done) {
@@ -38,7 +35,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		step.data.last_flush = now.format();
 
-		var parsed = helper.parse_time(step.options.or_after);
+		var parsed = that.utils.parse.time(step.options.or_after);
 		var dur = moment.duration(parsed);
 		step.data.next_flush = now.add(dur).format();
 	}

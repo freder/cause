@@ -1,13 +1,8 @@
-var path = require('path');
 var sf = require('sf');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var cli = require( path.join(global.paths.lib, 'cli.js') );
 
 
 function fn(task, step, input, prev_step, done) {
 	var that = this;
-
 	var output;
 	var decision;
 

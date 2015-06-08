@@ -1,9 +1,6 @@
-var path = require('path');
 var _ = require('lodash');
 var sf = require('sf');
 var chalk = require('chalk');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 /*

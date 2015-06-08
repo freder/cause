@@ -1,18 +1,10 @@
-var path = require('path');
 var R = require('ramda');
 var _ = require('lodash');
-var winston = require('winston');
 var request = require('request');
 var chalk = require('chalk');
 var sf = require('sf');
 var FeedParser = require('feedparser');
 var validator = require('validator');
-
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var realestate = require( path.join(global.paths.lib, 'realestate.js') );
-var feed = require( path.join(global.paths.lib, 'feed.js') );
-var email = require( path.join(global.paths.lib, 'email.js') );
 
 
 function neighborhood_filter(white_list) {
@@ -73,7 +65,7 @@ function prepare_item(item) {
 	new_item.source = 'duinzigt';
 
 	// make google maps url
-	new_item.maps_url = helper.make_googlemaps_url(new_item.street);
+	new_item.maps_url = that.utils.make_googlemaps_url(new_item.street);
 
 	// prepare images
 	if (item['rss:images']) {
@@ -101,18 +93,18 @@ function prepare_item(item) {
 function fn(task, step, input, prev_step, done) {
 	var that = this;
 
-	var feedparser = feed.request_feedparser({
+	var feedparser = that.feed.request_feedparser({
 		url: step.options.url
 	});
 
-	feed.process_feed(
+	that.feed.process_feed(
 		{
 			feedparser: feedparser,
 			seen_guids: step.data.seen_guids,
 			seen_pubdate: step.data.seen_pubdate
 		},
 		function(err, result) {
-			if (err) { return helper.handle_error(err); }
+			if (err) { return that.utils.handle_error(err); }
 
 			var new_matches = result.new_items
 				.map(prepare_item)
@@ -131,11 +123,11 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 
 			// if (new_ones) {
-				// var line = helper.format_msg('duinzigt', sf('{0} new houses', new_matches.length));
-			// 	winston.info(line);
+				// var line = that.utils.format.cli_msg('duinzigt', sf('{0} new houses', new_matches.length));
+			// 	that.winston.info(line);
 
-			// 	var email_content = realestate.email_template(new_matches);
-			// 	email.send({
+			// 	var email_content = that.realestate.email_template(new_matches);
+			// 	that.email.send({
 			// 		subject: sf('duinzigt: {0} new houses', new_matches.length),
 			// 		html: email_content
 			// 	});

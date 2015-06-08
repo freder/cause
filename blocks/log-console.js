@@ -1,26 +1,23 @@
 var sf = require('sf');
-var winston = require('winston');
 var chalk = require('chalk');
-var path = require('path');
 var _ = require('lodash');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
 
 
 function fn(task, step, input, prev_step, done) {
-	var message_vars = helper.message_vars(task, input, step, prev_step);
+	var that = this;
+	var message_vars = that.utils.message_vars(task, input, step, prev_step);
 
 	var title = _.template(step.options.title)(message_vars);
 	var message = _.template(step.options.message)(message_vars);
 
 	var line = sf(
 		'{0} {1} {2}: {3}',
-		helper.format_msg(task.name),
+		that.utils.format.cli_msg(task.name),
 		chalk.blue(prev_step.block),
 		chalk.white(title),
 		chalk.green(message)
 	);
-	winston.info(line);
+	that.winston.info(line);
 
 	var output = input;
 	done(null, output, null);

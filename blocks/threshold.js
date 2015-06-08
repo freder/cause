@@ -1,9 +1,5 @@
-var path = require('path');
 var _ = require('lodash');
 var versus = require('versus');
-
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function fn(task, step, input, prev_step, done) {
@@ -12,7 +8,7 @@ function fn(task, step, input, prev_step, done) {
 
 	// has the threshold been crossed?
 	var check = versus(input, step.options.comparison, step.options.value);
-	var decision = tasklib.flow_decision(check);
+	var decision = that.tasklib.flow_decision(check);
 
 	// trigger only once, when the threshold is reached,
 	// otherwise it would keep on triggering.

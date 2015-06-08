@@ -1,4 +1,3 @@
-var path = require('path');
 var request = require('request');
 var _ = require('lodash');
 var ical = require('ical');
@@ -6,12 +5,10 @@ var moment = require('moment');
 var sf = require('sf');
 var validator = require('validator');
 
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var scraping = require( path.join(global.paths.lib, 'scraping.js') );
-
 
 function organizer(orga) {
-	return orga.params.map(function(item) {
+	return orga.params
+		.map(function(item) {
 			return item.replace('CN=', '');
 		})
 		.join(', ');
@@ -69,10 +66,10 @@ function fn(task, step, input, prev_step, done) {
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		scraping.request_defaults()
+		that.scraping.request_defaults()
 	);
 	var req = request(req_opts, function(err, res, body) {
-		if (err) { return helper.handle_error(err); }
+		if (err) { return that.handle_error(err); }
 
 		if (res.statusCode != 200) {
 			that.debug('status code: '+res.statusCode, task.name);

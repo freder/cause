@@ -14,7 +14,7 @@ global.paths = util.get_paths();
 
 var config = require('../config.js');
 var tasklib = require('../lib/tasklib.js');
-var helper = require('../lib/helper.js');
+var utils = require('../lib/utils.js');
 var filesystem = require('../lib/filesystem.js');
 var scraping = require('../lib/scraping.js');
 var feed = require('../lib/feed.js');
@@ -155,7 +155,7 @@ describe(util.f1('lib/'), function() {
 
 
 	// ############################################################
-	describe(util.f2('helper.js'), function() {
+	describe(util.f2('utils.js'), function() {
 
 		describe(util.f3('.get_filename()'), function() {
 			it('should handle filenames correctly', function() {
@@ -178,13 +178,13 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-		describe(util.f3('.parse_time()'), function() {
+		describe(util.f3('.parse.time()'), function() {
 			it('should parse time', function() {
 				var parsed;
-				parsed = helper.parse_time('12 minutes');
+				parsed = utils.parse.time('12 minutes');
 				assert(parsed.minutes === 12);
 
-				parsed = helper.parse_time('12 minutes ago');
+				parsed = utils.parse.time('12 minutes ago');
 				assert(_.isEmpty(parsed));
 			});
 		});

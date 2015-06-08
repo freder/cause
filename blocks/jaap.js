@@ -1,5 +1,3 @@
-var chalk = require('chalk');
-var winston = require('winston');
 var async = require('async');
 var sf = require('sf');
 var cheerio = require('cheerio');
@@ -9,10 +7,6 @@ var R = require('ramda');
 var _ = require('lodash');
 
 var config = require( path.join(global.paths.root, 'config.js') );
-var helper = require( path.join(global.paths.lib, 'helper.js') );
-var realestate = require( path.join(global.paths.lib, 'realestate.js') );
-var email = require( path.join(global.paths.lib, 'email.js') );
-var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 
 // TODO: cleaner re-write
@@ -124,7 +118,7 @@ function parse_info(info) {
 function do_request(req_opts, cb) {
 	req_opts = _.defaults(
 		req_opts,
-		scraping.request_defaults()
+		that.scraping.request_defaults()
 	);
 	return request(
 		req_opts,
@@ -216,7 +210,7 @@ function get_items_from_page(body, kill_cb, step) {
 
 		item.street = item.street.replace(' 0 Ong', '');
 		item.link = make_link(item.id);
-		item.maps_url = helper.make_googlemaps_url(item.street);
+		item.maps_url = that.utils.make_googlemaps_url(item.street);
 
 		step.data.temp_seen_ids.push(item.id);
 		if (step.data.seen_ids.indexOf(item.id) < 0) {
@@ -341,16 +335,16 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 			
 			// if (new_ones) {
-				// var line = helper.format_msg('jaap.nl', sf('{0} new houses', new_matches.length));
-			// 	winston.info(line);
+				// var line = that.utils.format.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
+			// 	that.winston.info(line);
 
-			// 	var email_content = realestate.email_template(new_matches);
+			// 	var email_content = that.realestate.email_template(new_matches);
 			// 	var to = config.email.to; // override email defaults
 			// 	if (step.options.email && step.options.email.to) {
 			// 		to = step.options.email.to;
 			// 	}
 
-			// 	email.send({
+			// 	that.email.send({
 			// 		to: to,
 			// 		subject: sf('jaap.nl: {0} new houses', new_matches.length),
 			// 		html: email_content
