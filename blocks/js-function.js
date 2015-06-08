@@ -20,9 +20,9 @@ function fn(task, step, input, prev_step, done) {
 	
 	output = output || input;
 	decision = decision || false;
-	done(null, output, decision);
 
-	tasklib.save_task(task);
+	this.save();
+	done(null, output, decision);
 }
 
 

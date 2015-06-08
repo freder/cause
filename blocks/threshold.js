@@ -20,11 +20,12 @@ function fn(task, step, input, prev_step, done) {
 		decision['if'] = false;
 		decision['else'] = false;
 	}
-	done(null, output, decision);
 
 	// mark as triggered, or not
 	step.data.triggered = check;
-	tasklib.save_task(task);
+	this.save();
+	
+	done(null, output, decision);
 }
 
 

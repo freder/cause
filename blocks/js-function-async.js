@@ -9,15 +9,17 @@ var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	var output;
 	var decision;
 
 	function cb() {
 		output = output || input;
 		decision = decision || false;
-		done(null, output, decision);
 
-		tasklib.save_task(task);
+		that.save();
+		done(null, output, decision);
 	}
 
 	try {

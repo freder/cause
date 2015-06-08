@@ -293,6 +293,8 @@ function scrape(done, step) {
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	step.data.temp_seen_ids = [];
 
 	scrape(function(new_items) {
@@ -366,12 +368,12 @@ function fn(task, step, input, prev_step, done) {
 			);
 
 			var output = new_matches;
-			done(null, output, new_ones);
 
 			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
 			delete step.data.temp_seen_ids;
+			that.save();
 
-			tasklib.save_task(task);
+			done(null, output, new_ones);
 		}
 	}, step);
 }

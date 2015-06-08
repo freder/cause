@@ -15,6 +15,8 @@ var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	// validation
 	if (!validator.isURL(step.options.url)) {
 		throw new Error('not a valid url: ' + step.options.url);
@@ -64,10 +66,10 @@ function fn(task, step, input, prev_step, done) {
 			cli.log_price_delta(price, step.data.prev_price, task);
 		}
 
-		done(null, output, price_changed);
-		
 		step.data.prev_price = price;
-		tasklib.save_task(task);
+		that.save();
+
+		done(null, output, price_changed);
 	});
 }
 

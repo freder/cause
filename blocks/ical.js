@@ -63,6 +63,8 @@ function process_event(e) {
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	// validation
 	if (!validator.isURL(step.options.url)) {
 		throw new Error('not a valid url: ' + step.options.url);
@@ -98,7 +100,7 @@ function fn(task, step, input, prev_step, done) {
 		done(null, output, new_ones);
 
 		step.data.seen_events = current_events;
-		tasklib.save_task(task);
+		that.save();
 	});
 }
 

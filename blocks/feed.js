@@ -10,28 +10,32 @@ var debug = require('debug')('cause:block:'+path.basename(__filename));
 
 
 function fn(task, step, input, prev_step, done) {
+	var that = this;
+
 	var req_opts = _.defaults(
 		{ url: step.options.url },
 		scraping.request_defaults()
 	);
 	var feedparser = feed.request_feedparser(req_opts);
 
-	feed.process_feed({
-		feedparser: feedparser,
-		seen_guids: step.data.seen_guids,
-		seen_pubdate: step.data.seen_pubdate
-	},
-	function(err, result) {
-		if (err) { return helper.handle_error(err); }
+	feed.process_feed(
+		{
+			feedparser: feedparser,
+			seen_guids: step.data.seen_guids,
+			seen_pubdate: step.data.seen_pubdate
+		},
+		function(err, result) {
+			if (err) { return helper.handle_error(err); }
 
-		var output = result.new_items;
-		var new_ones = (result.new_items.length > 0);
-		done(null, output, new_ones);
+			var output = result.new_items;
+			var new_ones = (result.new_items.length > 0);
+			done(null, output, new_ones);
 
-		step.data.seen_guids = result.guids;
-		step.data.seen_pubdate = result.meta['pubdate'];
-		tasklib.save_task(task);
-	});
+			step.data.seen_guids = result.guids;
+			step.data.seen_pubdate = result.meta['pubdate'];
+			that.save();
+		}
+	);
 }
 
 

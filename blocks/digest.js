@@ -79,7 +79,7 @@ function fn(task, step, input, prev_step, done) {
 	// flush, once threshold is reached
 	if (step.data.collected.length >= step.options.limit) flush();
 
-	tasklib.save_task(task);
+	this.save();
 }
 
 

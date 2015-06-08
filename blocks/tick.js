@@ -15,10 +15,11 @@ function fn(task, step, input, prev_step, done) {
 	debug(step.data.counter);
 	
 	var output = step.data.counter;
-	done(null, output, null);
 
 	step.data.counter++;
-	tasklib.save_task(task);
+	this.save();
+	
+	done(null, output, null);
 }
 
 

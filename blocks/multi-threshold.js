@@ -40,10 +40,10 @@ function fn(task, step, input, prev_step, done) {
 		value: input
 	};
 
-	done(null, output, check);
-
 	step.data.prev_value = input;
-	tasklib.save_task(task);
+	this.save();
+
+	done(null, output, check);
 }
 
 

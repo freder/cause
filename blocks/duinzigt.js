@@ -142,11 +142,12 @@ function fn(task, step, input, prev_step, done) {
 		// }
 
 		var output = new_matches;
-		done(null, output, new_ones);
-
+		
 		step.data.seen_guids = result.guids;
 		step.data.seen_pubdate = result.meta['pubdate'];
-		tasklib.save_task(task);
+		this.save();
+
+		done(null, output, new_ones);
 	});
 }
 
