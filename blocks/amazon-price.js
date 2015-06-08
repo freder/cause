@@ -7,7 +7,6 @@ var _ = require('lodash');
 var request = require('request');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var cli = require( path.join(global.paths.lib, 'cli.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 

@@ -5,7 +5,6 @@ var _ = require('lodash');
 var R = require('ramda');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function fn(task, step, input, prev_step, done) {

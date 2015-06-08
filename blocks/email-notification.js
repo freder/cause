@@ -3,7 +3,6 @@ var _ = require('lodash');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 
 

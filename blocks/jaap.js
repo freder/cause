@@ -10,7 +10,6 @@ var _ = require('lodash');
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );

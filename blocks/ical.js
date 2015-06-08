@@ -7,7 +7,6 @@ var sf = require('sf');
 var validator = require('validator');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var scraping = require( path.join(global.paths.lib, 'scraping.js') );
 
 

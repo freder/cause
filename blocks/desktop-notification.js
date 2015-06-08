@@ -3,7 +3,6 @@ var path = require('path');
 var _ = require('lodash');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 function fn(task, step, input, prev_step, done) {

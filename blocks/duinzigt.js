@@ -10,7 +10,6 @@ var validator = require('validator');
 
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var realestate = require( path.join(global.paths.lib, 'realestate.js') );
 var feed = require( path.join(global.paths.lib, 'feed.js') );
 var email = require( path.join(global.paths.lib, 'email.js') );

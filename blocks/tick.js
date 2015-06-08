@@ -1,8 +1,6 @@
 var path = require('path');
 var _ = require('lodash');
 
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-
 
 function fn(task, step, input, prev_step, done) {
 	var that = this;

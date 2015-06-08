@@ -3,7 +3,6 @@ var R = require('ramda');
 var path = require('path');
 
 var config = require( path.join(global.paths.root, 'config.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var twitter = require( path.join(global.paths.lib, 'twitter.js') );
 
 

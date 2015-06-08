@@ -4,7 +4,6 @@ var sf = require('sf');
 var chalk = require('chalk');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
 
 /*

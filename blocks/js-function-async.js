@@ -2,7 +2,6 @@ var path = require('path');
 var sf = require('sf');
 
 var helper = require( path.join(global.paths.lib, 'helper.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 var cli = require( path.join(global.paths.lib, 'cli.js') );
 
 
