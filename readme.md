@@ -13,6 +13,8 @@ requirements:
 - [`git`](http://git-scm.com/)
 
 ```shell
+git clone https://github.com/freder/cause.git
+cd cause
 npm install
 mv config.js.example config.js
 ```
@@ -75,6 +77,14 @@ TODO:
 # writing your own blocks
 
 is pretty straight-forward. — look at [`blocks/website-changed.js`](./blocks/website-changed.js) for a documented example.
+
+
+---
+
+
+# versions
+- `0.9.0`
+	+ blocks: removed all dependencies on `cause`, so that they can be stand-alone npm modules
 
 
 ---
