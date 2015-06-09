@@ -1,7 +1,4 @@
-var path = require('path');
 var _ = require('lodash');
-
-var config = require( path.join(global.paths.root, 'config.js') );
 
 
 function fn(task, step, input, prev_step, done) {
@@ -12,8 +9,8 @@ function fn(task, step, input, prev_step, done) {
 	var message = _.template(step.options.message)(message_vars);
 
 	// override email defaults
-	var to = (step.options.to) ? step.options.to : config.email.to;
-	var from = (step.options.from) ? step.options.from : config.email.from;
+	var to = (step.options.to) ? step.options.to : that.config.email.to;
+	var from = (step.options.from) ? step.options.from : that.config.email.from;
 
 	that.email.send({
 		from: from,

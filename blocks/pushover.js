@@ -1,16 +1,14 @@
-var path = require('path');
 var pushover = require('pushover-notifications');
 var _ = require('lodash');
 
-var config = require( path.join(global.paths.root, 'config.js') );
-
-var p = new pushover({
-	user: config.pushover.user_key,
-	token: config.pushover.api_key
-});
 
 function fn(task, step, input, prev_step, done) {
 	var that = this;
+
+	var p = new pushover({
+		user: that.config.pushover.user_key,
+		token: that.config.pushover.api_key
+	});
 
 	function send(p, msg) {
 		p.send(msg, function(err, result) {

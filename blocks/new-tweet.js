@@ -1,57 +1,51 @@
 var _ = require('lodash');
 var R = require('ramda');
-var path = require('path');
-
-var config = require( path.join(global.paths.root, 'config.js') );
-var twitter = require( path.join(global.paths.lib, 'twitter.js') );
 
 
 // TODO: more functionality
-var fn = (function(task, step) {
-	var client = twitter.create_client({
-		consumer_key: config.twitter.api_key,
-		consumer_secret: config.twitter.api_secret,
-		access_token: config.twitter.access_token,
-		access_token_secret: config.twitter.access_token_secret
+var fn = function(task, step, input, prev_step, done) {
+	var that = this;
+
+	var endpoint = step.options.endpoint;
+	var endpoint_path = that.twitter.endpoints[endpoint];
+
+	var parameters = _.extend(
+		that.twitter.endpoint_defaults[endpoint],
+		_.pick(step.options, 'track', 'follow', 'locations'/*, 'delimited', 'stall_warnings'*/)
+	);
+
+	var client = that.twitter.create_client({
+		consumer_key: that.config.twitter.api_key,
+		consumer_secret: that.config.twitter.api_secret,
+		access_token: that.config.twitter.access_token,
+		access_token_secret: that.config.twitter.access_token_secret
 	});
 
-	return function(task, step, input, prev_step, done) {
-		var that = this;
-		
-		var endpoint = step.options.endpoint;
-		var endpoint_path = twitter.endpoints[endpoint];
+	var stream = client.stream(endpoint_path, parameters);
 
-		var parameters = _.extend(
-			twitter.endpoint_defaults[endpoint],
-			_.pick(step.options, 'track', 'follow', 'locations'/*, 'delimited', 'stall_warnings'*/)
-		);
+	function end(tweet) {
+		that.twitter.print_tweet(tweet);
+		var output = tweet;
+		done(null, output, null);
+	}
 
-		var stream = client.stream(endpoint_path, parameters);
+	stream.on('tweet', function(tweet) {
+		var keywords = step.options.keywords;
+		if (!!keywords) {
+			// clean up tweet text a bit for further processing
+			var text = tweet.text.toLowerCase();
+			text = that.twitter.remove_at_mentions(text);
 
-		function end(tweet) {
-			twitter.print_tweet(tweet);
-			var output = tweet;
-			done(null, output, null);
-		}
+			var matches = keywords.filter( R.curry(that.twitter.keyword_filter, text) );
 
-		stream.on('tweet', function(tweet) {
-			var keywords = step.options.keywords;
-			if (!!keywords) {
-				// clean up tweet text a bit for further processing
-				var text = tweet.text.toLowerCase();
-				text = twitter.remove_at_mentions(text);
-
-				var matches = keywords.filter( R.curry(twitter.keyword_filter, text) );
-
-				if (matches.length > 0) {
-					end(tweet);
-				}
-			} else {
+			if (matches.length > 0) {
 				end(tweet);
-			}		
-		});
-	};
-})();
+			}
+		} else {
+			end(tweet);
+		}		
+	});
+};
 
 
 module.exports = {

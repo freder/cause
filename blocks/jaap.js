@@ -2,11 +2,8 @@ var async = require('async');
 var sf = require('sf');
 var cheerio = require('cheerio');
 var request = require('request');
-var path = require('path');
 var R = require('ramda');
 var _ = require('lodash');
-
-var config = require( path.join(global.paths.root, 'config.js') );
 
 
 // TODO: cleaner re-write
@@ -26,7 +23,6 @@ for each neighborhood
 */
 
 var timeout = 500;
-
 
 var price_min = 400;
 var price_max = 1000;
@@ -339,7 +335,7 @@ function fn(task, step, input, prev_step, done) {
 			// 	that.winston.info(line);
 
 			// 	var email_content = that.realestate.email_template(new_matches);
-			// 	var to = config.email.to; // override email defaults
+			// 	var to = that.config.email.to; // override email defaults
 			// 	if (step.options.email && step.options.email.to) {
 			// 		to = step.options.email.to;
 			// 	}
