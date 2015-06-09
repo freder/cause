@@ -53,7 +53,7 @@ function fn(task, step, input, prev_step, done) {
 		
 		// custom logging
 		if (price_changed) {
-			that.utils.log_price_delta(price, step.data.prev_price, task);
+			that.winston.info( that.utils.format.price_delta(price, step.data.prev_price, task) );
 		}
 
 		step.data.prev_price = price;
