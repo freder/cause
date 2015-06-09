@@ -2,7 +2,7 @@ var sf = require('sf');
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 	var output;
 	var decision;
 
@@ -10,7 +10,7 @@ function fn(task, step, input, prev_step, done) {
 		output = output || input;
 		decision = decision || false;
 
-		that.save();
+		cause.save();
 		done(null, output, decision);
 	}
 

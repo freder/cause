@@ -24,7 +24,7 @@ if (
 
 
 var config = require( path.join(global.paths.root, 'config.js') );
-var server = require( path.join(global.paths.root, 'server.js') );
+var server = require( path.join(global.paths.lib, 'server.js') );
 var utils = require( path.join(global.paths.lib, 'utils.js') );
 var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
 
@@ -34,8 +34,7 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 process.stdin.on('data', cli.handle_command);
 
 process.on('uncaughtException', function(err) {	
-	var email = require( path.join(global.paths.lib, 'email.js') );
-	email.send(
+	utils.email.send(
 		{
 			subject: "'cause crashed",
 			html: '<pre>'+err.stack+'</pre>'
@@ -45,7 +44,7 @@ process.on('uncaughtException', function(err) {
 		}
 	);
 
-	utils.handle_error(err);
+	utils.misc.handle_error(err);
 	// cli.exit(1);
 });
 

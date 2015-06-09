@@ -114,7 +114,7 @@ function parse_info(info) {
 function do_request(req_opts, cb) {
 	req_opts = _.defaults(
 		req_opts,
-		that.scraping.request_defaults()
+		cause.utils.scraping.request_defaults()
 	);
 	return request(
 		req_opts,
@@ -123,8 +123,8 @@ function do_request(req_opts, cb) {
 			
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
-				that.debug(msg, task.name);
-				that.debug(req_opts.url);
+				cause.debug(msg, task.name);
+				cause.debug(req_opts.url);
 				return cb(new Error(msg));
 			}
 
@@ -206,7 +206,7 @@ function get_items_from_page(body, kill_cb, step) {
 
 		item.street = item.street.replace(' 0 Ong', '');
 		item.link = make_link(item.id);
-		item.maps_url = that.utils.make_googlemaps_url(item.street);
+		item.maps_url = cause.utils.misc.make_googlemaps_url(item.street);
 
 		step.data.temp_seen_ids.push(item.id);
 		if (step.data.seen_ids.indexOf(item.id) < 0) {
@@ -243,7 +243,7 @@ function scrape(done, step) {
 						var url = make_url({ neighborhood: neighborhood, page: page });
 						var opts = { url: url };
 
-						// that.debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
+						// cause.debug( sf('{0}: {1} / {2}', neighborhood, page, num_pages) );
 
 						setTimeout(function() {
 							do_request(opts, function(err, body) {
@@ -280,7 +280,7 @@ function scrape(done, step) {
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 
 	step.data.temp_seen_ids = [];
 
@@ -331,23 +331,23 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 			
 			// if (new_ones) {
-				// var line = that.utils.format.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
-			// 	that.winston.info(line);
+				// var line = cause.utils.format.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
+			// 	cause.winston.info(line);
 
-			// 	var email_content = that.realestate.email_template(new_matches);
-			// 	var to = that.config.email.to; // override email defaults
+			// 	var email_content = cause.utils.realestate.email_template(new_matches);
+			// 	var to = cause.config.email.to; // override email defaults
 			// 	if (step.options.email && step.options.email.to) {
 			// 		to = step.options.email.to;
 			// 	}
 
-			// 	that.email.send({
+			// 	cause.utils.email.send({
 			// 		to: to,
 			// 		subject: sf('jaap.nl: {0} new houses', new_matches.length),
 			// 		html: email_content
 			// 	});
 			// }
 
-			that.debug(
+			cause.debug(
 				sf('{0} new ones, {1} matches',
 					new_items.length,
 					new_matches.length
@@ -358,7 +358,7 @@ function fn(task, step, input, prev_step, done) {
 
 			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
 			delete step.data.temp_seen_ids;
-			that.save();
+			cause.save();
 
 			done(null, output, new_ones);
 		}

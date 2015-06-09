@@ -5,7 +5,7 @@ var request = require('request');
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 
 	// validation
 	if (!validator.isURL(step.options.url)) {
@@ -14,7 +14,7 @@ function fn(task, step, input, prev_step, done) {
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		that.scraping.request_defaults()
+		cause.utils.scraping.request_defaults()
 	);
 	req_opts.headers = _.merge(req_opts.headers, {
 		'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -27,37 +27,37 @@ function fn(task, step, input, prev_step, done) {
 	});
 
 	request(req_opts, function(err, res, body) {
-		if (err) { return that.handle_error(err); }
+		if (err) { return cause.handle_error(err); }
 
-		var $selection = that.scraping.query('css', '#priceblock_ourprice', body);
+		var $selection = cause.utils.scraping.query('css', '#priceblock_ourprice', body);
 
 		if (!$selection) {
-			that.winston.error( that.utils.format.cli_msg(task.name, 'scraping failed') );
+			cause.winston.error( cause.utils.format.cli_msg(task.name, 'scraping failed') );
 			return;
 		}
 		
 		if ($selection.length === 0) {
-			that.winston.error( that.utils.format.cli_msg(task.name, 'selection is empty') );
+			cause.winston.error( cause.utils.format.cli_msg(task.name, 'selection is empty') );
 			return;
 		}
 
 		if ($selection.length > 1) {
-			that.winston.warn( that.utils.format.cli_msg(task.name, 'more than one element selected — only using first one') );
+			cause.winston.warn( cause.utils.format.cli_msg(task.name, 'more than one element selected — only using first one') );
 		}
 
 		var text = $selection.first().text();
-		var price = that.utils.format.price(text, step.options);
+		var price = cause.utils.format.price(text, step.options);
 		price = parseFloat(price);
 		var output = price;
 		var price_changed = (step.data.prev_price != price);
 		
 		// custom logging
 		if (price_changed) {
-			that.winston.info( that.utils.format.price_delta(price, step.data.prev_price, task) );
+			cause.winston.info( cause.utils.format.price_delta(price, step.data.prev_price, task) );
 		}
 
 		step.data.prev_price = price;
-		that.save();
+		cause.save();
 
 		done(null, output, price_changed);
 	});

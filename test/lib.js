@@ -7,17 +7,12 @@ var glob = require('glob');
 var cheerio = require('cheerio');
 var FeedParser = require('feedparser');
 
-
 var util = require('./util.js');
 global.paths = util.get_paths();
 
-
-var config = require('../config.js');
-var tasklib = require('../lib/tasklib.js');
-var utils = require('../lib/utils.js');
-var filesystem = require('../lib/filesystem.js');
-var scraping = require('../lib/scraping.js');
-var feed = require('../lib/feed.js');
+var config = require( path.join(global.paths.root, 'config.js') );
+var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var utils = require( path.join(global.paths.lib, 'utils.js') );
 
 
 describe(util.f1('lib/'), function() {
@@ -162,19 +157,19 @@ describe(util.f1('lib/'), function() {
 				var file;
 
 				file = '../asdf/asdfadf/filename.ext';
-				assert.equal(filesystem.get_filename(file), 'filename');
+				assert.equal(utils.filesystem.get_filename(file), 'filename');
 				
 				file = 'filename.ext';
-				assert.equal(filesystem.get_filename(file), 'filename');
+				assert.equal(utils.filesystem.get_filename(file), 'filename');
 				
 				file = 'filename.bla.ext';
-				assert.equal(filesystem.get_filename(file), 'filename.bla');
+				assert.equal(utils.filesystem.get_filename(file), 'filename.bla');
 				
 				file = '.ext';
-				assert.equal(filesystem.get_filename(file), '');
+				assert.equal(utils.filesystem.get_filename(file), '');
 
 				file = '../.ext';
-				assert.equal(filesystem.get_filename(file), '');
+				assert.equal(utils.filesystem.get_filename(file), '');
 			});
 		});
 
@@ -205,16 +200,16 @@ describe(util.f1('lib/'), function() {
 				var query, $result;
 
 				query = '$("#container div").first()';
-				$result = scraping.query('jquery', query, html);
+				$result = utils.scraping.query('jquery', query, html);
 				assert($result.text().trim() == 'div');
 
 				query = '#container span';
-				$result = scraping.query('css', query, html);
+				$result = utils.scraping.query('css', query, html);
 				assert($result.text().trim() == 'span');
 
 				// query = '#nope';
 				// assert.throws(function() {
-				// 	scraping.query('css', query, html);
+				// 	utils.scraping.query('css', query, html);
 				// });
 			});
 		});
@@ -231,7 +226,7 @@ describe(util.f1('lib/'), function() {
 				fs.createReadStream('test/files/feed.xml')
 					.pipe(feedparser);
 
-				feed.process_feed({
+				utils.feed.process_feed({
 					feedparser: feedparser,
 					seen_guids: ['1111'],
 					seen_pubdate: undefined

@@ -65,7 +65,7 @@ function prepare_item(item) {
 	new_item.source = 'duinzigt';
 
 	// make google maps url
-	new_item.maps_url = that.utils.make_googlemaps_url(new_item.street);
+	new_item.maps_url = cause.utils.misc.make_googlemaps_url(new_item.street);
 
 	// prepare images
 	if (item['rss:images']) {
@@ -91,20 +91,20 @@ function prepare_item(item) {
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 
-	var feedparser = that.feed.request_feedparser({
+	var feedparser = cause.utils.feed.request_feedparser({
 		url: step.options.url
 	});
 
-	that.feed.process_feed(
+	cause.utils.feed.process_feed(
 		{
 			feedparser: feedparser,
 			seen_guids: step.data.seen_guids,
 			seen_pubdate: step.data.seen_pubdate
 		},
 		function(err, result) {
-			if (err) { return that.utils.handle_error(err); }
+			if (err) { return cause.handle_error(err); }
 
 			var new_matches = result.new_items
 				.map(prepare_item)
@@ -112,7 +112,7 @@ function fn(task, step, input, prev_step, done) {
 				.filter(neighborhood_filter(step.options.neighborhoods))
 				.filter(price_filter(step.options.min_price, step.options.max_price));
 
-			that.debug(
+			cause.debug(
 				sf('{0} items, {1} new ones, {2} matches',
 					result.items.length,
 					result.new_items.length,
@@ -123,11 +123,11 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 
 			// if (new_ones) {
-				// var line = that.utils.format.cli_msg('duinzigt', sf('{0} new houses', new_matches.length));
-			// 	that.winston.info(line);
+				// var line = cause.utils.format.cli_msg('duinzigt', sf('{0} new houses', new_matches.length));
+			// 	cause.winston.info(line);
 
-			// 	var email_content = that.realestate.email_template(new_matches);
-			// 	that.email.send({
+			// 	var email_content = cause.utils.realestate.email_template(new_matches);
+			// 	cause.utils.email.send({
 			// 		subject: sf('duinzigt: {0} new houses', new_matches.length),
 			// 		html: email_content
 			// 	});
@@ -137,7 +137,7 @@ function fn(task, step, input, prev_step, done) {
 			
 			step.data.seen_guids = result.guids;
 			step.data.seen_pubdate = result.meta['pubdate'];
-			that.save();
+			cause.save();
 
 			done(null, output, new_ones);
 		}

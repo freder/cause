@@ -2,22 +2,22 @@ var _ = require('lodash');
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		that.scraping.request_defaults()
+		cause.utils.scraping.request_defaults()
 	);
-	var feedparser = that.feed.request_feedparser(req_opts);
+	var feedparser = cause.utils.feed.request_feedparser(req_opts);
 
-	that.feed.process_feed(
+	cause.utils.feed.process_feed(
 		{
 			feedparser: feedparser,
 			seen_guids: step.data.seen_guids,
 			seen_pubdate: step.data.seen_pubdate
 		},
 		function(err, result) {
-			if (err) { return that.handle_error(err); }
+			if (err) { return cause.handle_error(err); }
 
 			var output = result.new_items;
 			var new_ones = (result.new_items.length > 0);
@@ -25,7 +25,7 @@ function fn(task, step, input, prev_step, done) {
 
 			step.data.seen_guids = result.guids;
 			step.data.seen_pubdate = result.meta['pubdate'];
-			that.save();
+			cause.save();
 		}
 	);
 }

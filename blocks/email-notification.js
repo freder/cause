@@ -2,17 +2,17 @@ var _ = require('lodash');
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
-	var message_vars = that.utils.message_vars(task, input, step, prev_step);
+	var cause = this;
+	var message_vars = cause.message_vars(task, input, step, prev_step);
 
 	var title = _.template(step.options.title)(message_vars);
 	var message = _.template(step.options.message)(message_vars);
 
 	// override email defaults
-	var to = (step.options.to) ? step.options.to : that.config.email.to;
-	var from = (step.options.from) ? step.options.from : that.config.email.from;
+	var to = (step.options.to) ? step.options.to : cause.config.email.to;
+	var from = (step.options.from) ? step.options.from : cause.config.email.from;
 
-	that.email.send({
+	cause.utils.email.send({
 		from: from,
 		to: to,
 		subject: title,

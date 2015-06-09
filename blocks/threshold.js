@@ -3,12 +3,12 @@ var versus = require('versus');
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 	var output = input;
 
 	// has the threshold been crossed?
 	var check = versus(input, step.options.comparison, step.options.value);
-	var decision = that.tasklib.flow_decision(check);
+	var decision = cause.tasklib.flow_decision(check);
 
 	// trigger only once, when the threshold is reached,
 	// otherwise it would keep on triggering.
@@ -20,7 +20,7 @@ function fn(task, step, input, prev_step, done) {
 
 	// mark as triggered, or not
 	step.data.triggered = check;
-	that.save();
+	cause.save();
 	
 	done(null, output, decision);
 }

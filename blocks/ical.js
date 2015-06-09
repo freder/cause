@@ -57,7 +57,7 @@ function process_event(e) {
 
 
 function fn(task, step, input, prev_step, done) {
-	var that = this;
+	var cause = this;
 
 	// validation
 	if (!validator.isURL(step.options.url)) {
@@ -66,14 +66,14 @@ function fn(task, step, input, prev_step, done) {
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		that.scraping.request_defaults()
+		cause.utils.scraping.request_defaults()
 	);
 	var req = request(req_opts, function(err, res, body) {
-		if (err) { return that.handle_error(err); }
+		if (err) { return cause.handle_error(err); }
 
 		if (res.statusCode != 200) {
-			that.debug('status code: '+res.statusCode, task.name);
-			that.debug(req_opts.url);
+			cause.debug('status code: '+res.statusCode, task.name);
+			cause.debug(req_opts.url);
 			return;
 		}
 
@@ -94,7 +94,7 @@ function fn(task, step, input, prev_step, done) {
 		done(null, output, new_ones);
 
 		step.data.seen_events = current_events;
-		that.save();
+		cause.save();
 	});
 }
 
