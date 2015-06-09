@@ -1,6 +1,6 @@
 {
   "name": "cause",
-  "version": "0.8.7",
+  "version": "0.9.0",
   "private": true,
   "description": "(web) automation framework",
   "main": "index.js",
@@ -25,7 +25,7 @@
     "lodash": "^3.2.0",
     "moment": "^2.9.0",
     "mout": "^0.11.0",
-    "node-notifier": "^4.1.1",
+    "node-notifier": "^4.1.2",
     "nodemailer": "^1.3.0",
     "nodemailer-html-to-text": "^1.0.0",
     "nodemailer-mailgun-transport": "^1.0.0",
@@ -42,8 +42,7 @@
     "validator": "^3.30.0",
     "versus": "^0.2.0",
     "winston": "^0.9.0",
-    "ical": "^0.3.1",
-    "node-notifier": "^4.1.2"
+    "ical": "^0.3.1"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
