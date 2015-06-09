@@ -10,8 +10,8 @@
   "author": "freder.code@gmail.com",
   "dependencies": {
     "async": "^0.9.0",
-    "cause-bitcoin-rate": "0.0.1",
-    "cause-website-changed": "0.0.1",
+    "cause-bitcoin-rate": "~0.1.0",
+    "cause-website-changed": "~0.1.0",
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
     "debug": "^2.1.2",
@@ -41,12 +41,12 @@
     "twit": "^1.1.20",
     "validator": "^3.30.0",
     "versus": "^0.2.0",
-    "winston": "^0.9.0"
+    "winston": "^0.9.0",
+    "ical": "^0.3.1",
+    "node-notifier": "^4.1.2"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
-    "gulp-mocha": "^2.0.0",
-    "ical": "^0.3.1",
-    "node-notifier": "^4.1.2"
+    "gulp-mocha": "^2.0.0"
   }
 }
