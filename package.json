@@ -1,13 +1,24 @@
 {
   "name": "cause",
   "version": "0.10.0",
-  "private": true,
   "description": "(web) automation framework",
+  "license": "CC-BY-NC-SA-4.0",
   "main": "index.js",
   "scripts": {
     "test": "DEBUG=cause:block:* mocha"
   },
   "author": "freder.code@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freder/cause.git"
+  },
+  "keywords": [
+    "cause, automation, ifttt"
+  ],
+  "bugs": {
+    "url": "https://github.com/freder/cause/issues"
+  },
+  "homepage": "https://github.com/freder/cause",
   "dependencies": {
     "async": "^0.9.0",
     "cause-bitcoin-rate": "~0.1.0",
