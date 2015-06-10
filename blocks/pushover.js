@@ -16,9 +16,8 @@ function fn(task, step, input, prev_step, done) {
 		});
 	}
 
-	var message_vars = cause.message_vars(task, input, step, prev_step);
-	var title = _.template(step.options.title)(message_vars);
-	var message = _.template(step.options.message)(message_vars);
+	var title = _.template(step.options.title)(cause.message_vars);
+	var message = _.template(step.options.message)(cause.message_vars);
 	send(p, {
 		title: title,
 		message: message
