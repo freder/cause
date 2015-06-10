@@ -17,7 +17,7 @@ function fn(task, step, input, prev_step, done) {
 			seen_pubdate: step.data.seen_pubdate
 		},
 		function(err, result) {
-			if (err) { return cause.handle_error(err); }
+			if (err) { return done(err); }
 
 			var output = result.new_items;
 			var new_ones = (result.new_items.length > 0);

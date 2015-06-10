@@ -27,7 +27,7 @@ function fn(task, step, input, prev_step, done) {
 	});
 
 	request(req_opts, function(err, res, body) {
-		if (err) { return cause.handle_error(err); }
+		if (err) { return done(err); }
 
 		var $selection = cause.utils.scraping.query('css', '#priceblock_ourprice', body);
 

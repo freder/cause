@@ -12,7 +12,7 @@ function fn(task, step, input, prev_step, done) {
 
 	function send(p, msg) {
 		p.send(msg, function(err, result) {
-			if (err) { return cause.handle_error(err); }
+			if (err) { return done(err); }
 		});
 	}
 
