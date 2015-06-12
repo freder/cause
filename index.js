@@ -5,8 +5,7 @@ var _ = require('lodash');
 
 global.paths = {
 	root: __dirname,
-	lib: path.join(__dirname, 'lib'),
-	blocks: path.join(__dirname, 'blocks')
+	lib: path.join(__dirname, 'lib')
 };
 
 require( path.join(global.paths.lib, 'log.js') ).init();

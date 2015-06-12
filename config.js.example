@@ -1,7 +1,8 @@
 module.exports = {
 
 	paths: {
-		tasks: './tasks'
+		tasks: './tasks',
+		blocks: './blocks'
 	},
 
 	server: {
