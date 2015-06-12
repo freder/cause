@@ -37,8 +37,6 @@ if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
 DEBUG=cause:* node index.js
 ```
 
-or use [`nodemon`](http://nodemon.io/), [`forever`](https://github.com/foreverjs/forever), ...
-
 
 ---
 
@@ -76,7 +74,7 @@ TODO:
 
 # writing your own blocks
 
-is pretty straight-forward. — look at [`blocks/website-changed.js`](./blocks/website-changed.js) for a documented example.
+check out [`cause-website-changed`](https://github.com/freder/cause-website-changed/blob/master/cause-website-changed.js) for a documented example.
 
 
 ---
