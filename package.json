@@ -25,6 +25,7 @@
     "cause-website-changed": "~0.1.0",
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
+    "chokidar": "^1.0.3",
     "debug": "^2.1.2",
     "express": "^4.11.2",
     "feedparser": "^0.19.2",
