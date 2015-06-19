@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var sf = require('sf');
+var chalk = require('chalk');
 var feed = require('./feed.js');
 
 
@@ -15,6 +16,7 @@ function fn(task, step, input, prev_step, done) {
 		// do s.th. with output from `feed` block
 		output.forEach(function(item) {
 			console.log(item.title);
+			console.log('\t', chalk.green(item.link));			
 		});
 		// pass arguments on to original callback
 		done(err, output, decision);
