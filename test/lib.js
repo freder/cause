@@ -146,6 +146,31 @@ describe(util.f1('lib/'), function() {
 				assert(data.test.length > 0);
 			});
 		});
+
+
+		describe(util.f3('.run_task()'), function() {
+			it('should work with single step tasks', function() {
+				var block = {
+					fn: function(task, step, input, prev_step, done) {
+						console.log('done');
+						done(null, 'output', true);
+					}
+				};
+
+				var task = tasklib.prepare_task({
+					name: 'single step task'
+				});
+
+				var step = { id: 'single step' };
+				step._execute = tasklib.create_step_function(block, task, step);
+
+				task.steps = [step];
+				task._done = function() {
+					console.log('also done');
+				};
+				tasklib.run_task(task);
+			});
+		});
 	});
 
 
