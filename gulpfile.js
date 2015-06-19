@@ -9,14 +9,7 @@ var fs = require('fs');
 var sf = require('sf');
 var exec = require('child_process').exec;
 
-
-var root = path.resolve('./');
-global.paths = {
-	root: root,
-	lib: path.join(root, 'lib'),
-	blocks: path.join(root, 'blocks')
-};
-var filesystem = require('./lib/filesystem.js');
+var filesystem = require('./lib/utils/filesystem.js');
 
 
 var dirname = {
