@@ -13,12 +13,15 @@
     "tests"
   ],
   "devDependencies": {
-    "zepto": "~1.1.6"
-  },
-  "resolutions": {
-    "lodash": "~3.5.0"
   },
   "dependencies": {
-    "socket.io-client": "~1.3.5"
+    "zepto": "~1.1.6",
+    "socket.io-client": "~1.3.5",
+    "Processing.js": "1.4.8",
+    "tweenjs": "*",
+    "lodash": "~3.9.3"
+  },
+  "resolutions": {
+    "lodash": "~3.9.3"
   }
 }
