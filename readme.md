@@ -92,4 +92,5 @@ check out [`cause-website-changed`](https://github.com/freder/cause-website-chan
 - [`ifttt`](https://ifttt.com/)
 - [`huginn`](https://github.com/cantino/huginn)
 - [`node-red`](http://nodered.org/)
+- [noflo](http://noflojs.org/)
 - [`workflow`](https://workflow.is/)
