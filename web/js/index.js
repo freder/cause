@@ -98,17 +98,24 @@ function make_graph(task) {
 
 function init_websocket() {
 	var socket = io('http://localhost:'+websocket_port);
-	
+
 	socket.on('connect', function() {
 		console.log('CONNECT');
 	});
-	
+
 	socket.on('console_data', function(data) {
-		var $console = $('#console');
-		$console.append( $('<div>'+data+'</div>') )
-		$console.scrollTop($console[0].scrollHeight);
+		// var $console = $('#console');
+		// $console.append( $('<div>'+data+'</div>') )
+		// $console.scrollTop($console[0].scrollHeight);
+
+		var method = 'log';
+		if (/\d\d i: /.test(data)) method = 'log';
+		if (/\d\d w: /.test(data)) method = 'warn';
+		if (/\d\d e: /.test(data)) method = 'error';
+		var style = 'background-color: black; color: white; font-size: 16px; padding: 3px;';
+		console[method]('%c'+data, style);
 	});
-	
+
 	socket.on('disconnect', function() {
 		console.log('DISCONNECT');
 	});
