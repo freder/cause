@@ -32,16 +32,18 @@ var debug = require('debug')('cause:'+path.basename(__filename));
 
 process.stdin.on('data', cli.handle_command);
 
-process.on('uncaughtException', function(err) {	
-	utils.email.send(
-		{
-			subject: "'cause crashed",
-			html: '<pre>'+err.stack+'</pre>'
-		},
-		function(/*err, info*/) {
-			cli.exit(1);
-		}
-	);
+process.on('uncaughtException', function(err) {
+	if (!args.task) {
+		utils.email.send(
+			{
+				subject: "'cause crashed",
+				html: '<pre>'+err.stack+'</pre>'
+			},
+			function(/*err, info*/) {
+				cli.exit(1);
+			}
+		);
+	}
 
 	utils.misc.handle_error(err);
 	// cli.exit(1);
