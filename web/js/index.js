@@ -5,8 +5,6 @@ var io = require('socket.io-client');
 var React = require('react');
 var App = require('./App.js');
 
-require('./logo.js');
-
 
 function init_codemirror() {
 	var elems = document.querySelectorAll('.codemirror');
@@ -56,7 +54,7 @@ function init_websocket() {
 
 $(document).ready(function() {
 	init_websocket();
-	
+
 	// init_codemirror();
 
 	React.render(<App tasks={window.tasks} />, $('#app')[0]);

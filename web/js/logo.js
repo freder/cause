@@ -1,6 +1,7 @@
 var $ = require('jquery');
 var _ = require('lodash');
 var TWEEN = require('tween.js');
+var React = require('react');
 
 
 function sketch(p) {
@@ -74,7 +75,22 @@ function sketch(p) {
 	}
 }
 
-$(document).ready(function() {
-	var canvas = document.getElementById('logo');
-	var p = new Processing(canvas, sketch);
+
+var Logo = React.createClass({
+	propTypes: {
+	},
+
+	render: function() {
+		return (
+			<canvas id="logo" ref="canvas"></canvas>
+		);
+	},
+
+	componentDidMount: function() {
+		var canvas = this.refs.canvas.getDOMNode();
+		var p = new Processing(canvas, sketch);
+	}
 });
+
+
+module.exports = Logo;

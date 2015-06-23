@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var React = require('react');
 
+var Logo = require('./Logo.js');
 var Task = require('./Task.js');
 
 
@@ -13,15 +14,17 @@ var App = React.createClass({
 		return (
 			<div>
 				<div id="menu">
-					<strong>'cause</strong><br />
+					<span className="title">'cause</span><br />
 					<br />
 					<div id="task-list">
 						{_.keys(this.props.tasks).map(this.renderMenuItem)}
 					</div>
 				</div>
 				<div id="tasks">
-					{/*_.values(this.props.tasks).map(this.renderTask)*/}
-					{this.renderSelectedTask()}
+					{ (this.state.selectedTask)
+						? this.renderSelectedTask()
+						: <Logo />
+					}
 				</div>
 			</div>
 		);

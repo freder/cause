@@ -94,14 +94,14 @@ var Task = React.createClass({
 			<div>
 				<div className='task-name'>
 					{task.name}
-					{ (task.interval)
-						?	<button onClick={function(){ run_task(task.slug); }}>{task.interval}</button>
-						:	null
-					}
 				</div>
 				{ (task.interval)
-					?	<span>{task.interval}</span>
-					:	null
+					? <div>{task.interval}</div>
+					: null
+				}
+				{ (task.interval)
+					? <div><button onClick={function(){ run_task(task.slug); }}>run now</button></div>
+					: null
 				}
 				<div className='code'>
 					{ /*textarea.codemirror #{JSON.stringify(t, null, 4)}*/ }
