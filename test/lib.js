@@ -96,6 +96,58 @@ describe(util.f1('lib/'), function() {
 				assert(_.keys(task._currently_executing_steps).length === 1);
 				// console.log(task._currently_executing_steps);
 			});
+
+			it('tasks should require a name', function() {
+				assert.throws(function() {
+					tasklib.prepare_task({ name: undefined });
+				});
+			});
+
+			it('should check if specified interval is valid', function() {
+				assert.throws(function() {
+					tasklib.prepare_task({
+						name: 'test',
+						interval: 'nonsense'
+					});
+				});
+			});
+		});
+
+		describe(util.f3('.find_root_steps()'), function() {
+			it('should find all task entry points / blocks', function() {
+				var task = {
+					name: 'multi-entry-point-task',
+					steps: [
+						{	id: 'entry-1',
+							flow: {
+								'if': 'block-1'
+							}
+						},
+						{	id: 'entry-2',
+							flow: {
+								'always': 'block-1'
+							}
+						},
+						{	id: 'entry-3',
+							flow: {
+								'else': 'block-2'
+							}
+						},
+						{	id: 'entry-4',
+							flow: {}
+						},
+						// ------
+						{	id: 'block-1',
+							flow: {}
+						},
+						{	id: 'block-2',
+							flow: {}
+						},
+					]
+				};
+
+				assert(tasklib.find_root_steps(task).length === 4);
+			});
 		});
 
 		describe(util.f3('.flow_decision()'), function() {
@@ -133,26 +185,33 @@ describe(util.f1('lib/'), function() {
 		});
 
 		describe(util.f3('._prepare()'), function() {
-			it('should make sure everything is sane', function() {
-				var data;
-				var step = {
-					data: { test: [1, 2, 3] }
-				};
-				var defaults = {
-					test: []
-				};
+			it('should use (optional) defaults', function() {
+				var it, defaults;
 
-				data = tasklib._prepare(step.data, defaults);
-				assert(data.test.length > 0);
+				it = { test: undefined };
+				defaults = { test: [1, 2, 3] };
+				it = tasklib._prepare(it, defaults);
+				assert(it.test.length > 0);
+
+				it = { test: [1, 2, 3] };
+				defaults = null;
+				it = tasklib._prepare(it, defaults);
+				assert(it.test.length > 0);
+
+				it = null;
+				defaults = { test: [1, 2, 3] };
+				it = tasklib._prepare(it, defaults);
+				assert(it.test.length > 0);
 			});
 		});
 
 
 		describe(util.f3('.run_task()'), function() {
 			it('should work with single step tasks', function() {
+				var has_run = false;
 				var block = {
 					fn: function(task, step, input, prev_step, done) {
-						console.log('done');
+						has_run = true;
 						done(null, 'output', true);
 					}
 				};
@@ -166,7 +225,7 @@ describe(util.f1('lib/'), function() {
 
 				task.steps = [step];
 				task._done = function() {
-					console.log('also done');
+					assert(has_run);
 				};
 				tasklib.run_task(task);
 			});
@@ -175,7 +234,7 @@ describe(util.f1('lib/'), function() {
 
 
 	// ############################################################
-	describe(util.f2('utils.js'), function() {
+	describe(util.f2('utils/filesystem.js'), function() {
 
 		describe(util.f3('.get_filename()'), function() {
 			it('should handle filenames correctly', function() {
@@ -198,7 +257,22 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-		describe(util.f3('.parse.time()'), function() {
+		describe(util.f3('.load_json()'), function() {
+			it('throw an error when json input is bad', function() {
+				assert.throws(function() {
+					file = 'test/files/bad.json';
+					utils.filesystem.load_json(file);					
+				});
+			});
+		});
+
+	});
+
+
+	// ############################################################
+	describe(util.f2('utils/parse.js'), function() {
+
+		describe(util.f3('.time()'), function() {
 			it('should parse time', function() {
 				var parsed;
 				parsed = utils.parse.time('12 minutes');
@@ -208,11 +282,12 @@ describe(util.f1('lib/'), function() {
 				assert(_.isEmpty(parsed));
 			});
 		});
+
 	});
 
 	
 	// ############################################################
-	describe(util.f2('scraping.js'), function() {
+	describe(util.f2('utils/scraping.js'), function() {
 
 		describe(util.f3('.query()'), function() {
 			it('should work with css and jquery', function() {
@@ -232,10 +307,11 @@ describe(util.f1('lib/'), function() {
 				$result = utils.scraping.query('css', query, html);
 				assert($result.text().trim() == 'span');
 
-				// query = '#nope';
-				// assert.throws(function() {
-				// 	utils.scraping.query('css', query, html);
-				// });
+				query = '#notfound';
+				var result = utils.scraping.query('css', query, html);
+				assert(result.length === 0);
+
+				assert(utils.scraping.query('never_heard_of_this', query, html) === null);
 			});
 		});
 
@@ -243,7 +319,7 @@ describe(util.f1('lib/'), function() {
 
 
 	// ############################################################
-	describe(util.f2('feed.js'), function() {
+	describe(util.f2('utils/feed.js'), function() {
 
 		describe(util.f3('.process_feed()'), function() {
 			it('should work', function(done) {
