@@ -56,31 +56,31 @@ gulp.task('graphviz', function() {
 
 			// boilerplate
 			content += '\
-edge [\n\
-	fontname = Helvetica,\n\
-	labelfontsize = 10 ,\n\
-	labelfloat = false,\n\
-	labelloc = "c",\n\
-	minlen = 2,\n\
-	len = 2.5\n\
-];\n\
-\n\
-node [\n\
-	fontname = Helvetica,\n\
-	fontsize = 10,\n\
-	# shape = circle,\n\
-	shape = box,\n\
-	# fixedsize = true,\n\
-	# width = 1.0,\n\
-	style = filled,\n\
-	fillcolor = "yellow"\n\
-	color = none\n\
-];\n\
-\n\
-rankdir = TB;\n\
-overlap = false;\n\
-#splines = line;\n\
-splines = spline;\n\n';
+				edge [\n\
+					fontname = Helvetica,\n\
+					labelfontsize = 10 ,\n\
+					labelfloat = false,\n\
+					labelloc = "c",\n\
+					minlen = 2,\n\
+					len = 2.5\n\
+				];\n\
+				\n\
+				node [\n\
+					fontname = Helvetica,\n\
+					fontsize = 10,\n\
+					# shape = circle,\n\
+					shape = box,\n\
+					# fixedsize = true,\n\
+					# width = 1.0,\n\
+					style = filled,\n\
+					fillcolor = "yellow"\n\
+					color = none\n\
+				];\n\
+				\n\
+				rankdir = TB;\n\
+				overlap = false;\n\
+				#splines = line;\n\
+				splines = spline;\n\n';
 			
 			// task info
 			// http://www.graphviz.org/doc/info/attrs.html#k%3aescString
@@ -128,7 +128,6 @@ splines = spline;\n\n';
 });
 
 
-
 gulp.task('sass', function() {
 	return gulp.src( path.join(paths.sass, pattern.sass_main) )
 		.pipe(sass(options.sass))
@@ -139,27 +138,6 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('mocha', function() {
-	return gulp.src('test/test.js', { read: false })
-		.pipe(mocha())
-		.on('error', function(err) {
-			notifier.notify({
-				title: err.plugin,
-				message: err.message
-			});
-		});
-});
-
-
-gulp.task('default', [/*'mocha',*/ 'sass'], function() {
-	// gulp.watch([
-	// 		'./*.js',
-	// 		'./lib/*.js',
-	// 		'./blocks/*.js',
-	// 		'./test/*.js'
-	// 	],
-	// 	['mocha']
-	// );
-
+gulp.task('default', ['sass'], function() {
 	gulp.watch('./web/sass/**/*.{sass,scss}', ['sass']);
 });
