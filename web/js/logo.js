@@ -19,12 +19,12 @@ function sketch(p) {
 	var prev_duration;
 	var blocks = _.range(num_elems)
 		.map(function(index) {
-			var duration = 200;
+			var duration = 500;
 			if (index > 0) {
 				duration = 0.975 * prev_duration;
 			}
 			prev_duration = duration;
-			var delay = 500 + index * (duration * 0.55);
+			var delay = 1000 + index * (duration * 0.62);
 			var block = {
 				index: index,
 				width: rect_w,

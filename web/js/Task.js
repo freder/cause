@@ -96,11 +96,11 @@ var Task = React.createClass({
 					{task.name}
 				</div>
 				{ (task.interval)
-					? <div>{task.interval}</div>
+					? <div className='task-interval'>{task.interval}</div>
 					: null
 				}
 				{ (task.interval)
-					? <div><button onClick={function(){ run_task(task.slug); }}>run now</button></div>
+					? <div className='task-run'><button onClick={function(){ run_task(task.slug); }}>run now</button></div>
 					: null
 				}
 				<div className='code'>

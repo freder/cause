@@ -14,7 +14,7 @@ var App = React.createClass({
 		return (
 			<div>
 				<div id="menu">
-					<span className="title">'cause</span><br />
+					<i className="title">'cause</i><br />
 					<br />
 					<div id="task-list">
 						{_.keys(this.props.tasks).map(this.renderMenuItem)}
