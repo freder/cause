@@ -1,20 +1,33 @@
-'use strict';
+var $ = require('jquery');
+var _ = require('lodash');
+var io = require('socket.io-client');
+var d3 = require('d3');
+var dagre = require('dagre');
+var dagreD3 = require('dagre-d3');
 
-var elems = document.querySelectorAll('.codemirror');
-for (var i = 0; i < elems.length; i++) {
-	var editor = CodeMirror(function(cm_el) {
-			elems[i].parentNode.replaceChild(cm_el, elems[i]);
-		},
-		{
-			value: elems[i].value,
-			mode: 'javascript',
-				json: true,
-			theme: 'monokai',
-			//- lineNumbers: true,
-			styleActiveLine: true
-		}
-	);
-	//- console.log(editor.getValue());
+var React = require('react');
+var App = require('./App.js');
+
+require('./logo.js');
+
+
+function init_codemirror() {
+	var elems = document.querySelectorAll('.codemirror');
+	for (var i = 0; i < elems.length; i++) {
+		var editor = CodeMirror(function(cm_el) {
+				elems[i].parentNode.replaceChild(cm_el, elems[i]);
+			},
+			{
+				value: elems[i].value,
+				mode: 'javascript',
+					json: true,
+				theme: 'monokai',
+				//- lineNumbers: true,
+				styleActiveLine: true
+			}
+		);
+		//- console.log(editor.getValue());
+	}
 }
 
 
@@ -124,8 +137,11 @@ function init_websocket() {
 
 $(document).ready(function() {
 	init_websocket();
+	// init_codemirror();
 
 	_.keys(tasks).forEach(function(name) {
 		make_graph(tasks[name]);
 	});
+
+	React.render(<App />, $('#app')[0]);
 });

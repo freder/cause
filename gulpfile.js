@@ -8,6 +8,13 @@ var glob = require('glob');
 var fs = require('fs');
 var sf = require('sf');
 var exec = require('child_process').exec;
+var _ = require('lodash');
+var gutil = require('gulp-util');
+var chalk = require('chalk');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var reactify = require('reactify');
+var source = require('vinyl-source-stream');
 
 var filesystem = require('./lib/utils/filesystem.js');
 
@@ -138,6 +145,65 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('default', ['sass'], function() {
+var main_js_file_path = './web/js/index.js';
+var destination_path = './web/js';
+var destination_filename = '_bundle.js';
+ 
+// build scripts with browserify
+gulp.task('build:js', function() {
+	return browserify({
+			transform: [reactify]
+		})
+		.add(main_js_file_path)
+		.bundle()
+		.on('error', function(e) {
+			gutil.log('Browserify Error', e);
+		})
+		.pipe(source(destination_filename))
+		.pipe(gulp.dest(destination_path));
+});
+ 
+// watch scripts & build with debug features
+gulp.task('watch:js', function() {
+	var b = browserify(
+			_.defaults({
+				transform: [reactify]
+			}, watchify.args)
+		)
+		.add(main_js_file_path);
+ 
+	var w = watchify(b)
+		.on('update', function(scriptIds) {
+			scriptIds = scriptIds
+				.filter(function(i) { return i.substr(0,2) !== './'; })
+				.map(function(i) { return chalk.blue(i.replace(__dirname, '')); });
+			if (scriptIds.length > 1) {
+				gutil.log(scriptIds.length + ' Scripts updated:\n* ' + scriptIds.join('\n* ') + '\nrebuilding...');
+			} else {
+				gutil.log(scriptIds[0] + ' updated, rebuilding...');
+			}
+ 
+			rebundle();
+		})
+		.on('time', function(time) {
+			gutil.log(chalk.green('Scripts built in ' + (Math.round(time / 10) / 100) + 's'));
+		});
+ 
+	function rebundle() {
+		w.bundle()
+			.on('error', function(e) {
+				gutil.log('Browserify Error', e);
+			})
+			.pipe(source(destination_filename))
+			.pipe(gulp.dest(destination_path));
+	}
+ 
+	return rebundle();
+});
+
+
+gulp.task('build', ['sass', 'build:js']);
+
+gulp.task('default', ['sass', 'watch:js'], function() {
 	gulp.watch('./web/sass/**/*.{sass,scss}', ['sass']);
 });
