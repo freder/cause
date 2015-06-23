@@ -1,9 +1,6 @@
 var $ = require('jquery');
 var _ = require('lodash');
 var io = require('socket.io-client');
-var d3 = require('d3');
-var dagre = require('dagre');
-var dagreD3 = require('dagre-d3');
 
 var React = require('react');
 var App = require('./App.js');
@@ -28,84 +25,6 @@ function init_codemirror() {
 		);
 		//- console.log(editor.getValue());
 	}
-}
-
-
-function run_task(slug) {
-	$.post('/run/'+slug, {}, function(res) {
-		console.log(res.ok);
-	});
-}
-
-
-function make_graph(task) {
-	var g = new dagreD3.graphlib.Graph()
-		.setGraph({
-			rankdir: 'LR',
-			// ranksep: 15,
-			// nodesep: 15
-		});
-		// .setDefaultEdgeLabel(function() { return {}; });
-
-	// g.setNode(task.slug, {
-	// 	label: task.name,
-	// 	class: 'task'
-	// });
-
-	task.steps.forEach(function(step) {
-		var label = step.block;
-		if (step._description) {
-			// label += '\n'+step._description;
-			label = step._description;
-		}
-		g.setNode(step.id, {
-			label: label,
-			class: 'step'
-		});
-
-		// edges
-		var flow = step.flow;
-		['if', 'else', 'always'].forEach(function(type) {
-			var f = flow[type] || [];
-
-			if (f.length > 0) {
-				var flow_node_id = step.id+'-'+task.slug;
-				g.setNode(flow_node_id, {
-					label: type,
-					class: 'flow',
-					shape: 'diamond'
-				});
-			}
-
-			f.forEach(function(next_id) {
-				g.setEdge(step.id, flow_node_id, { arrowhead: 'undirected' });
-				g.setEdge(flow_node_id, next_id, { /*label: type*/ });
-			});
-		});
-	});
-
-	g.nodes().forEach(function(v) {
-		var node = g.node(v);
-		// Round the corners of the nodes
-		node.rx = node.ry = 5;
-	});
-
-	// Create the renderer
-	var render = new dagreD3.render();
-
-	// Set up an SVG group so that we can translate the final graph.
-	var svg = d3.select('#'+task.slug+' .visualization svg');
-	var svgGroup = svg.append('g');
-
-	// Run the renderer. This is what draws the final graph.
-	render(svg.select('g'), g);
-
-	// Center the graph
-	svg.attr('height', g.graph().height)
-	svg.attr('width', g.graph().width)
-	// var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
-	// svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
-	// svg.attr('height', g.graph().height + 40);
 }
 
 
@@ -137,11 +56,8 @@ function init_websocket() {
 
 $(document).ready(function() {
 	init_websocket();
+	
 	// init_codemirror();
 
-	_.keys(tasks).forEach(function(name) {
-		make_graph(tasks[name]);
-	});
-
-	React.render(<App />, $('#app')[0]);
+	React.render(<App tasks={window.tasks} />, $('#app')[0]);
 });

@@ -1,30 +1,10 @@
 extends ../layouts/default
 
 
-mixin task(t)
-	div(id=t.slug)
-		.task-name
-			| #{t.name}
-			if t.interval
-				button(onclick='run_task("#{t.slug}")') run now
-		if t.interval
-			| interval: #{t.interval}
-		.code
-			//- textarea.codemirror #{JSON.stringify(t, null, 4)}
-		.visualization
-			svg
-
-
 block content
 	//- div#console
-
 	canvas#logo
-
 	#app
-
-	h2 #{tasks.length} tasks
-	for t in tasks
-		+task(t)
 
 
 block js
@@ -37,5 +17,4 @@ block js
 	//- script(src='/bower_components/codemirror/addon/selection/active-line.js')
 	
 	script(src='bower_components/Processing.js/processing.min.js')
-
 	script(src='/js/_bundle.js')
