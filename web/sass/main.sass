@@ -1,10 +1,17 @@
 body
 	font-family: sans-serif
-	text-align: center
 
 
-// #logo
-// 	width: 300px
+#menu
+	position: absolute
+	top: 0
+	right: 0
+	text-align: right
+	padding-top: 1em
+	padding-right: 1em
+
+	.menu-item
+
 
 #console
 	width: 600px
@@ -36,11 +43,10 @@ body
 button
 	margin-left: 1em
 
+
 // graphs
 .visualization
 	display: flex-box
-	margin-top: 1em
-	margin-bottom: 5em
 
 .node
 	&.task rect
@@ -58,7 +64,6 @@ button
 			stroke: none
 
 		font-size: 14px
-		// font-weight: bold
 
 .edgePath path
 	stroke: black
