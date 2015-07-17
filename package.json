@@ -5,7 +5,8 @@
   "license": "CC-BY-NC-SA-4.0",
   "main": "index.js",
   "scripts": {
-    "test": "DEBUG=cause:block:* mocha"
+    "test": "DEBUG=cause:block:* mocha",
+    "lint": "eslint ."
   },
   "author": "freder.code@gmail.com",
   "repository": {

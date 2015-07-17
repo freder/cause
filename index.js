@@ -1,7 +1,8 @@
+'use strict';
+
 var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
-var _ = require('lodash');
 
 global.paths = {
 	root: __dirname,
@@ -70,9 +71,8 @@ if (args.task) {
 			.map(tasklib.prepare_task);
 
 		tasks.forEach(tasklib.run_task);
-		
+
 		cli.list_tasks();
 		server.start();
-	});	
+	});
 }
-
