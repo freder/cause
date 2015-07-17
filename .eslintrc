@@ -22,8 +22,9 @@
 		"no-shadow": 1,
 		"no-unused-vars": 1,
 		"no-underscore-dangle": 0,
-		"space-infix-ops": 1,
+		"space-infix-ops": 0,
 		"dot-notation": 0,
-		"quotes": [1, "single"]
+		"comma-dangle": 0,
+		"quotes": [0, "single"]
 	}
 }

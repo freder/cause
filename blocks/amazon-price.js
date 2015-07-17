@@ -1,7 +1,6 @@
 'use strict';
 
 var validator = require('validator');
-var sf = require('sf');
 var _ = require('lodash');
 var request = require('request');
 

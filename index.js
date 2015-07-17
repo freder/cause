@@ -15,8 +15,8 @@ require( path.join(global.paths.lib, 'log.js') ).init();
 var cli = require( path.join(global.paths.lib, 'cli.js') );
 var nopt = require('nopt');
 var args = global.args = nopt(cli.opts, cli.shorthands, process.argv, 2);
-if (args.help) cli.show_help();
-if (args.version) cli.show_version();
+if (args.help) { cli.show_help(); }
+if (args.version) { cli.show_version(); }
 if (args.help ||
 	args.version) {
 	cli.exit(0, true);
@@ -55,7 +55,7 @@ process.on('SIGINT', function() {
 
 if (args.task) {
 	debug('running '+chalk.cyan(args.task));
-	var task_data = tasklib.load_task_from_file(args.task)
+	var task_data = tasklib.load_task_from_file(args.task);
 	task_data.interval = undefined;
 	task = tasklib.prepare_task(task_data);
 	tasklib.run_task(task, function(err, result) {
