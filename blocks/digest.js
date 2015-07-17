@@ -1,3 +1,5 @@
+'use strict';
+
 var moment = require('moment');
 var sf = require('sf');
 var _ = require('lodash');
@@ -42,7 +44,7 @@ function fn(task, step, input, prev_step, done) {
 
 	function flush() {
 		var take_n = step.options.limit;
-		if (all_at_once) take_n = step.data.collected.length;
+		if (all_at_once) { take_n = step.data.collected.length; }
 
 		cause.debug('flushing ...');
 
@@ -68,12 +70,12 @@ function fn(task, step, input, prev_step, done) {
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
 			cause.debug(step.options.or_after+' have passed');
-			if (step.data.collected.length > 0) flush();
+			if (step.data.collected.length > 0) { flush(); }
 		}
 	}
 
 	// flush, once threshold is reached
-	if (step.data.collected.length >= step.options.limit) flush();
+	if (step.data.collected.length >= step.options.limit) { flush(); }
 
 	cause.save();
 }

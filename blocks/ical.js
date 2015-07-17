@@ -1,3 +1,5 @@
+'use strict';
+
 var request = require('request');
 var _ = require('lodash');
 var ical = require('ical');

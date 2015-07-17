@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('async');
 var sf = require('sf');
 var cheerio = require('cheerio');
@@ -50,13 +52,13 @@ function text_filter(description) {
 
 // TODO: expose all criteria as options
 var neighborhoods = [
-		'archipelbuurt', 
-		'centrum', 
-		'regentessekwartier', 
-		'geuzen- en statenkwartier', 
-		'zeeheldenkwartier', 
-		'willemspark', 
-		'transvaalkwartier', 
+		'archipelbuurt',
+		'centrum',
+		'regentessekwartier',
+		'geuzen- en statenkwartier',
+		'zeeheldenkwartier',
+		'willemspark',
+		'transvaalkwartier',
 		'valkenboskwartier'
 	].map(function(neighborhood) {
 		return neighborhood
@@ -120,7 +122,7 @@ function do_request(req_opts, cb) {
 		req_opts,
 		function(err, res, body) {
 			if (err) { return cb(err); }
-			
+
 			if (res.statusCode != 200) {
 				var msg = 'status code: '+res.statusCode;
 				cause.debug(msg, task.name);
@@ -150,7 +152,7 @@ function get_number_of_pages(done) {
 				var $pageinfo = $('.page-info');
 				var num_pages = $pageinfo.first().text().trim().split(' van ')[1];
 				result[neighborhood] = parseInt(num_pages);
-				
+
 				cb(null, result);
 			});
 		}
@@ -331,7 +333,7 @@ function fn(task, step, input, prev_step, done) {
 
 		function finish(new_items, new_matches) {
 			var new_ones = (new_matches.length > 0);
-			
+
 			// if (new_ones) {
 				// var line = cause.utils.format.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
 			// 	cause.winston.info(line);

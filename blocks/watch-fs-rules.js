@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = [
 	{
 		watch: ['/Users/fredericbrodbeck/Desktop/_screenshots/*.png'],

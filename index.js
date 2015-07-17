@@ -17,11 +17,10 @@ var nopt = require('nopt');
 var args = global.args = nopt(cli.opts, cli.shorthands, process.argv, 2);
 if (args.help) cli.show_help();
 if (args.version) cli.show_version();
-if (
-	args.help ||
-	args.version
-) { cli.exit(0, true); }
-
+if (args.help ||
+	args.version) {
+	cli.exit(0, true);
+}
 
 var config = require( path.join(global.paths.root, 'config.js') );
 var server = require( path.join(global.paths.lib, 'server.js') );

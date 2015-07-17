@@ -1,3 +1,5 @@
+'use strict';
+
 var validator = require('validator');
 var sf = require('sf');
 var _ = require('lodash');
@@ -31,20 +33,21 @@ function fn(task, step, input, prev_step, done) {
 
 		var $selection = cause.utils.scraping.query('css', '#priceblock_ourprice', body);
 
+		var msg;
 		if (!$selection) {
-			var msg = 'scraping failed';
+			msg = 'scraping failed';
 			cause.winston.error( cause.utils.format.cli_msg(task.name, msg) );
 			return done(new Error(msg));
 		}
-		
+
 		if ($selection.length === 0) {
-			var msg = 'selection is empty';
+			msg = 'selection is empty';
 			cause.winston.error( cause.utils.format.cli_msg(task.name, msg) );
 			return done(new Error(msg));
 		}
 
 		if ($selection.length > 1) {
-			var msg = 'more than one element selected — only using first one';
+			msg = 'more than one element selected — only using first one';
 			cause.winston.warn( cause.utils.format.cli_msg(task.name, msg) );
 		}
 
@@ -53,7 +56,7 @@ function fn(task, step, input, prev_step, done) {
 		price = parseFloat(price);
 		var output = price;
 		var price_changed = (step.data.prev_price != price);
-		
+
 		// custom logging
 		if (price_changed) {
 			cause.winston.info( cause.utils.format.price_delta(price, step.data.prev_price, task) );

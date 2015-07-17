@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 
 
@@ -29,10 +31,10 @@ module.exports = {
 		options: {
 			from: undefined,
 			to: undefined,
-			title: "’cause: <%=task.name%>",
-			message: "<%=prev_step.block%>: <%=input%>"
+			title: '’cause: <%=task.name%>',
+			message: '<%=prev_step.block%>: <%=input%>'
 		},
 		data: {},
-		description: "email"
+		description: 'email'
 	}
 };

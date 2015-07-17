@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var versus = require('versus');
 
@@ -21,7 +23,7 @@ function fn(task, step, input, prev_step, done) {
 	// mark as triggered, or not
 	step.data.triggered = check;
 	cause.save();
-	
+
 	done(null, output, decision);
 }
 

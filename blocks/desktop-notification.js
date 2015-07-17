@@ -1,3 +1,5 @@
+'use strict';
+
 var notifier = require('node-notifier');
 var _ = require('lodash');
 
@@ -23,7 +25,7 @@ module.exports = {
 	defaults: {
 		options: {
 			title: "’cause: <%=task.name%>",
-			message: "<%=prev_step.block%>: <%=input%>"			
+			message: "<%=prev_step.block%>: <%=input%>"
 		},
 		data: {},
 		description: "desktop notification"

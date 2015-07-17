@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var chokidar = require('chokidar');
 
@@ -14,7 +16,7 @@ function fn(task, step, input, prev_step, done) {
 			persistent: true,
 			ignoreInitial: true,
 		};
-		if (rule.ignore) options.ignored = rule.ignore;
+		if (rule.ignore) { options.ignored = rule.ignore; }
 		// console.log('watching', rule.watch);
 		var watcher = chokidar.watch(rule.watch, options);
 

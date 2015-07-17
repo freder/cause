@@ -1,3 +1,5 @@
+'use strict';
+
 var pushover = require('pushover-notifications');
 var _ = require('lodash');
 

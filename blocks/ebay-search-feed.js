@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var sf = require('sf');
 var chalk = require('chalk');
@@ -12,11 +14,11 @@ function fn(task, step, input, prev_step, done) {
 	step.options.url = sf('http://www.ebay.{1}/sch/i.html?_nkw={0}&_rss=1', query, step.options.tld);
 
 	// wrap original callback
-	cb = _.wrap(done, function(done, err, output, decision) {
+	var cb = _.wrap(done, function(done, err, output, decision) {
 		// do s.th. with output from `feed` block
 		output.forEach(function(item) {
 			console.log(item.title);
-			console.log('\t', chalk.green(item.link));			
+			console.log('\t', chalk.green(item.link));
 		});
 		// pass arguments on to original callback
 		done(err, output, decision);

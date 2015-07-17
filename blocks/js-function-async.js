@@ -1,3 +1,5 @@
+'use strict';
+
 var sf = require('sf');
 
 
@@ -15,7 +17,7 @@ function fn(task, step, input, prev_step, done) {
 	}
 
 	try {
-		eval( sf('({0})(cb);', step.options.func) );		
+		eval( sf('({0})(cb);', step.options.func) );
 	} catch(e) {
 		done(e);
 	}

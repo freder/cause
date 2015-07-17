@@ -1,3 +1,5 @@
+'use strict';
+
 var R = require('ramda');
 var _ = require('lodash');
 var request = require('request');
@@ -9,31 +11,31 @@ var validator = require('validator');
 
 function neighborhood_filter(white_list) {
 	return function(item) {
-		return R.contains(item.neighborhood.toLowerCase(), white_list);		
-	}
+		return R.contains(item.neighborhood.toLowerCase(), white_list);
+	};
 }
 
 function city_filter(city) {
 	return function(item) {
-		return item.city.toLowerCase() == city.toLowerCase();
-	}
+		return item.city.toLowerCase() === city.toLowerCase();
+	};
 }
 
 function price_filter(min_price, max_price) {
 	return function(item) {
 		return (min_price <= item.price) && (item.price <= max_price);
-	}
+	};
 }
 
 
 function rename_keys(data) {
-	for (key in data) {
+	for (var key in data) {
 		var new_key = key.replace('rss:', '');
 
 		// rename some special cases
-		if (new_key == 'area') new_key = 'neighborhood';
-		if (new_key == 'street_name') new_key = 'street';
-		if (new_key == 'sub_category') new_key = 'type';
+		if (new_key === 'area') { new_key = 'neighborhood'; }
+		if (new_key === 'street_name') { new_key = 'street'; }
+		if (new_key === 'sub_category') { new_key = 'type'; }
 
 		data[new_key] = data[key]['#'];
 
@@ -134,7 +136,7 @@ function fn(task, step, input, prev_step, done) {
 			// }
 
 			var output = new_matches;
-			
+
 			step.data.seen_guids = result.guids;
 			step.data.seen_pubdate = result.meta['pubdate'];
 			cause.save();
@@ -162,7 +164,7 @@ module.exports = {
 				'valkenboskwartier'
 			],
 			min_price: 0,
-			min_price: 1000
+			max_price: 1000
 		},
 		data: {
 			seen_pubdate: null,

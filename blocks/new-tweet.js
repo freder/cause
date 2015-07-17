@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var R = require('ramda');
 
@@ -43,7 +45,7 @@ var fn = function(task, step, input, prev_step, done) {
 			}
 		} else {
 			end(tweet);
-		}		
+		}
 	});
 };
 
