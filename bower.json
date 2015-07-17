@@ -12,10 +12,9 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
-    "zepto": "~1.1.6"
-  },
-  "resolutions": {
-    "lodash": "~3.5.0"
+  "devDependencies": {},
+  "dependencies": {
+    "Processing.js": "1.4.8",
+    "codemirror": "~5.3.0"
   }
 }

@@ -33,7 +33,7 @@ module.exports = {
 	fn: fn,
 	defaults: {
 		options: {
-			title: "'cause: <%=task.name%>",
+			title: "’cause: <%=task.name%>",
 			message: "<%=prev_step.block>: <%=input%>"
 		},
 		data: {},

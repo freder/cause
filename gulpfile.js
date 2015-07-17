@@ -8,15 +8,15 @@ var glob = require('glob');
 var fs = require('fs');
 var sf = require('sf');
 var exec = require('child_process').exec;
+var _ = require('lodash');
+var gutil = require('gulp-util');
+var chalk = require('chalk');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var reactify = require('reactify');
+var source = require('vinyl-source-stream');
 
-
-var root = path.resolve('./');
-global.paths = {
-	root: root,
-	lib: path.join(root, 'lib'),
-	blocks: path.join(root, 'blocks')
-};
-var filesystem = require('./lib/filesystem.js');
+var filesystem = require('./lib/utils/filesystem.js');
 
 
 var dirname = {
@@ -63,31 +63,31 @@ gulp.task('graphviz', function() {
 
 			// boilerplate
 			content += '\
-edge [\n\
-	fontname = Helvetica,\n\
-	labelfontsize = 10 ,\n\
-	labelfloat = false,\n\
-	labelloc = "c",\n\
-	minlen = 2,\n\
-	len = 2.5\n\
-];\n\
-\n\
-node [\n\
-	fontname = Helvetica,\n\
-	fontsize = 10,\n\
-	# shape = circle,\n\
-	shape = box,\n\
-	# fixedsize = true,\n\
-	# width = 1.0,\n\
-	style = filled,\n\
-	fillcolor = "yellow"\n\
-	color = none\n\
-];\n\
-\n\
-rankdir = TB;\n\
-overlap = false;\n\
-#splines = line;\n\
-splines = spline;\n\n';
+				edge [\n\
+					fontname = Helvetica,\n\
+					labelfontsize = 10 ,\n\
+					labelfloat = false,\n\
+					labelloc = "c",\n\
+					minlen = 2,\n\
+					len = 2.5\n\
+				];\n\
+				\n\
+				node [\n\
+					fontname = Helvetica,\n\
+					fontsize = 10,\n\
+					# shape = circle,\n\
+					shape = box,\n\
+					# fixedsize = true,\n\
+					# width = 1.0,\n\
+					style = filled,\n\
+					fillcolor = "yellow"\n\
+					color = none\n\
+				];\n\
+				\n\
+				rankdir = TB;\n\
+				overlap = false;\n\
+				#splines = line;\n\
+				splines = spline;\n\n';
 			
 			// task info
 			// http://www.graphviz.org/doc/info/attrs.html#k%3aescString
@@ -135,7 +135,6 @@ splines = spline;\n\n';
 });
 
 
-
 gulp.task('sass', function() {
 	return gulp.src( path.join(paths.sass, pattern.sass_main) )
 		.pipe(sass(options.sass))
@@ -146,27 +145,65 @@ gulp.task('sass', function() {
 });
 
 
-gulp.task('mocha', function() {
-	return gulp.src('test/test.js', { read: false })
-		.pipe(mocha())
-		.on('error', function(err) {
-			notifier.notify({
-				title: err.plugin,
-				message: err.message
-			});
+var main_js_file_path = './web/js/index.js';
+var destination_path = './web/js';
+var destination_filename = '_bundle.js';
+ 
+// build scripts with browserify
+gulp.task('build:js', function() {
+	return browserify({
+			transform: [reactify]
+		})
+		.add(main_js_file_path)
+		.bundle()
+		.on('error', function(e) {
+			gutil.log('Browserify Error', e);
+		})
+		.pipe(source(destination_filename))
+		.pipe(gulp.dest(destination_path));
+});
+ 
+// watch scripts & build with debug features
+gulp.task('watch:js', function() {
+	var b = browserify(
+			_.defaults({
+				transform: [reactify]
+			}, watchify.args)
+		)
+		.add(main_js_file_path);
+ 
+	var w = watchify(b)
+		.on('update', function(scriptIds) {
+			scriptIds = scriptIds
+				.filter(function(i) { return i.substr(0,2) !== './'; })
+				.map(function(i) { return chalk.blue(i.replace(__dirname, '')); });
+			if (scriptIds.length > 1) {
+				gutil.log(scriptIds.length + ' Scripts updated:\n* ' + scriptIds.join('\n* ') + '\nrebuilding...');
+			} else {
+				gutil.log(scriptIds[0] + ' updated, rebuilding...');
+			}
+ 
+			rebundle();
+		})
+		.on('time', function(time) {
+			gutil.log(chalk.green('Scripts built in ' + (Math.round(time / 10) / 100) + 's'));
 		});
+ 
+	function rebundle() {
+		w.bundle()
+			.on('error', function(e) {
+				gutil.log('Browserify Error', e);
+			})
+			.pipe(source(destination_filename))
+			.pipe(gulp.dest(destination_path));
+	}
+ 
+	return rebundle();
 });
 
 
-gulp.task('default', [/*'mocha',*/ 'sass'], function() {
-	// gulp.watch([
-	// 		'./*.js',
-	// 		'./lib/*.js',
-	// 		'./blocks/*.js',
-	// 		'./test/*.js'
-	// 	],
-	// 	['mocha']
-	// );
+gulp.task('build', ['sass', 'build:js']);
 
+gulp.task('default', ['sass', 'watch:js'], function() {
 	gulp.watch('./web/sass/**/*.{sass,scss}', ['sass']);
 });

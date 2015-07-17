@@ -29,7 +29,7 @@ module.exports = {
 		options: {
 			from: undefined,
 			to: undefined,
-			title: "'cause: <%=task.name%>",
+			title: "’cause: <%=task.name%>",
 			message: "<%=prev_step.block%>: <%=input%>"
 		},
 		data: {},

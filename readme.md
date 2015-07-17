@@ -1,4 +1,4 @@
-# 'cause
+# ’cause
 
 > an automation tool
 
@@ -15,7 +15,8 @@ requirements:
 ```shell
 git clone https://github.com/freder/cause.git
 cd cause
-npm install
+npm install && bower install
+gulp build
 mv config.js.example config.js
 ```
 
@@ -31,7 +32,7 @@ then edit `config.js` and fill in the `XXXXXXXXX`s.
 node index.js
 ```
 
-if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
+or, if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
 
 ```shell
 DEBUG=cause:* node index.js
@@ -75,14 +76,6 @@ TODO:
 # writing your own blocks
 
 check out [`cause-website-changed`](https://github.com/freder/cause-website-changed/blob/master/cause-website-changed.js) for a documented example.
-
-
----
-
-
-# versions
-- `0.9.0`
-	+ blocks: removed all dependencies on `cause`, so that they can be stand-alone npm modules
 
 
 ---

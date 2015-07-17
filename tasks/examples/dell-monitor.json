@@ -59,7 +59,7 @@
 			"id": "email",
 			"block": "email-notification",
 			"options": {
-				"title": "'cause: <%=task.name%>",
+				"title": "’cause: <%=task.name%>",
 				"message": "<%=prev_step.block%>: <%=input%>"
 			},
 			"flow": {
@@ -74,7 +74,7 @@
 			"block": "desktop-notification",
 			"options": {
 				"message": "<%=format.money(input)%>",
-				"title": "'cause: <%=task.name%>"
+				"title": "’cause: <%=task.name%>"
 			},
 			"flow": {
 				"if": [],
@@ -88,7 +88,7 @@
 			"block": "pushover",
 			"options": {
 				"message": "dell monitor price: <%=format.money(input)%>",
-				"title": "'cause: <%=task.name%>"
+				"title": "’cause: <%=task.name%>"
 			},
 			"flow": {
 				"if": [],
