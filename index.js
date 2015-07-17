@@ -4,15 +4,14 @@ var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
 
-global.paths = {
-	root: __dirname,
-	lib: path.join(__dirname, 'lib')
-};
-
-require( path.join(global.paths.lib, 'log.js') ).init();
+var cwd = process.cwd();
+var config = require('./config.js');
+var libPath = path.join(cwd, config.paths.lib);
+var log = require(path.join(libPath, 'log.js'));
+log.init();
 
 // command line
-var cli = require( path.join(global.paths.lib, 'cli.js') );
+var cli = require(path.join(libPath, 'cli.js'));
 var nopt = require('nopt');
 var args = global.args = nopt(cli.opts, cli.shorthands, process.argv, 2);
 if (args.help) { cli.show_help(); }
@@ -22,10 +21,9 @@ if (args.help ||
 	cli.exit(0, true);
 }
 
-var config = require( path.join(global.paths.root, 'config.js') );
-var server = require( path.join(global.paths.lib, 'server.js') );
-var utils = require( path.join(global.paths.lib, 'utils.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
+var server = require(path.join(libPath, 'server.js'));
+var utils = require(path.join(libPath, 'utils.js'));
+var tasklib = require(path.join(libPath, 'tasklib.js'));
 
 var debug = require('debug')('cause:'+path.basename(__filename));
 
@@ -62,9 +60,8 @@ if (args.task) {
 		process.exit();
 	});
 } else {
-	var tasks_path = path.join(global.paths.root, config.paths.tasks);
-	debug('loading tasks from '+chalk.cyan(tasks_path));
-	glob(path.join(tasks_path, '*.json'), function(err, files) {
+	debug('loading tasks from '+chalk.cyan(config.paths.tasks));
+	glob(path.join(config.paths.tasks, '*.json'), function(err, files) {
 		var tasks = global.tasks = files
 			.map(tasklib.load_task_from_file)
 			.map(tasklib.prepare_task);

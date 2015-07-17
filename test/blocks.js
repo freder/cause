@@ -4,10 +4,7 @@ var chalk = require('chalk');
 var async = require('async');
 var _ = require('lodash');
 
-
 var util = require('./util.js');
-global.paths = util.get_paths();
-
 
 var tasklib = require('../lib/tasklib.js');
 
@@ -135,7 +132,7 @@ describe(util.f1('blocks/'), function() {
 	describe(util.f2('digest.js'), function() {
 		// describe(util.f3('.()'), function() {
 		// 	it('should', function() {
-		// 		var task_path = path.join(global.paths.root, 'tasks/test/digest-test-2.json');
+		// 		var task_path = path.join('../', 'tasks/test/digest-test-2.json');
 		// 		var task = tasklib.load_task_from_file(task_path);
 		// 		task = tasklib.prepare_task(task);
 		// 		tasklib.run_task(task);

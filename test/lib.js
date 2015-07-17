@@ -8,11 +8,10 @@ var cheerio = require('cheerio');
 var FeedParser = require('feedparser');
 
 var util = require('./util.js');
-global.paths = util.get_paths();
 
-var config = require( path.join(global.paths.root, 'config.js') );
-var tasklib = require( path.join(global.paths.lib, 'tasklib.js') );
-var utils = require( path.join(global.paths.lib, 'utils.js') );
+var config = require('../config.js');
+var tasklib = require('../lib/tasklib.js');
+var utils = require('../lib/utils.js');
 
 
 describe(util.f1('lib/'), function() {
@@ -60,7 +59,7 @@ describe(util.f1('lib/'), function() {
 
 				assert.throws(function() {
 					task_data.interval = 'asdf';
-					task = tasklib.prepare_task(task_data);					
+					task = tasklib.prepare_task(task_data);
 				});
 
 				delete task_data.interval;

@@ -1,6 +1,7 @@
 module.exports = {
 
 	paths: {
+		lib: './lib',
 		tasks: './tasks',
 		blocks: './blocks'
 	},
