@@ -161,7 +161,7 @@ describe(util.f1('lib/'), function() {
 		describe(util.f3('.prepare_flow()'), function() {
 			it('should make sure everything is sane', function() {
 				var _flow, flow;
-				
+
 				_flow = {};
 				flow = tasklib.prepare_flow(_flow);
 				assert(flow['if'] !== undefined);
@@ -241,13 +241,13 @@ describe(util.f1('lib/'), function() {
 
 				file = '../asdf/asdfadf/filename.ext';
 				assert.equal(utils.filesystem.get_filename(file), 'filename');
-				
+
 				file = 'filename.ext';
 				assert.equal(utils.filesystem.get_filename(file), 'filename');
-				
+
 				file = 'filename.bla.ext';
 				assert.equal(utils.filesystem.get_filename(file), 'filename.bla');
-				
+
 				file = '.ext';
 				assert.equal(utils.filesystem.get_filename(file), '');
 
@@ -260,7 +260,7 @@ describe(util.f1('lib/'), function() {
 			it('throw an error when json input is bad', function() {
 				assert.throws(function() {
 					file = 'test/files/bad.json';
-					utils.filesystem.load_json(file);					
+					utils.filesystem.load_json(file);
 				});
 			});
 		});
@@ -284,7 +284,7 @@ describe(util.f1('lib/'), function() {
 
 	});
 
-	
+
 	// ############################################################
 	describe(util.f2('utils/scraping.js'), function() {
 

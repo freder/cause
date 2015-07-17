@@ -57,7 +57,7 @@ describe(util.f1('blocks/'), function() {
 				assert(typeof data.rooms == 'number');
 			});
 		});
-	
+
 		describe(util.f3('.text_filter()'), function() {
 			it('should reject houses for less than 2 persons', function(done) {
 				// var opts = {
@@ -127,7 +127,7 @@ describe(util.f1('blocks/'), function() {
 
 	});
 
-	
+
 	// ############################################################
 	describe(util.f2('digest.js'), function() {
 		// describe(util.f3('.()'), function() {
@@ -407,7 +407,7 @@ describe(util.f1('blocks/'), function() {
 		});
 	});
 
-	
+
 	// ############################################################
 	describe(util.f2('js-function.js'), function() {
 		describe(util.f3('.fn()'), function() {
