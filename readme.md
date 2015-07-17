@@ -15,7 +15,8 @@ requirements:
 ```shell
 git clone https://github.com/freder/cause.git
 cd cause
-npm install
+npm install && bower install
+gulp build
 mv config.js.example config.js
 ```
 
@@ -31,7 +32,7 @@ then edit `config.js` and fill in the `XXXXXXXXX`s.
 node index.js
 ```
 
-if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
+or, if you want to see [`debug`](https://www.npmjs.com/package/debug) messages:
 
 ```shell
 DEBUG=cause:* node index.js
@@ -80,17 +81,9 @@ check out [`cause-website-changed`](https://github.com/freder/cause-website-chan
 ---
 
 
-# versions
-- `0.9.0`
-	+ blocks: removed all dependencies on `cause`, so that they can be stand-alone npm modules
-
-
----
-
-
 ## similar tools:
 - [`ifttt`](https://ifttt.com/)
 - [`huginn`](https://github.com/cantino/huginn)
 - [`node-red`](http://nodered.org/)
-- [noflo](http://noflojs.org/)
+- [`noflo`](http://noflojs.org/)
 - [`workflow`](https://workflow.is/)
