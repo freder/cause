@@ -32,17 +32,20 @@ function fn(task, step, input, prev_step, done) {
 		var $selection = cause.utils.scraping.query('css', '#priceblock_ourprice', body);
 
 		if (!$selection) {
-			cause.winston.error( cause.utils.format.cli_msg(task.name, 'scraping failed') );
-			return;
+			var msg = 'scraping failed';
+			cause.winston.error( cause.utils.format.cli_msg(task.name, msg) );
+			return done(new Error(msg));
 		}
 		
 		if ($selection.length === 0) {
-			cause.winston.error( cause.utils.format.cli_msg(task.name, 'selection is empty') );
-			return;
+			var msg = 'selection is empty';
+			cause.winston.error( cause.utils.format.cli_msg(task.name, msg) );
+			return done(new Error(msg));
 		}
 
 		if ($selection.length > 1) {
-			cause.winston.warn( cause.utils.format.cli_msg(task.name, 'more than one element selected — only using first one') );
+			var msg = 'more than one element selected — only using first one';
+			cause.winston.warn( cause.utils.format.cli_msg(task.name, msg) );
 		}
 
 		var text = $selection.first().text();
@@ -60,6 +63,8 @@ function fn(task, step, input, prev_step, done) {
 		cause.save();
 
 		done(null, output, price_changed);
+	}).on('error', function(err) {
+		cause.handle_error(err);
 	});
 }
 

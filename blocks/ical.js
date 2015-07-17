@@ -72,9 +72,10 @@ function fn(task, step, input, prev_step, done) {
 		if (err) { return done(err); }
 
 		if (res.statusCode != 200) {
-			cause.debug('status code: '+res.statusCode, task.name);
+			var msg = 'status code: '+res.statusCode;
+			cause.debug(msg, task.name);
 			cause.debug(req_opts.url);
-			return;
+			return done(new Error(msg));
 		}
 
 		var events = ical.parseICS(body);
@@ -95,6 +96,8 @@ function fn(task, step, input, prev_step, done) {
 
 		step.data.seen_events = current_events;
 		cause.save();
+	}).on('error', function(err) {
+		cause.handle_error(err);
 	});
 }
 

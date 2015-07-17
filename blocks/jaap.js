@@ -129,6 +129,8 @@ function do_request(req_opts, cb) {
 			}
 
 			cb(null, body);
+		}).on('error', function(err) {
+			console.log(err);
 		});
 }
 
