@@ -36,7 +36,7 @@ process.on('uncaughtException', function(err) {
 	if (!args.task) {
 		utils.email.send(
 			{
-				subject: "'cause crashed",
+				subject: "’cause crashed",
 				html: '<pre>'+err.stack+'</pre>'
 			},
 			function(/*err, info*/) {

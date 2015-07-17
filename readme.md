@@ -1,4 +1,4 @@
-# 'cause
+# ’cause
 
 > an automation tool
 
