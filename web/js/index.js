@@ -7,22 +7,22 @@ var App = require('./App.js');
 
 
 function init_codemirror() {
-	var elems = document.querySelectorAll('.codemirror');
-	for (var i = 0; i < elems.length; i++) {
-		var editor = CodeMirror(function(cm_el) {
-				elems[i].parentNode.replaceChild(cm_el, elems[i]);
-			},
-			{
-				value: elems[i].value,
-				mode: 'javascript',
-					json: true,
-				theme: 'monokai',
-				//- lineNumbers: true,
-				styleActiveLine: true
-			}
-		);
-		//- console.log(editor.getValue());
-	}
+	// var elems = document.querySelectorAll('.codemirror');
+	// for (var i = 0; i < elems.length; i++) {
+	// 	var editor = CodeMirror(function(cm_el) {
+	// 			elems[i].parentNode.replaceChild(cm_el, elems[i]);
+	// 		},
+	// 		{
+	// 			value: elems[i].value,
+	// 			mode: 'javascript',
+	// 				json: true,
+	// 			theme: 'monokai',
+	// 			//- lineNumbers: true,
+	// 			styleActiveLine: true
+	// 		}
+	// 	);
+	// 	//- console.log(editor.getValue());
+	// }
 }
 
 
