@@ -133,3 +133,6 @@ tasks are defined as json files. example:
 ## cool examples / recipes
 
 <!-- TODO: create a repository of example tasks. -->
+
+## license
+[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
