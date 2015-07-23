@@ -10,3 +10,5 @@ tasks/test
 tasks/inactive
 graphviz
 web/css
+logo/sketch/build-tmp
+logo
