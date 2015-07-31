@@ -4,11 +4,16 @@ var glob = require('glob');
 var path = require('path');
 var chalk = require('chalk');
 
-var cwd = process.cwd();
 var config = require('./config.js');
-var libPath = path.join(cwd, config.paths.lib);
+var libPath = path.join(process.cwd(), config.paths.lib);
 var log = require(path.join(libPath, 'log.js'));
 log.init();
+
+var server = require(path.join(libPath, 'server.js'));
+var utils = require(path.join(libPath, 'utils.js'));
+var tasklib = require(path.join(libPath, 'tasklib.js'));
+
+var debug = require('debug')('cause:'+path.basename(__filename));
 
 // command line
 var cli = require(path.join(libPath, 'cli.js'));
@@ -21,16 +26,9 @@ if (args.help ||
 	cli.exit(0, true);
 }
 
-var server = require(path.join(libPath, 'server.js'));
-var utils = require(path.join(libPath, 'utils.js'));
-var tasklib = require(path.join(libPath, 'tasklib.js'));
-
-var debug = require('debug')('cause:'+path.basename(__filename));
-
-
-process.stdin.on('data', cli.handle_command);
-
+// send a notification email when the program crashes
 process.on('uncaughtException', function(err) {
+	// don't send anything when testing a single task
 	if (!args.task) {
 		utils.email.send(
 			{
@@ -44,7 +42,6 @@ process.on('uncaughtException', function(err) {
 	}
 
 	utils.misc.handle_error(err);
-	// cli.exit(1);
 });
 
 process.on('SIGINT', function() {
@@ -52,14 +49,16 @@ process.on('SIGINT', function() {
 });
 
 if (args.task) {
-	debug('running '+chalk.cyan(args.task));
+	// load single task
+	debug('loading '+chalk.cyan(args.task));
 	var task_data = tasklib.load_task_from_file(args.task);
-	task_data.interval = undefined;
+	task_data.interval = undefined; // only run once ...
 	task = tasklib.prepare_task(task_data);
 	tasklib.run_task(task, function(err, result) {
-		process.exit();
+		process.exit(); // ... then exit
 	});
 } else {
+	// load all tasks in task dir
 	debug('loading tasks from '+chalk.cyan(config.paths.tasks));
 	glob(path.join(config.paths.tasks, '*.json'), function(err, files) {
 		var tasks = global.tasks = files
@@ -67,6 +66,9 @@ if (args.task) {
 			.map(tasklib.prepare_task);
 
 		tasks.forEach(tasklib.run_task);
+
+		// accept commands from command line
+		process.stdin.on('data', cli.handle_command);
 
 		cli.list_tasks();
 		server.start();

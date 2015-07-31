@@ -17,7 +17,7 @@ an automation tool
 - I discovered [node-red](http://nodered.org/) only after I had already begun working on ’cause
 - [workflow](https://workflow.is/) is nice, but ios only
 
-ultimately I did it to scratch my own itch.
+ultimately, I did it to scratch my own itch.
 <!-- TODO: explain -->
 
 theoretically you could use ’cause to do what tools like [maid](https://github.com/benjaminoakes/maid) and [controlplane](http://www.controlplaneapp.com/) do.
