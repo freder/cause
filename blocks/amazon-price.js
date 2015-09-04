@@ -66,7 +66,7 @@ function fn(task, step, input, prev_step, done) {
 
 		done(null, output, price_changed);
 	}).on('error', function(err) {
-		cause.handle_error(err);
+		done(err);
 	});
 }
 

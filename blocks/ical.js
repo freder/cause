@@ -99,7 +99,7 @@ function fn(task, step, input, prev_step, done) {
 		step.data.seen_events = current_events;
 		cause.save();
 	}).on('error', function(err) {
-		cause.handle_error(err);
+		done(err);
 	});
 }
 
