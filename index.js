@@ -26,6 +26,12 @@ if (args.help ||
 	cli.exit(0, true);
 }
 
+
+function handleError(err) {
+	console.error(err.stack);
+}
+
+
 // send a notification email when the program crashes
 process.on('uncaughtException', function(err) {
 	// don't send anything when testing a single task
@@ -41,7 +47,7 @@ process.on('uncaughtException', function(err) {
 		);
 	}
 
-	utils.misc.handle_error(err);
+	handleError(err);
 });
 
 process.on('SIGINT', function() {

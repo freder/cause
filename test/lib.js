@@ -149,14 +149,6 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-		describe(util.f3('.flow_decision()'), function() {
-			it('should leave defaults untouched', function() {
-				tasklib.flow_decision(false);
-				assert(tasklib.flow_decision_defaults['if'] === true);
-				// assert(tasklib.flow_decision_defaults['else'] === true);
-				// assert(tasklib.flow_decision_defaults['always'] === true);
-			});
-		});
 
 		describe(util.f3('.prepare_flow()'), function() {
 			it('should make sure everything is sane', function() {
@@ -261,84 +253,6 @@ describe(util.f1('lib/'), function() {
 				assert.throws(function() {
 					file = 'test/files/bad.json';
 					utils.filesystem.load_json(file);
-				});
-			});
-		});
-
-	});
-
-
-	// ############################################################
-	describe(util.f2('utils/parse.js'), function() {
-
-		describe(util.f3('.time()'), function() {
-			it('should parse time', function() {
-				var parsed;
-				parsed = utils.parse.time('12 minutes');
-				assert(parsed.minutes === 12);
-
-				parsed = utils.parse.time('12 minutes ago');
-				assert(_.isEmpty(parsed));
-			});
-		});
-
-	});
-
-
-	// ############################################################
-	describe(util.f2('utils/scraping.js'), function() {
-
-		describe(util.f3('.query()'), function() {
-			it('should work with css and jquery', function() {
-				var html = ' \
-					<div id="container"> \
-						<div class="div">div</div> \
-						<span>span</span> \
-					</div>';
-				var $ = cheerio.load(html);
-				var query, $result;
-
-				query = '$("#container div").first()';
-				$result = utils.scraping.query('jquery', query, html);
-				assert($result.text().trim() == 'div');
-
-				query = '#container span';
-				$result = utils.scraping.query('css', query, html);
-				assert($result.text().trim() == 'span');
-
-				query = '#notfound';
-				var result = utils.scraping.query('css', query, html);
-				assert(result.length === 0);
-
-				assert(utils.scraping.query('never_heard_of_this', query, html) === null);
-			});
-		});
-
-	});
-
-
-	// ############################################################
-	describe(util.f2('utils/feed.js'), function() {
-
-		describe(util.f3('.process_feed()'), function() {
-			it('should work', function(done) {
-				var feedparser = new FeedParser();
-				fs.createReadStream('test/files/feed.xml')
-					.pipe(feedparser);
-
-				utils.feed.process_feed({
-					feedparser: feedparser,
-					seen_guids: ['1111'],
-					seen_pubdate: undefined
-				},
-				function(err, result) {
-					if (err) { throw err; }
-
-					assert(result.items.length === 3);
-					assert(result.new_items.length === 2);
-					assert(result.new_items.indexOf('1111') === -1);
-
-					done();
 				});
 			});
 		});

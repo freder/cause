@@ -22,6 +22,7 @@
   "homepage": "https://github.com/freder/cause",
   "dependencies": {
     "async": "^0.9.0",
+    "cause-utils": "*",
     "chalk": "^0.5.1",
     "cheerio": "^0.18.0",
     "chokidar": "^1.0.3",
