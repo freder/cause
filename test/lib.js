@@ -6,6 +6,7 @@ var fs = require('fs');
 var chalk = require('chalk');
 var _ = require('lodash');
 var glob = require('glob');
+var mout = require('mout');
 var cheerio = require('cheerio');
 var FeedParser = require('feedparser');
 
@@ -147,7 +148,11 @@ describe(util.f1('lib/'), function() {
 					]
 				};
 
-				assert(tasklib.find_root_steps(task).length === 4);
+				const rootSteps = tasklib.find_root_steps(task);
+				assert(rootSteps.length === 4);
+				rootSteps.forEach(function(item) {
+					assert(mout.string.startsWith(item.id, 'entry'));
+				});
 			});
 		});
 
