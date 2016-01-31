@@ -1,5 +1,6 @@
 --growl
 --colors
+--watch
 
 test/lib.js
 test/blocks.js
