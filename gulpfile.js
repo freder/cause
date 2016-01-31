@@ -1,5 +1,6 @@
+'use strict';
+
 var gulp = require('gulp');
-var mocha = require('gulp-mocha');
 var notifier = require('node-notifier');
 var path = require('path');
 var sass = require('gulp-sass');
@@ -88,7 +89,7 @@ gulp.task('graphviz', function() {
 				overlap = false;\n\
 				#splines = line;\n\
 				splines = spline;\n\n';
-			
+
 			// task info
 			// http://www.graphviz.org/doc/info/attrs.html#k%3aescString
 			content += sf('node [labeljust = "l" label = "{name}\\l{interval}\\l" shape = box fillcolor = none color = "gray"]; task_info;\n', task);
@@ -97,7 +98,7 @@ gulp.task('graphviz', function() {
 				// node
 				var node_name = cleanup(step.id);
 				step_definitions += sf('node [label = "{0}\\n({1}.js)" shape = box color = none fillcolor = "yellow"]; {2};\n', step.id, step.block, node_name);
-				
+
 				// edges
 				var flow = step.flow;
 				flow.if = flow.if || [];
@@ -148,7 +149,7 @@ gulp.task('sass', function() {
 var main_js_file_path = './web/js/index.js';
 var destination_path = './web/js';
 var destination_filename = '_bundle.js';
- 
+
 // build scripts with browserify
 gulp.task('build:js', function() {
 	return browserify({
@@ -162,7 +163,7 @@ gulp.task('build:js', function() {
 		.pipe(source(destination_filename))
 		.pipe(gulp.dest(destination_path));
 });
- 
+
 // watch scripts & build with debug features
 gulp.task('watch:js', function() {
 	var b = browserify(
@@ -171,7 +172,7 @@ gulp.task('watch:js', function() {
 			}, watchify.args)
 		)
 		.add(main_js_file_path);
- 
+
 	var w = watchify(b)
 		.on('update', function(scriptIds) {
 			scriptIds = scriptIds
@@ -182,13 +183,13 @@ gulp.task('watch:js', function() {
 			} else {
 				gutil.log(scriptIds[0] + ' updated, rebuilding...');
 			}
- 
+
 			rebundle();
 		})
 		.on('time', function(time) {
 			gutil.log(chalk.green('Scripts built in ' + (Math.round(time / 10) / 100) + 's'));
 		});
- 
+
 	function rebundle() {
 		w.bundle()
 			.on('error', function(e) {
@@ -197,7 +198,7 @@ gulp.task('watch:js', function() {
 			.pipe(source(destination_filename))
 			.pipe(gulp.dest(destination_path));
 	}
- 
+
 	return rebundle();
 });
 
