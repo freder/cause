@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "DEBUG=cause:block:* mocha",
-    "lint": "eslint ."
+    "lint": "eslint index.js ./lib ./blocks/*.js"
   },
   "author": "freder.code@gmail.com",
   "repository": {
