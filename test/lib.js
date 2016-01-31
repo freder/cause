@@ -85,7 +85,7 @@ describe(util.f1('lib/'), function() {
 				});
 
 				var step = { id: 'test-step' };
-				step._execute = tasklib.create_step_function(block, task, step);
+				step._execute = tasklib.create_execute_function(block, task, step);
 
 				task.steps = [step];
 				task._done = function() {
@@ -214,7 +214,7 @@ describe(util.f1('lib/'), function() {
 				});
 
 				var step = { id: 'single step' };
-				step._execute = tasklib.create_step_function(block, task, step);
+				step._execute = tasklib.create_execute_function(block, task, step);
 
 				task.steps = [step];
 				task._done = function() {
