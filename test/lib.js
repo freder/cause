@@ -22,21 +22,28 @@ describe(util.f1('lib/'), function() {
 	// ############################################################
 	describe(util.f2('tasklib.js'), function() {
 		describe(util.f3('.make_savable()'), function() {
+			var task = {
+				name: 'test task',
+				_internal: 'schedule',
+				steps: [
+					{
+						block: 'block',
+						_description: '_description',
+					}
+				]
+			};
+
 			it("should remove everything prefixed with '_'", function() {
-				var task = {
-					name: 'test task',
-					_internal: 'schedule',
-					steps: [
-						{
-							block: 'block',
-							_description: '_description',
-						}
-					]
-				};
+				var skip_steps = true;
+				var savable = tasklib.make_savable(task, skip_steps);
+				assert(!savable._internal);
+			});
+
+			it("should optionally include step objects, too", function() {
 				var skip_steps = false;
 				var savable = tasklib.make_savable(task, skip_steps);
-				assert(savable._internal === undefined);
-				assert(savable.steps[0]._description === undefined);
+				assert(!savable._internal);
+				assert(!savable.steps[0]._description);
 			});
 		});
 
