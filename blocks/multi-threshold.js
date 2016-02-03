@@ -11,11 +11,12 @@ arbitrary intervals can be specified:
 for instance "every 7.5 units, relative to 0.33"
 */
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
+function fn(input, step, context, done) {
+	var data = step.data;
+	var options = step.options;
 
-	var floor_prev = Math.floor((step.data.prev_value - step.options.offset) / step.options.step);
-	var floor_current = Math.floor((input - step.options.offset) / step.options.step);
+	var floor_prev = Math.floor((data.prev_value - options.offset) / options.step);
+	var floor_current = Math.floor((input - options.offset) / options.step);
 
 	var crossed_up = (floor_prev < floor_current);
 	var crossed_down = (floor_current < floor_prev);
@@ -23,11 +24,11 @@ function fn(task, step, input, prev_step, done) {
 	var check = crossed_down || crossed_up;
 
 	var threshold = (crossed_down)
-		? floor_prev * step.options.step + step.options.offset
-		: floor_current * step.options.step + step.options.offset;
+		? floor_prev * options.step + options.offset
+		: floor_current * options.step + options.offset;
 	if (check) {
 		var arrow = (crossed_up) ? '▲' : '▼';
-		cause.debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+step.data.prev_value, ''+input, chalk.inverse(arrow)) );
+		context.debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+data.prev_value, ''+input, chalk.inverse(arrow)) );
 	}
 
 	var output = {
@@ -37,8 +38,8 @@ function fn(task, step, input, prev_step, done) {
 		value: input
 	};
 
-	step.data.prev_value = input;
-	cause.save();
+	data.prev_value = input;
+	context.save();
 
 	done(null, output, check);
 }

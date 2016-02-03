@@ -35,17 +35,17 @@ function handleError(err) {
 // send a notification email when the program crashes
 process.on('uncaughtException', function(err) {
 	// don't send anything when testing a single task
-	if (!args.task) {
-		utils.email.send(
-			{
-				subject: "’cause crashed",
-				html: '<pre>'+err.stack+'</pre>'
-			},
-			function(/*err, info*/) {
-				cli.exit(1);
-			}
-		);
-	}
+	// if (!args.task) {
+	// 	utils.email.send(
+	// 		{
+	// 			subject: "’cause crashed",
+	// 			html: '<pre>'+err.stack+'</pre>'
+	// 		},
+	// 		function(/*err, info*/) {
+	// 			cli.exit(1);
+	// 		}
+	// 	);
+	// }
 
 	handleError(err);
 });

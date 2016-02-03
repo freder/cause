@@ -3,12 +3,10 @@
 var _ = require('lodash');
 var sf = require('sf');
 var chalk = require('chalk');
-var feed = require('./feed.js');
+var feed = require('cause-feed');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
+function fn(input, step, context, done) {
 	// construct rss feed url
 	var query = step.options.search.replace(/ +/ig, '+');
 	step.options.url = sf('http://www.ebay.{1}/sch/i.html?_nkw={0}&_rss=1', query, step.options.tld);
@@ -25,7 +23,7 @@ function fn(task, step, input, prev_step, done) {
 	});
 
 	// use `feed` block functionality
-	feed.fn.call(this, task, step, input, prev_step, cb);
+	feed.fn.call(this, input, step, context, cb);
 }
 
 

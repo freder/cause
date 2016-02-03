@@ -4,11 +4,10 @@ var moment = require('moment');
 var sf = require('sf');
 var _ = require('lodash');
 var R = require('ramda');
+var parsingUtils = require('cause-utils/parsing');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
+function fn(input, step, context, done) {
 	// sanity check: `limit` must be >= `at_least`
 	step.options.limit = Math.max(step.options.limit, step.options.at_least);
 
@@ -19,7 +18,7 @@ function fn(task, step, input, prev_step, done) {
 
 		// add input to buffer
 		step.data.collected = step.data.collected.concat(input);
-		cause.debug(
+		context.debug(
 			sf('received {0} items, now: {1} / {2}',
 				input.length,
 				step.data.collected.length,
@@ -27,7 +26,7 @@ function fn(task, step, input, prev_step, done) {
 			)
 		);
 	} else {
-		cause.debug('ignoring empty input: '+input);
+		context.debug('ignoring empty input: '+input);
 	}
 
 	// TODO: should it flush multiple times, or simply everything all at once?
@@ -37,7 +36,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		step.data.last_flush = now.format();
 
-		var parsed = cause.utils.parse.time(step.options.or_after);
+		var parsed = parsingUtils.time(step.options.or_after);
 		var dur = moment.duration(parsed);
 		step.data.next_flush = now.add(dur).format();
 	}
@@ -46,7 +45,7 @@ function fn(task, step, input, prev_step, done) {
 		var take_n = step.options.limit;
 		if (all_at_once) { take_n = step.data.collected.length; }
 
-		cause.debug('flushing ...');
+		context.debug('flushing ...');
 
 		var output = R.take(take_n, step.data.collected);
 		var decision = true;
@@ -69,7 +68,7 @@ function fn(task, step, input, prev_step, done) {
 		var now = moment();
 		var time_to_flush = moment(step.data.next_flush);
 		if (now >= time_to_flush) {
-			cause.debug(step.options.or_after+' have passed');
+			context.debug(step.options.or_after+' have passed');
 			if (step.data.collected.length > 0) { flush(); }
 		}
 	}
@@ -77,7 +76,7 @@ function fn(task, step, input, prev_step, done) {
 	// flush, once threshold is reached
 	if (step.data.collected.length >= step.options.limit) { flush(); }
 
-	cause.save();
+	context.save();
 }
 
 

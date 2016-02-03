@@ -98,7 +98,7 @@ tasks are defined as json files. example:
 	"steps": [
 		{
 			"id": "feed",
-			"block": "feed",
+			"block": "cause-feed",
 			"description": "check if there are new adventure time episodes",
 			"options": {
 				"url": "http://www.watchcartoononline.com/anime/adventure-time/feed"

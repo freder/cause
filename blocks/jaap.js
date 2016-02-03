@@ -6,6 +6,8 @@ var cheerio = require('cheerio');
 var request = require('request');
 var R = require('ramda');
 var _ = require('lodash');
+var scrapingUtils = require('cause-utils/scraping');
+var formattingUtils = require('cause-utils/formatting');
 
 
 // TODO: cleaner re-write
@@ -116,7 +118,7 @@ function parse_info(info) {
 function do_request(req_opts, cb) {
 	req_opts = _.defaults(
 		req_opts,
-		cause.utils.scraping.request_defaults()
+		scrapingUtils.requestDefaults()
 	);
 	return request(
 		req_opts,
@@ -335,7 +337,7 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 
 			// if (new_ones) {
-				// var line = cause.utils.format.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
+				// var line = formattingUtils.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
 			// 	cause.winston.info(line);
 
 			// 	var email_content = cause.utils.realestate.email_template(new_matches);

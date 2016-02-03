@@ -79,7 +79,7 @@ describe(util.f1('lib/'), function() {
 
 			it("should keep track of currently executing steps", function(cb) {
 				var block = {
-					fn: function(task, step, input, prev_step, done) {
+					fn: function(input, step, context, done) {
 						setTimeout(function() {
 							var output = null;
 							var decision = true;
@@ -215,7 +215,7 @@ describe(util.f1('lib/'), function() {
 			it('should work with single step tasks', function() {
 				var has_run = false;
 				var block = {
-					fn: function(task, step, input, prev_step, done) {
+					fn: function(input, step, context, done) {
 						has_run = true;
 						done(null, 'output', true);
 					}

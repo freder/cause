@@ -55,7 +55,7 @@
 		},
 		{
 			"id": "desktop-notification",
-			"block": "desktop-notification",
+			"block": "cause-desktop-notification",
 			"options": {
 				"message": "<%=format.money(input)%>",
 				"title": "’cause: <%=task.name%>"

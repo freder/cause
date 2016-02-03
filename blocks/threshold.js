@@ -1,27 +1,27 @@
 'use strict';
 
+var taskUtils = require('cause-utils/task');
 var versus = require('versus');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
+function fn(input, step, context, done) {
 	var output = input;
 
 	// has the threshold been crossed?
-	var check = versus(input, step.options.comparison, step.options.value);
-	var decision = cause.tasklib.flow_decision(check);
+	var checkResult = versus(input, step.options.comparison, step.options.value);
+	var decision = taskUtils.flowDecision(checkResult);
 
 	// trigger only once, when the threshold is reached,
 	// otherwise it would keep on triggering.
 	// TODO: maybe make desired behavior configurable
-	if (check && step.data.triggered) {
+	if (checkResult && step.data.triggered) {
 		decision['if'] = false;
 		decision['else'] = false;
 	}
 
 	// mark as triggered, or not
-	step.data.triggered = check;
-	cause.save();
+	step.data.triggered = checkResult;
+	context.save();
 
 	done(null, output, decision);
 }

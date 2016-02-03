@@ -6,6 +6,7 @@ var ical = require('ical');
 var moment = require('moment');
 var sf = require('sf');
 var validator = require('validator');
+var scrapingUtils = require('cause-utils/scraping');
 
 
 function organizer(orga) {
@@ -58,9 +59,7 @@ function process_event(e) {
 }
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
+function fn(input, step, context, done) {
 	// validation
 	if (!validator.isURL(step.options.url)) {
 		throw new Error('not a valid url: ' + step.options.url);
@@ -68,15 +67,15 @@ function fn(task, step, input, prev_step, done) {
 
 	var req_opts = _.defaults(
 		{ url: step.options.url },
-		cause.utils.scraping.request_defaults()
+		scrapingUtils.requestDefaults()
 	);
 	var req = request(req_opts, function(err, res, body) {
 		if (err) { return done(err); }
 
 		if (res.statusCode != 200) {
 			var msg = 'status code: '+res.statusCode;
-			cause.debug(msg, task.name);
-			cause.debug(req_opts.url);
+			context.debug(msg, task.name);
+			context.debug(req_opts.url);
 			return done(new Error(msg));
 		}
 
@@ -97,7 +96,7 @@ function fn(task, step, input, prev_step, done) {
 		done(null, output, new_ones);
 
 		step.data.seen_events = current_events;
-		cause.save();
+		context.save();
 	}).on('error', function(err) {
 		done(err);
 	});
@@ -111,7 +110,7 @@ module.exports = {
 		data: {
 			seen_events: []
 		},
-		description: "new ical event"
+		description: 'new ical event'
 	},
 	organizer: organizer
 };

@@ -3,8 +3,7 @@
 var sf = require('sf');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
+function fn(input, step, context, done) {
 	var output;
 	var decision;
 
@@ -12,14 +11,14 @@ function fn(task, step, input, prev_step, done) {
 		output = output || input;
 		decision = decision || false;
 
-		cause.save();
+		context.save();
 		done(null, output, decision);
 	}
 
 	try {
 		eval( sf('({0})(cb);', step.options.func) );
-	} catch(e) {
-		done(e);
+	} catch(err) {
+		done(err);
 	}
 }
 
@@ -31,6 +30,6 @@ module.exports = {
 			func: 'function() { console.log(input); }'
 		},
 		data: {},
-		description: ""
+		description: ''
 	},
 };

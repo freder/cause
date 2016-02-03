@@ -4,12 +4,10 @@ var pushover = require('pushover-notifications');
 var _ = require('lodash');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
+function fn(input, step, context, done) {
 	var p = new pushover({
-		user: cause.config.pushover.user_key,
-		token: cause.config.pushover.api_key
+		user: context.config.pushover.user_key,
+		token: context.config.pushover.api_key
 	});
 
 	function send(p, msg) {
@@ -18,8 +16,8 @@ function fn(task, step, input, prev_step, done) {
 		});
 	}
 
-	var title = _.template(step.options.title)(cause.message_vars);
-	var message = _.template(step.options.message)(cause.message_vars);
+	var title = _.template(step.options.title)(context);
+	var message = _.template(step.options.message)(context);
 	send(p, {
 		title: title,
 		message: message
@@ -35,10 +33,10 @@ module.exports = {
 	fn: fn,
 	defaults: {
 		options: {
-			title: "’cause: <%=task.name%>",
-			message: "<%=prev_step.block>: <%=input%>"
+			title: '’cause: <%=task.name%>',
+			message: '<%=prevStep.block>: <%=input%>'
 		},
 		data: {},
-		description: "pushover notification"
+		description: 'pushover notification'
 	}
 };

@@ -3,15 +3,19 @@
 var _ = require('lodash');
 
 
-function fn(task, step, input, prev_step, done) {
+function fn(input, step, context, done) {
 	var cause = this;
 
-	var title = _.template(step.options.title)(cause.message_vars);
-	var message = _.template(step.options.message)(cause.message_vars);
+	var title = _.template(step.options.title)(context);
+	var message = _.template(step.options.message)(context);
 
 	// override email defaults
-	var to = (step.options.to) ? step.options.to : cause.config.email.to;
-	var from = (step.options.from) ? step.options.from : cause.config.email.from;
+	var to = (step.options.to)
+		? step.options.to
+		: context.config.email.to;
+	var from = (step.options.from)
+		? step.options.from
+		: context.config.email.from;
 
 	cause.utils.email.send({
 		from: from,

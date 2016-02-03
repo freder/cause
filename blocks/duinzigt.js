@@ -8,6 +8,9 @@ var sf = require('sf');
 var FeedParser = require('feedparser');
 var validator = require('validator');
 
+var formattingUtils = require('cause-utils/formatting');
+var requestFeed = require('cause-feed').requestFeed;
+
 
 function neighborhood_filter(white_list) {
 	return function(item) {
@@ -92,16 +95,15 @@ function prepare_item(item) {
 }
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
-	var feedparser = cause.utils.feed.request_feedparser({
-		url: step.options.url
+function fn(input, step, context, done) {
+	var reqOpts = { url: step.options.url };
+	var feedparser = requestFeed(reqOpts, function(err) {
+		context.debug(err);
+		return done(err);
 	});
 
-	cause.utils.feed.process_feed(
-		{
-			feedparser: feedparser,
+	feedUtils.process_feed(
+		feedparser, {
 			seen_guids: step.data.seen_guids,
 			seen_pubdate: step.data.seen_pubdate
 		},
@@ -114,7 +116,7 @@ function fn(task, step, input, prev_step, done) {
 				.filter(neighborhood_filter(step.options.neighborhoods))
 				.filter(price_filter(step.options.min_price, step.options.max_price));
 
-			cause.debug(
+			context.debug(
 				sf('{0} items, {1} new ones, {2} matches',
 					result.items.length,
 					result.new_items.length,
@@ -125,8 +127,8 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 
 			// if (new_ones) {
-				// var line = cause.utils.format.cli_msg('duinzigt', sf('{0} new houses', new_matches.length));
-			// 	cause.winston.info(line);
+				// var line = formattingUtils.cli_msg('duinzigt', sf('{0} new houses', new_matches.length));
+			// 	context.logger.info(line);
 
 			// 	var email_content = cause.utils.realestate.email_template(new_matches);
 			// 	cause.utils.email.send({
@@ -139,7 +141,7 @@ function fn(task, step, input, prev_step, done) {
 
 			step.data.seen_guids = result.guids;
 			step.data.seen_pubdate = result.meta['pubdate'];
-			cause.save();
+			context.save();
 
 			done(null, output, new_ones);
 		}

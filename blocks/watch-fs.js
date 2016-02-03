@@ -4,13 +4,14 @@ var _ = require('lodash');
 var chokidar = require('chokidar');
 
 
-function fn(task, step, input, prev_step, done) {
-	var cause = this;
-
-
+function fn(input, step, context, done) {
 	var watchers = [];
 
-	step.options._rules = require(step.options.rules_file);
+	try {
+		step.options._rules = require(step.options.rules_file);
+	} catch (err) {
+		return done(err);
+	}
 	step.options._rules.forEach(function(rule) {
 		var options = {
 			persistent: true,
