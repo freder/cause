@@ -1,5 +1,6 @@
---growl
+--compilers js:babel-register
 --colors
 --watch
+--growl
 
 test/lib.js

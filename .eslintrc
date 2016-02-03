@@ -1,6 +1,8 @@
 {
 	"env": {
-		"node": true
+		"es6": true,
+		"node": true,
+		"mocha": true,
 	},
 
 	"plugins": [],
@@ -16,8 +18,9 @@
 		"comma-dangle": 0,
 		"dot-notation": 0,
 		"eqeqeq": 1,
+		"global-strict": 0,
 		"key-spacing": 1,
-		"new-cap": 1,
+		"new-cap": 0,
 		"no-alert": 0,
 		"no-extra-boolean-cast": 1,
 		"no-mixed-spaces-and-tabs": 1,

@@ -11,6 +11,7 @@ an automation tool
 ## no, seriously. other tools exist — why reinvent the wheel?
 
 - [ifttt](https://ifttt.com/) is great, but too simple
+- [zapier](https://zapier.com/) is great, but too simple
 - [yahoo! pipes](http://pipes.yahoo.com/pipes/) doesn't let you create your own modules
 - [huginn](https://github.com/cantino/huginn) looks very promising, but I don't want to learn ruby
 - [noflo](http://noflojs.org/) didn't seem very accessible at the time I looked at it

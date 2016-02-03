@@ -1,16 +1,6 @@
-var path = require('path');
-var chalk = require('chalk');
+'use strict';
 
-
-module.exports.get_paths =
-function() {
-	var root = path.resolve('./');
-	return {
-		root: root,
-		lib: path.join(root, 'lib'),
-		blocks: path.join(root, 'blocks')
-	};
-};
+const chalk = require('chalk');
 
 
 module.exports.f1 =

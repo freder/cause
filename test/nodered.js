@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
@@ -9,7 +11,7 @@ var jsfunction = require('../node_modules/node-red/nodes/core/core/80-function.j
 function wrap(nodered_node, options, handlers, input) {
 	var options = options || {};
 	var input = input || null;
-	
+
 	var handlers = handlers || {};
 	handlers.handle_input = handlers.handle_input || function(msg) {
 		console.log('input:', msg);
@@ -71,15 +73,15 @@ function wrap(nodered_node, options, handlers, input) {
 
 wrap(
 	jsfunction,
-	{ 
+	{
 		func: 'console.log("success!")'
 	},
 	{
-		handle_input: function(msg) { 
-			console.log('in:', msg); 
+		handle_input: function(msg) {
+			console.log('in:', msg);
 		},
-		handle_output: function(results) { 
-			console.log('out:', results); 
+		handle_output: function(results) {
+			console.log('out:', results);
 		}
 	},
 	'hello node-red'
