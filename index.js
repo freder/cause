@@ -1,39 +1,18 @@
 'use strict';
 
 const nopt = require('nopt');
-const glob = require('glob');
 const path = require('path');
 const fs = require('fs');
 // const chalk = require('chalk');
 const async = require('async');
 
 const config = require('./config.js');
+const common = require('./lib/common.js');
 const cli = require('./lib/cli.js');
 const tasklib = require('./lib/tasklib.js');
 
 
-function printStacktrace(err) {
-	console.error(err.stack);
-}
-
-
-function getTaskFiles(absPath) {
-	const pattern = path.join(absPath, '*.json');
-	const taskFiles = glob.sync(pattern);
-	return taskFiles;
-}
-
-
-function parseJSON(dataStr) {
-	try {
-		return JSON.parse(dataStr);
-	} catch (e) {
-		throw new Error('could not parse JSON');
-	}
-}
-
-
-
+let tasks = [];
 
 
 const args = nopt(cli.options, cli.shorthands, process.argv, 2);
@@ -41,23 +20,17 @@ const args = nopt(cli.options, cli.shorthands, process.argv, 2);
 // if --task option is given, load only one specific task file
 const taskAbsPaths = (!!args.task)
 	? [ path.resolve(__dirname, args.task) ]
-	: getTaskFiles(
+	: tasklib.getTaskFiles(
 		path.resolve(__dirname, config.paths.tasks)
 	);
+
 
 async.map(
 	taskAbsPaths,
 	tasklib.loadTaskFromFile,
-	(err, tasksList) => {
-		if (err) {
-			throw err;
-		}
-
-		tasksList
-			.map(tasklib.prepareTask)
-			.forEach((task) => {
-				console.log(task.name);
-			});
+	(err, tasksData) => {
+		if (err) { throw err; }
+		tasks = tasklib.startTasks(tasksData);
 	}
 );
 
@@ -86,10 +59,6 @@ async.map(
 // }
 
 
-// function handleError(err) {
-// 	console.error(err.stack);
-// }
-
 
 // // send a notification email when the program crashes
 // process.on('uncaughtException', function(err) {
@@ -106,7 +75,7 @@ async.map(
 // 	// 	);
 // 	// }
 
-// 	handleError(err);
+// 	printStacktrace(err);
 // });
 
 // process.on('SIGINT', function() {

@@ -164,72 +164,104 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-	// 	describe(util.f3('.findRootSteps()'), function() {
-	// 		it('should find all task entry points / blocks', function() {
-	// 			var task = {
-	// 				name: 'multi-entry-point-task',
-	// 				steps: [
-	// 					{	id: 'entry-1',
-	// 						flow: {
-	// 							'if': 'block-1'
-	// 						}
-	// 					},
-	// 					{	id: 'entry-2',
-	// 						flow: {
-	// 							'always': 'block-1'
-	// 						}
-	// 					},
-	// 					{	id: 'entry-3',
-	// 						flow: {
-	// 							'else': 'block-2'
-	// 						}
-	// 					},
-	// 					{	id: 'entry-4',
-	// 						flow: {}
-	// 					},
-	// 					// ------
-	// 					{	id: 'block-1',
-	// 						flow: {}
-	// 					},
-	// 					{	id: 'block-2',
-	// 						flow: {}
-	// 					},
-	// 				]
-	// 			};
+		describe(util.f3('.startTask()'), function() {
+			it('should let task do its own thing, if interval is undefined', function() {
+				const task = {
+					name: 'test-task',
+					interval: undefined,
+				};
+				const startedTask = tasklib.startTask(task);
+				assert(!startedTask.interval);
+				assert(!startedTask._schedule);
+				assert(!startedTask._timer);
+			});
 
-	// 			const rootSteps = tasklib.findRootSteps(task);
-	// 			assert(rootSteps.length === 4);
-	// 			rootSteps.forEach(function(item) {
-	// 				assert(mout.string.startsWith(item.id, 'entry'));
-	// 			});
-	// 		});
-	// 	});
+			it('should throw error, if interval is invalid', function() {
+				const task = {
+					name: 'test-task',
+					interval: 'every 3 moons',
+				};
+				assert.throws(() => {
+					tasklib.startTask(task);
+				});
+			});
+
+			it('should create a schedule and timer', function() {
+				const task = {
+					name: 'test-task',
+					interval: 'every 3 minutes',
+				};
+				const startedTask = tasklib.startTask(task);
+				assert(!!startedTask._schedule);
+				assert(!!startedTask._timer);
+			});
+		});
+
+		describe(util.f3('.findRootSteps()'), function() {
+			it('should find all task entry points', function() {
+				var task = {
+					name: 'multi-entry-point-task',
+					steps: [
+						{	id: 'entry-1',
+							flow: {
+								'if': 'block-1'
+							}
+						},
+						{	id: 'entry-2',
+							flow: {
+								'always': 'block-1'
+							}
+						},
+						{	id: 'entry-3',
+							flow: {
+								'else': 'block-2'
+							}
+						},
+						{	id: 'entry-4',
+							flow: {}
+						},
+						// ------
+						{	id: 'block-1',
+							flow: {}
+						},
+						{	id: 'block-2',
+							flow: {}
+						},
+					]
+				};
+
+				const rootSteps = tasklib.findRootSteps(task);
+				assert(rootSteps.length === 4);
+				rootSteps.forEach(function(item) {
+					assert(mout.string.startsWith(item.id, 'entry'));
+				});
+			});
+		});
 
 
-	// 	describe(util.f3('.prepare_flow()'), function() {
-	// 		it('should make sure everything is sane', function() {
-	// 			var _flow, flow;
+		describe(util.f3('.prepareFlow()'), function() {
+			it('should make sure everything is sane', function() {
+				let flow;
+				let preparedFlow;
 
-	// 			_flow = {};
-	// 			flow = tasklib.prepare_flow(_flow);
-	// 			assert(flow['if'] !== undefined);
+				flow = {};
+				preparedFlow = tasklib.prepareFlow(flow);
+				assert(preparedFlow['if'] !== undefined);
 
-	// 			_flow = 'test';
-	// 			flow = tasklib.prepare_flow(_flow);
-	// 			assert(flow['if'] !== undefined);
+				flow = 'test';
+				preparedFlow = tasklib.prepareFlow(flow);
+				assert(preparedFlow['if'] !== undefined);
 
-	// 			_flow = null;
-	// 			flow = tasklib.prepare_flow(_flow);
-	// 			assert(flow['if'] !== undefined);
-	// 			assert(_.isArray(flow['if']));
+				flow = null;
+				preparedFlow = tasklib.prepareFlow(flow);
+				assert(preparedFlow['if'] !== undefined);
+				assert(_.isArray(preparedFlow['if']));
 
-	// 			_flow = {
-	// 				'if': 'asdf'
-	// 			};
-	// 			flow = tasklib.prepare_flow(_flow);
-	// 			assert(flow['if'] !== undefined);
-	// 		});
-	// 	});
+				flow = { 'if': 'asdf' };
+				preparedFlow = tasklib.prepareFlow(flow);
+				assert(preparedFlow['if'] !== undefined);
+			});
+		});
 
 	// 	describe(util.f3('._prepare()'), function() {
 	// 		it('should use (optional) defaults', function() {
