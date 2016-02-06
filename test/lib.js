@@ -208,29 +208,29 @@ describe(util.f1('lib/'), function() {
 				var task = {
 					name: 'multi-entry-point-task',
 					steps: [
-						{	id: 'entry-1',
-							flow: {
-								'if': 'block-1'
-							}
+						{
+							id: 'entry-1',
+							flow: { 'if': 'block-1' }
 						},
-						{	id: 'entry-2',
-							flow: {
-								'always': 'block-1'
-							}
+						{
+							id: 'entry-2',
+							flow: { 'always': 'block-1' }
 						},
-						{	id: 'entry-3',
-							flow: {
-								'else': 'block-2'
-							}
+						{
+							id: 'entry-3',
+							flow: { 'else': 'block-2' }
 						},
-						{	id: 'entry-4',
+						{
+							id: 'entry-4',
 							flow: {}
 						},
 						// ------
-						{	id: 'block-1',
+						{
+							id: 'block-1',
 							flow: {}
 						},
-						{	id: 'block-2',
+						{
+							id: 'block-2',
 							flow: {}
 						},
 					]
