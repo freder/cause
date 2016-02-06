@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
 const _ = require('lodash');
+const R = require('ramda');
 const glob = require('glob');
 const mout = require('mout');
 const cheerio = require('cheerio');
@@ -19,33 +20,42 @@ const utils = require('../lib/utils.js');
 
 describe(util.f1('lib/'), function() {
 
-	// ############################################################
+	// ————————————————————————————————————————————————————————————
 	describe(util.f2('tasklib.js'), function() {
-	// 	describe(util.f3('.make_savable()'), function() {
-	// 		var task = {
-	// 			name: 'test task',
-	// 			_internal: 'schedule',
-	// 			steps: [
-	// 				{
-	// 					block: 'block',
-	// 					_description: '_description',
-	// 				}
-	// 			]
-	// 		};
+		describe(util.f3('.startsWithUnderscore()'), function() {
+			it('should work', function() {
+				assert(tasklib.startsWithUnderscore('_yes'));
+				assert(!tasklib.startsWithUnderscore('no'));
+			});
+		});
 
-	// 		it("should remove everything prefixed with '_'", function() {
-	// 			var skip_steps = true;
-	// 			var savable = tasklib.make_savable(task, skip_steps);
-	// 			assert(!savable._internal);
-	// 		});
 
-	// 		it("should optionally include step objects, too", function() {
-	// 			var skip_steps = false;
-	// 			var savable = tasklib.make_savable(task, skip_steps);
-	// 			assert(!savable._internal);
-	// 			assert(!savable.steps[0]._description);
-	// 		});
-	// 	});
+		describe(util.f3('.makeSavable()'), function() {
+			const task = {
+				name: 'test task',
+				_internal: 'schedule',
+				steps: [
+					{
+						block: 'block',
+						_description: '_description',
+						flow: {}
+					}
+				],
+			};
+
+			it("should remove everything prefixed with '_'", function() {
+				const skipSteps = true;
+				const savableTask = tasklib.makeSavable(task, skipSteps);
+				assert(!savableTask._internal);
+			});
+
+			it("should optionally do the same thing with step objects, too", function() {
+				const skipSteps = false;
+				const savableTask = tasklib.makeSavable(task, skipSteps);
+				assert(!savableTask._internal);
+				assert(!savableTask.steps[0]._description);
+			});
+		});
 
 		describe(util.f3('.prepareTask()'), function() {
 			it('should set defaults for missing fields', function() {
@@ -75,34 +85,6 @@ describe(util.f1('lib/'), function() {
 				});
 			});
 
-	// 		it("should not create a timer for tasks that don't specify an inteval", function() {
-	// 			var task_data, task;
-
-	// 			task_data = {
-	// 				name: 'test task',
-	// 				steps: [],
-	// 				interval: null
-	// 			};
-	// 			task = tasklib.prepareTask(task_data);
-	// 			assert(task._timer === undefined);
-
-	// 			task_data.interval = false;
-	// 			task = tasklib.prepareTask(task_data);
-	// 			assert(task._timer === undefined);
-
-	// 			task_data.interval = 'every 5 seconds';
-	// 			task = tasklib.prepareTask(task_data);
-	// 			assert(task._timer);
-
-	// 			assert.throws(function() {
-	// 				task_data.interval = 'asdf';
-	// 				task = tasklib.prepareTask(task_data);
-	// 			});
-
-	// 			delete task_data.interval;
-	// 			task = tasklib.prepareTask(task_data);
-	// 			assert(task._timer === undefined);
-	// 		});
 
 	// 		it("should keep track of currently executing steps", function(cb) {
 	// 			var block = {
@@ -125,44 +107,42 @@ describe(util.f1('lib/'), function() {
 	// 			task.steps = [step];
 	// 			task._done = function() {
 	// 				// console.log(task._currently_executing_steps);
-	// 				assert(_.keys(task._currently_executing_steps).length === 0);
+	// 				assert(R.keys(task._currently_executing_steps).length === 0);
 	// 				cb();
 	// 			};
 	// 			tasklib.run_task(task);
-	// 			assert(_.keys(task._currently_executing_steps).length === 1);
+	// 			assert(R.keys(task._currently_executing_steps).length === 1);
 	// 			// console.log(task._currently_executing_steps);
-	// 		});
-
-	// 		it('tasks should require a name', function() {
-	// 			assert.throws(function() {
-	// 				tasklib.prepareTask({ name: undefined });
-	// 			});
-	// 		});
-
-	// 		it('should check if specified interval is valid', function() {
-	// 			assert.throws(function() {
-	// 				tasklib.prepareTask({
-	// 					name: 'test',
-	// 					interval: 'nonsense'
-	// 				});
-	// 			});
 	// 		});
 		});
 
+
 		describe(util.f3('.prepareStep()'), function() {
+			const task = {};
+
 			it('should throw error if step block is missing or empty', function() {
 				const stepData1 = { block: undefined };
 				const stepData2 = { block: '' };
 
 				assert.throws(() => {
-					tasklib.prepareStep(stepData1);
+					tasklib.prepareStep(task, stepData1);
 				});
 
 				assert.throws(() => {
-					tasklib.prepareStep(stepData2);
+					tasklib.prepareStep(task, stepData2);
 				});
 			});
+
+			it('should add default values', function() {
+				const stepData = {
+					block: 'assert' // s.th. that exits
+				};
+				const preparedStep = tasklib.prepareStep(task, stepData);
+				assert(!!preparedStep.flow);
+				assert(!!preparedStep.options);
+			});
 		});
+
 
 		describe(util.f3('.startTask()'), function() {
 			it('should let task do its own thing, if interval is undefined', function() {
@@ -182,20 +162,22 @@ describe(util.f1('lib/'), function() {
 					interval: 'every 3 moons',
 				};
 				assert.throws(() => {
-					tasklib.startTask(task);
+					const startedTask = tasklib.startTask(task);
 				});
 			});
 
 			it('should create a schedule and timer', function() {
 				const task = {
 					name: 'test-task',
-					interval: 'every 3 minutes',
+					interval: 'every 5 seconds',
 				};
 				const startedTask = tasklib.startTask(task);
 				assert(!!startedTask._schedule);
 				assert(!!startedTask._timer);
+				startedTask._timer.clear();
 			});
 		});
+
 
 		describe(util.f3('.findRootSteps()'), function() {
 			it('should find all task entry points', function() {
@@ -312,7 +294,7 @@ describe(util.f1('lib/'), function() {
 	});
 
 
-	// // ############################################################
+	// // ————————————————————————————————————————————————————————————
 	// describe(util.f2('utils/filesystem.js'), function() {
 
 	// 	describe(util.f3('.get_filename()'), function() {
