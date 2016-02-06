@@ -14,9 +14,9 @@ const nopt = require('nopt');
 const args = nopt(cli.options, cli.shorthands, process.argv, 2);
 
 
-process.on('SIGINT', function() {
-	cli.exit();
-});
+// process.on('SIGINT', function() {
+// 	cli.exit();
+// });
 
 
 // if --task option is given, load only one specific task file

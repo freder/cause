@@ -308,26 +308,14 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-	// 	describe(util.f3('._prepare()'), function() {
-	// 		it('should use (optional) defaults', function() {
-	// 			var it, defaults;
 
-	// 			it = { test: undefined };
-	// 			defaults = { test: [1, 2, 3] };
-	// 			it = tasklib._prepare(it, defaults);
-	// 			assert(it.test.length > 0);
-
-	// 			it = { test: [1, 2, 3] };
-	// 			defaults = null;
-	// 			it = tasklib._prepare(it, defaults);
-	// 			assert(it.test.length > 0);
-
-	// 			it = null;
-	// 			defaults = { test: [1, 2, 3] };
-	// 			it = tasklib._prepare(it, defaults);
-	// 			assert(it.test.length > 0);
-	// 		});
-	// 	});
+		describe(util.f3('.isTaskDone()'), function() {
+			it('should work', function() {
+				assert(tasklib.isTaskDone({}));
+				assert(tasklib.isTaskDone({ _currentlyExecutingSteps: {} }));
+				assert(!tasklib.isTaskDone({ _currentlyExecutingSteps: { 'asdf': true } }));
+			});
+		});
 
 
 	// 	describe(util.f3('.run_task()'), function() {
