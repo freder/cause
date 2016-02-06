@@ -117,6 +117,45 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.addDefaults()'), function() {
+			it('should work without defaults argument', function() {
+				assert(
+					tasklib.addDefaults(
+						{ attr: 'a' },
+						undefined
+					).attr === 'a'
+				);
+			});
+
+			it('should work without first argument', function() {
+				assert(
+					tasklib.addDefaults(
+						undefined,
+						{ attr: 'a' }
+					).attr === 'a'
+				);
+			});
+
+			it('should work without both', function() {
+				assert(
+					!!tasklib.addDefaults(
+						undefined,
+						undefined
+					)
+				);
+			});
+
+			it('should not overwrite existing keys', function() {
+				assert(
+					tasklib.addDefaults(
+						{ attr: 'a' },
+						{ attr: 'b' }
+					).attr === 'a'
+				);
+			});
+		});
+
+
 		describe(util.f3('.prepareStep()'), function() {
 			const task = {};
 
