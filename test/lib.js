@@ -144,6 +144,30 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.loadBlock()'), function() {
+			const blocksDirPath = path.join(__dirname, './blocks');
+
+			it('should throw error if block does not exist', function() {
+				const blockName = 'does-not-exist';
+				assert.throws(function() {
+					const block = tasklib.loadBlock(blocksDirPath, blockName);
+				});
+			});
+
+			it('should successfully load local block', function() {
+				const blockName = 'cause-test';
+				const block = tasklib.loadBlock(blocksDirPath, blockName);
+				assert(block.success === true);
+			});
+
+			it('should successfully load local file', function() {
+				const blockName = 'test';
+				const block = tasklib.loadBlock(blocksDirPath, blockName);
+				assert(block.success === true);
+			});
+		});
+
+
 		describe(util.f3('.startTask()'), function() {
 			it('should let task do its own thing, if interval is undefined', function() {
 				const task = {
