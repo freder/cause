@@ -196,13 +196,16 @@ describe(util.f1('lib/'), function() {
 		describe(util.f3('.loadTaskFromFile()'), function() {
 			const tasksDirPath = path.join(__dirname, './tasks');
 
-			it('should throw error if block does not exist', function(done) {
+			it('should load task data', function(done) {
 				const taskFileName = 'test.json';
 				const taskPath = path.join(tasksDirPath, taskFileName);
 				tasklib.loadTaskFromFile(taskPath, (err, taskData) => {
 					assert(taskData.name === 'test task');
 					assert(taskData.interval === 'every 10 mins');
 					assert(taskData.steps.length === 0);
+
+					assert(!!taskData._filePath);
+
 					done();
 				});
 			});
