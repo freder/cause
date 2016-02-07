@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const async = require('async');
 const debug = require('debug')('cause');
+const io = require('socket.io');
 
 const config = require('./config.js');
 const common = require('./lib/common.js');
@@ -52,7 +53,11 @@ async.map(
 		if (err) { throw err; }
 		let tasks = tasklib.startTasks(tasksData);
 
-		// TODO: start socket server
+		// start web socket server
+		var socketServer = io.listen(config.server.websocket_port);
+		socketServer.sockets.on('connection', (socket) => {
+			console.log('connection');
+		});
 	}
 );
 
