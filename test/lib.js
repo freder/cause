@@ -228,10 +228,13 @@ describe(util.f1('lib/'), function() {
 				assert(block.success === true);
 			});
 
+			const blockName = 'test';
+			const block = tasklib.loadBlock(blocksDirPath, blockName);
 			it('should successfully load local file', function() {
-				const blockName = 'test';
-				const block = tasklib.loadBlock(blocksDirPath, blockName);
 				assert(block.success === true);
+			});
+			it('should set defaults', function() {
+				assert(!!block.defaults);
 			});
 		});
 
