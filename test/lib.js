@@ -360,6 +360,53 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.invokeChildren()'), function() {
+			it('should work', function() {
+				const flow = {
+					'if': ['step-if'],
+					'else': ['step-else'],
+					'always': ['step-always'],
+				};
+				const currentStep = { flow };
+				let success;
+				const taskSteps = [
+					{
+						id: 'step-if',
+						_execute: () => {
+							success = true;
+						}
+					},
+					{
+						id: 'step-else',
+						_execute: () => {
+							success = false;
+						}
+					}/*,
+					{
+						id: 'step-always',
+						_execute: () => {
+							console.log('always');
+						}
+					}*/
+				];
+				const output = 'output';
+				const flowDecision = {
+					'if': true,
+					'else': false,
+					'always': true,
+				};
+
+				tasklib.invokeChildren(
+					currentStep,
+					taskSteps,
+					output,
+					flowDecision
+				);
+				assert(success === true);
+			});
+		});
+
+
 	// 	describe(util.f3('.run_task()'), function() {
 	// 		it('should work with single step tasks', function() {
 	// 			var has_run = false;
@@ -385,41 +432,5 @@ describe(util.f1('lib/'), function() {
 	// 		});
 	// 	});
 	});
-
-
-	// // ————————————————————————————————————————————————————————————
-	// describe(util.f2('utils/filesystem.js'), function() {
-
-	// 	describe(util.f3('.get_filename()'), function() {
-	// 		it('should handle filenames correctly', function() {
-	// 			var file;
-
-	// 			file = '../asdf/asdfadf/filename.ext';
-	// 			assert.equal(utils.filesystem.get_filename(file), 'filename');
-
-	// 			file = 'filename.ext';
-	// 			assert.equal(utils.filesystem.get_filename(file), 'filename');
-
-	// 			file = 'filename.bla.ext';
-	// 			assert.equal(utils.filesystem.get_filename(file), 'filename.bla');
-
-	// 			file = '.ext';
-	// 			assert.equal(utils.filesystem.get_filename(file), '');
-
-	// 			file = '../.ext';
-	// 			assert.equal(utils.filesystem.get_filename(file), '');
-	// 		});
-	// 	});
-
-	// 	describe(util.f3('.load_json()'), function() {
-	// 		it('throw an error when json input is bad', function() {
-	// 			assert.throws(function() {
-	// 				file = 'test/files/bad.json';
-	// 				utils.filesystem.load_json(file);
-	// 			});
-	// 		});
-	// 	});
-
-	// });
 
 });
