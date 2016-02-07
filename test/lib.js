@@ -351,6 +351,52 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.createExecuteFunction()'), function() {
+			it('should return a function', function() {
+				const execFn = tasklib.createExecuteFunction();
+				assert(_.isFunction(execFn));
+			});
+
+			let doneCallback_hasRun = false;
+			let cb_hasRun = false;
+			it('should (un)register itself from currently executing steps', function() {
+				let done;
+				const block = {
+					fn: (input, step, context, _done) => {
+						done = _done;
+					}
+				};
+				let task = {
+					_currentlyExecutingSteps: {},
+					_doneCallback: () => {
+						doneCallback_hasRun = true;
+					}
+				};
+				const step = {
+					id: 'currentStep',
+					flow: tasklib.prepareFlow()
+				};
+				const prevStep = {};
+				const input = 'input';
+				const cb = () => {
+					cb_hasRun = true;
+				};
+
+				const execFn = tasklib.createExecuteFunction(block, task, step);
+				execFn(input, prevStep, cb);
+				assert(!!task._currentlyExecutingSteps[step.id]);
+
+				done(null);
+				assert(!task._currentlyExecutingSteps[step.id]);
+			});
+
+			it('should call all the callbacks', function() {
+				assert(cb_hasRun);
+				assert(doneCallback_hasRun);
+			});
+		});
+
+
 		describe(util.f3('.isTaskDone()'), function() {
 			it('should work', function() {
 				assert(tasklib.isTaskDone({}));
