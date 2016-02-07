@@ -183,6 +183,32 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.getTaskFiles()'), function() {
+			const tasksDirPath = path.join(__dirname, './tasks');
+
+			it('should find the files', function() {
+				const taskFiles = tasklib.getTaskFiles(tasksDirPath);
+				assert(taskFiles.length === 1);
+			});
+		});
+
+
+		describe(util.f3('.loadTaskFromFile()'), function() {
+			const tasksDirPath = path.join(__dirname, './tasks');
+
+			it('should throw error if block does not exist', function(done) {
+				const taskFileName = 'test.json';
+				const taskPath = path.join(tasksDirPath, taskFileName);
+				tasklib.loadTaskFromFile(taskPath, (err, taskData) => {
+					assert(taskData.name === 'test task');
+					assert(taskData.interval === 'every 10 mins');
+					assert(taskData.steps.length === 0);
+					done();
+				});
+			});
+		});
+
+
 		describe(util.f3('.loadBlock()'), function() {
 			const blocksDirPath = path.join(__dirname, './blocks');
 
