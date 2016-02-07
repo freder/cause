@@ -209,10 +209,10 @@ describe(util.f1('lib/'), function() {
 
 		describe(util.f3('.startTask()'), function() {
 			it('should let task do its own thing, if interval is undefined', function() {
-				const task = {
+				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: undefined,
-				};
+				});
 				const startedTask = tasklib.startTask(task);
 				assert(!startedTask.interval);
 				assert(!startedTask._schedule);
@@ -220,23 +220,33 @@ describe(util.f1('lib/'), function() {
 			});
 
 			it('should throw error, if interval is invalid', function() {
-				const task = {
+				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: 'every 3 moons',
-				};
+				});
 				assert.throws(() => {
 					const startedTask = tasklib.startTask(task);
 				});
 			});
 
 			it('should create a schedule and timer', function() {
-				const task = {
+				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: 'every 5 seconds',
-				};
+				});
 				const startedTask = tasklib.startTask(task);
 				assert(!!startedTask._schedule);
 				assert(!!startedTask._timer);
+				startedTask._timer.clear();
+			});
+
+			it('should create other fields', function() {
+				const task = tasklib.prepareTask({
+					name: 'test-task',
+					interval: 'every 5 seconds',
+				});
+				const startedTask = tasklib.startTask(task);
+				assert(!!startedTask._currentlyExecutingSteps);
 				startedTask._timer.clear();
 			});
 		});
