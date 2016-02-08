@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const async = require('async');
 const debug = require('debug')('cause');
+const debugCli = require('debug')('cause:cli');
 const io = require('socket.io');
 
 const config = require('./config.js');
@@ -56,7 +57,11 @@ async.map(
 		// start web socket server
 		var socketServer = io.listen(config.server.websocket_port);
 		socketServer.sockets.on('connection', (socket) => {
-			console.log('connection');
+			debugCli('client connected');
+
+			socket.on('getTasks', () => {
+				socket.emit('tasks', tasks);
+			});
 		});
 	}
 );
