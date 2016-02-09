@@ -485,10 +485,20 @@ describe(util.f1('lib/'), function() {
 				name: 'test-task'
 			};
 			const newTasks = tasklib.addAndStartTask(tasks, taskData);
-			console.log(newTasks);
 
 			it('should add a task', function() {
 				assert(newTasks.length === 1);
+			});
+		});
+
+
+		describe(util.f3('.addAndStartTask()'), function() {
+			const tasks = [{ name: '0' }, { name: '1' }];
+			const newTasks = tasklib.removeTaskByIndex(tasks, 0);
+
+			it('should remove the right task', function() {
+				assert(newTasks.length === 1);
+				assert(newTasks[0].name === '1');
 			});
 		});
 	});
