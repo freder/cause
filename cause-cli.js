@@ -11,11 +11,17 @@ const config = require('./config.js');
 const socket = io('http://localhost:' + config.server.websocket_port);
 
 socket.on('connect', function() {
-	debugCli('connect');
+	debugCli('connected');
 
 	vorpal
+		.history('cause-cli')
 		.delimiter('=>')
 		.show();
+});
+
+
+socket.on('disconnect', function() {
+	debugCli('disconnected');
 });
 
 
@@ -31,6 +37,14 @@ vorpal
 	.command('tasks', 'list all tasks')
 	.action((args, cb) => {
 		socket.emit('getTasks');
+		cb();
+	});
+
+
+vorpal
+	.command('addtask <filePath>', 'add task from file')
+	.action((args, cb) => {
+		socket.emit('addTaskFile', args.filePath);
 		cb();
 	});
 

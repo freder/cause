@@ -477,6 +477,20 @@ describe(util.f1('lib/'), function() {
 	// 			tasklib.run_task(task);
 	// 		});
 	// 	});
+
+
+		describe(util.f3('.addAndStartTask()'), function() {
+			const tasks = [];
+			const taskData = {
+				name: 'test-task'
+			};
+			const newTasks = tasklib.addAndStartTask(tasks, taskData);
+			console.log(newTasks);
+
+			it('should add a task', function() {
+				assert(newTasks.length === 1);
+			});
+		});
 	});
 
 });

@@ -19,20 +19,20 @@ const args = nopt(cli.options, cli.shorthands, process.argv, 2);
 // send a notification email when the program crashes
 process.on('uncaughtException', (err) => {
 	// don't send anything when testing a single task
-	if (!args.task) {
-		utils.email.send(
-			{
-				subject: '’cause crashed',
-				html: '<pre>'+err.stack+'</pre>'
-			},
-			(err, info) => {
-				if (err) {
-					common.printStacktrace(err);
-				}
-				// cli.exit(1);
-			}
-		);
-	}
+	// if (!args.task) {
+	// 	utils.email.send(
+	// 		{
+	// 			subject: '’cause crashed',
+	// 			html: '<pre>'+err.stack+'</pre>'
+	// 		},
+	// 		(err, info) => {
+	// 			if (err) {
+	// 				common.printStacktrace(err);
+	// 			}
+	// 			// cli.exit(1);
+	// 		}
+	// 	);
+	// }
 
 	common.printStacktrace(err);
 });
@@ -61,6 +61,17 @@ async.map(
 
 			socket.on('getTasks', () => {
 				socket.emit('tasks', tasks);
+			});
+
+			socket.on('addTaskFile', (filePath) => {
+				const absPath = path.resolve(__dirname, filePath);
+				tasklib.loadTaskFromFile(
+					absPath,
+					(err, taskData) => {
+						tasks = tasklib.addAndStartTask(tasks, taskData);
+						socket.emit('tasks', tasks);
+					}
+				);
 			});
 		});
 	}
