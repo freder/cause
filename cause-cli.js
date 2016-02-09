@@ -57,3 +57,11 @@ vorpal
 		cb();
 	});
 
+
+vorpal
+	.command('reload <index>', 'reload task from file')
+	.action((args, cb) => {
+		socket.emit('reloadTask', args.index);
+		cb();
+	});
+

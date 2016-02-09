@@ -78,6 +78,18 @@ async.map(
 				tasks = tasklib.removeTaskByIndex(tasks, index);
 				socket.emit('tasks', tasks);
 			});
+
+			socket.on('reloadTask', (index) => {
+				tasklib.reloadTaskByIndex(
+					tasks,
+					index,
+					(err, taskData) => {
+						tasks = tasklib.removeTaskByIndex(tasks, index);
+						tasks = tasklib.addAndStartTask(tasks, taskData);
+						socket.emit('tasks', tasks);
+					}
+				);
+			});
 		});
 	}
 );
