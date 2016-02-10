@@ -351,6 +351,60 @@ describe(util.f1('lib/'), function() {
 		});
 
 
+		describe(util.f3('.flowDecision()'), function() {
+			it('should work with boolean argument', function() {
+				const decision = tasklib.flowDecision(false);
+				assert(decision['if'] === false);
+				assert(decision['else'] === true);
+			});
+
+			it('should work with object argument', function() {
+				const decision = tasklib.flowDecision({
+					'if': false
+				});
+				assert(decision['if'] === false);
+				assert(decision['else'] === true);
+			});
+
+			it('should work with undefined/null argument', function() {
+				let decision = tasklib.flowDecision(null);
+				assert(decision['if'] === false);
+				assert(decision['else'] === false);
+
+				decision = tasklib.flowDecision(undefined);
+				assert(decision['if'] === false);
+				assert(decision['else'] === false);
+			});
+
+			it('`always` should always be true', function() {
+				const decision = tasklib.flowDecision({ 'always': false });
+				assert(decision['always'] === true);
+			});
+
+			it('should leave defaults untouched', function() {
+				tasklib.flowDecision({
+					'if': false,
+					'else': false,
+					'always': false
+				});
+				assert(tasklib.flowDecisionDefaults['if'] === true);
+				assert(tasklib.flowDecisionDefaults['else'] === true);
+				assert(tasklib.flowDecisionDefaults['always'] === true);
+			});
+
+			it('should throw error on wrong argument type', function() {
+				const decision = [
+					{ 'if': false },
+					{ 'else': false },
+					{ 'always': false }
+				];
+				assert.throws(() => {
+					tasklib.flowDecision(decision);
+				});
+			});
+		});
+
+
 		describe(util.f3('.createExecuteFunction()'), function() {
 			it('should return a function', function() {
 				const execFn = tasklib.createExecuteFunction();

@@ -2,4 +2,4 @@
 --watch
 --growl
 
-test/lib.js
+test/tests.js
