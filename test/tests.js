@@ -420,7 +420,7 @@ describe(util.f1('lib/'), function() {
 						done = _done;
 					}
 				};
-				let task = {
+				const task = {
 					_currentlyExecutingSteps: {},
 					_doneCallback: () => {
 						doneCallback_hasRun = true;
@@ -508,6 +508,15 @@ describe(util.f1('lib/'), function() {
 
 
 		describe(util.f3('.runTask()'), function() {
+			it('should create a _doneCallback() function', function() {
+				const task = tasklib.prepareTask({
+					name: 'test',
+					interval: false
+				});
+				const runTask = tasklib.runTask(task);
+				assert(!!runTask._doneCallback);
+			});
+
 			it('should work with single step tasks', function() {
 				let hasRun = false;
 				const block = {
