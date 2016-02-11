@@ -102,17 +102,17 @@ describe(util.f1('lib/'), function() {
 	// 			});
 
 	// 			var step = { id: 'test-step' };
-	// 			step._execute = tasklib.create_execute_function(block, task, step);
+	// 			step._execute = tasklib.createExecuteFunction(block, task, step);
 
 	// 			task.steps = [step];
 	// 			task._done = function() {
-	// 				// console.log(task._currently_executing_steps);
-	// 				assert(R.keys(task._currently_executing_steps).length === 0);
+	// 				// console.log(task._currentlyExecutingSteps);
+	// 				assert(R.keys(task._currentlyExecutingSteps).length === 0);
 	// 				cb();
 	// 			};
-	// 			tasklib.run_task(task);
-	// 			assert(R.keys(task._currently_executing_steps).length === 1);
-	// 			// console.log(task._currently_executing_steps);
+	// 			tasklib.runTask(task);
+	// 			assert(R.keys(task._currentlyExecutingSteps).length === 1);
+	// 			// console.log(task._currentlyExecutingSteps);
 	// 		});
 		});
 
