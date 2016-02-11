@@ -507,30 +507,35 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-	// 	describe(util.f3('.run_task()'), function() {
-	// 		it('should work with single step tasks', function() {
-	// 			var has_run = false;
-	// 			var block = {
-	// 				fn: function(input, step, context, done) {
-	// 					has_run = true;
-	// 					done(null, 'output', true);
-	// 				}
-	// 			};
+		describe(util.f3('.runTask()'), function() {
+			it('should work with single step tasks', function() {
+				let hasRun = false;
+				const block = {
+					fn: function(input, step, context, done) {
+						hasRun = true;
+						const decision = true;
+						done(null, 'output', decision);
+					}
+				};
 
-	// 			var task = tasklib.prepareTask({
-	// 				name: 'single step task'
-	// 			});
+				let task = tasklib.prepareTask({
+					name: 'single step task',
+					interval: false
+				});
 
-	// 			var step = { id: 'single step' };
-	// 			step._execute = tasklib.create_execute_function(block, task, step);
+				const step = {
+					id: 'single step',
+					flow: tasklib.prepareFlow()
+				};
+				step._execute = tasklib.createExecuteFunction(block, task, step);
+				task.steps = [step];
 
-	// 			task.steps = [step];
-	// 			task._done = function() {
-	// 				assert(has_run);
-	// 			};
-	// 			tasklib.run_task(task);
-	// 		});
-	// 	});
+				task._doneCallback = function() {
+					assert(hasRun);
+				};
+				tasklib.runTask(task);
+			});
+		});
 
 
 		describe(util.f3('.addAndStartTask()'), function() {
