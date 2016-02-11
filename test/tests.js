@@ -351,15 +351,15 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.flowDecision()'), function() {
+		describe(util.f3('.prepareDecision()'), function() {
 			it('should work with boolean argument', function() {
-				const decision = tasklib.flowDecision(false);
+				const decision = tasklib.prepareDecision(false);
 				assert(decision['if'] === false);
 				assert(decision['else'] === true);
 			});
 
 			it('should work with object argument', function() {
-				const decision = tasklib.flowDecision({
+				const decision = tasklib.prepareDecision({
 					'if': false
 				});
 				assert(decision['if'] === false);
@@ -367,22 +367,22 @@ describe(util.f1('lib/'), function() {
 			});
 
 			it('should work with undefined/null argument', function() {
-				let decision = tasklib.flowDecision(null);
+				let decision = tasklib.prepareDecision(null);
 				assert(decision['if'] === false);
 				assert(decision['else'] === false);
 
-				decision = tasklib.flowDecision(undefined);
+				decision = tasklib.prepareDecision(undefined);
 				assert(decision['if'] === false);
 				assert(decision['else'] === false);
 			});
 
 			it('`always` should always be true', function() {
-				const decision = tasklib.flowDecision({ 'always': false });
+				const decision = tasklib.prepareDecision({ 'always': false });
 				assert(decision['always'] === true);
 			});
 
 			it('should leave defaults untouched', function() {
-				tasklib.flowDecision({
+				tasklib.prepareDecision({
 					'if': false,
 					'else': false,
 					'always': false
@@ -399,7 +399,7 @@ describe(util.f1('lib/'), function() {
 					{ 'always': false }
 				];
 				assert.throws(() => {
-					tasklib.flowDecision(decision);
+					tasklib.prepareDecision(decision);
 				});
 			});
 		});
