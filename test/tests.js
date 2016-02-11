@@ -387,9 +387,9 @@ describe(util.f1('lib/'), function() {
 					'else': false,
 					'always': false
 				});
-				assert(tasklib.flowDecisionDefaults['if'] === true);
-				assert(tasklib.flowDecisionDefaults['else'] === true);
-				assert(tasklib.flowDecisionDefaults['always'] === true);
+				assert(tasklib.decisionDefaults['if'] === true);
+				assert(tasklib.decisionDefaults['else'] === true);
+				assert(tasklib.decisionDefaults['always'] === true);
 			});
 
 			it('should throw error on wrong argument type', function() {
