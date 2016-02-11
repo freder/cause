@@ -1,0 +1,5 @@
+{
+	"name": "test task",
+	"interval": "every 10 mins",
+	"steps": []
+}
