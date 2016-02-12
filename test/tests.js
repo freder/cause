@@ -86,6 +86,15 @@ describe(util.f1('lib/'), function() {
 			});
 
 
+			it('should create a _doneCallback() function, if it does not exist', function() {
+				const task = tasklib.prepareTask({
+					name: 'test',
+					interval: false
+				});
+				assert(!!task._doneCallback);
+			});
+
+
 	// 		it("should keep track of currently executing steps", function(cb) {
 	// 			var block = {
 	// 				fn: function(input, step, context, done) {
@@ -105,7 +114,7 @@ describe(util.f1('lib/'), function() {
 	// 			step._execute = tasklib.createExecuteFunction(block, task, step);
 
 	// 			task.steps = [step];
-	// 			task._done = function() {
+	// 			task._doneCallback = function() {
 	// 				// console.log(task._currentlyExecutingSteps);
 	// 				assert(R.keys(task._currentlyExecutingSteps).length === 0);
 	// 				cb();
@@ -508,15 +517,6 @@ describe(util.f1('lib/'), function() {
 
 
 		describe(util.f3('.runTask()'), function() {
-			it('should create a _doneCallback() function', function() {
-				const task = tasklib.prepareTask({
-					name: 'test',
-					interval: false
-				});
-				const runTask = tasklib.runTask(task);
-				assert(!!runTask._doneCallback);
-			});
-
 			it('should work with single step tasks', function() {
 				let hasRun = false;
 				const block = {
