@@ -1,9 +1,7 @@
 'use strict';
 
 const path = require('path');
-const fs = require('fs');
 const async = require('async');
-const debug = require('debug')('cause');
 const debugCli = require('debug')('cause:cli');
 const io = require('socket.io');
 
@@ -111,10 +109,3 @@ async.map(
 // 	args.version) {
 // 	cli.exit(0, true);
 // }
-
-
-// process.on('SIGINT', function() {
-	//
-// });
-
-// 	task_data.interval = undefined; // only run once ...
