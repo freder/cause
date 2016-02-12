@@ -66,10 +66,12 @@ describe(util.f1('lib/'), function() {
 					data: undefined,
 				};
 
-				const prepared = tasklib.prepareTask(taskData);
-				assert(prepared.slug === 'task-name');
-				assert(prepared.steps.length === 0);
-				assert(prepared.data.counter === 0);
+				const task = tasklib.prepareTask(taskData);
+				assert(task.slug === 'task-name');
+				assert(task.steps.length === 0);
+				assert(task.data.counter === 0);
+
+				assert(!!task._currentlyExecutingSteps);
 			});
 
 			it('should throw error if task name is missing or empty', function() {
@@ -85,6 +87,31 @@ describe(util.f1('lib/'), function() {
 				});
 			});
 
+			it('should let task do its own thing, if interval is undefined', function() {
+				const task = tasklib.prepareTask({
+					name: 'test-task',
+					interval: undefined,
+				});
+				assert(!task.interval);
+				assert(!task._schedule);
+			});
+
+			it('should throw error, if interval is invalid', function() {
+				assert.throws(() => {
+					const task = tasklib.prepareTask({
+						name: 'test-task',
+						interval: 'every 3 moons',
+					});
+				});
+			});
+
+			it('should create a schedule', function() {
+				const task = tasklib.prepareTask({
+					name: 'test-task',
+					interval: 'every 5 seconds',
+				});
+				assert(!!task._schedule);
+			});
 
 			it('should create a _doneCallback() function, if it does not exist', function() {
 				const task = tasklib.prepareTask({
@@ -93,36 +120,6 @@ describe(util.f1('lib/'), function() {
 				});
 				assert(!!task._doneCallback);
 			});
-
-
-	// 		it("should keep track of currently executing steps", function(cb) {
-	// 			var block = {
-	// 				fn: function(input, step, context, done) {
-	// 					setTimeout(function() {
-	// 						var output = null;
-	// 						var decision = true;
-	// 						done(null, output, decision);
-	// 					}, 100);
-	// 				}
-	// 			};
-
-	// 			var task = tasklib.prepareTask({
-	// 				name: 'test task'
-	// 			});
-
-	// 			var step = { id: 'test-step' };
-	// 			step._execute = tasklib.createExecuteFunction(block, task, step);
-
-	// 			task.steps = [step];
-	// 			task._doneCallback = function() {
-	// 				// console.log(task._currentlyExecutingSteps);
-	// 				assert(R.keys(task._currentlyExecutingSteps).length === 0);
-	// 				cb();
-	// 			};
-	// 			tasklib.runTask(task);
-	// 			assert(R.keys(task._currentlyExecutingSteps).length === 1);
-	// 			// console.log(task._currentlyExecutingSteps);
-	// 		});
 		});
 
 
@@ -249,45 +246,13 @@ describe(util.f1('lib/'), function() {
 
 
 		describe(util.f3('.startTask()'), function() {
-			it('should let task do its own thing, if interval is undefined', function() {
-				const task = tasklib.prepareTask({
-					name: 'test-task',
-					interval: undefined,
-				});
-				const startedTask = tasklib.startTask(task);
-				assert(!startedTask.interval);
-				assert(!startedTask._schedule);
-				assert(!startedTask._timer);
-			});
-
-			it('should throw error, if interval is invalid', function() {
-				const task = tasklib.prepareTask({
-					name: 'test-task',
-					interval: 'every 3 moons',
-				});
-				assert.throws(() => {
-					const startedTask = tasklib.startTask(task);
-				});
-			});
-
-			it('should create a schedule and timer', function() {
+			it('should create a timer', function() {
 				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: 'every 5 seconds',
 				});
 				const startedTask = tasklib.startTask(task);
-				assert(!!startedTask._schedule);
 				assert(!!startedTask._timer);
-				startedTask._timer.clear();
-			});
-
-			it('should create other fields', function() {
-				const task = tasklib.prepareTask({
-					name: 'test-task',
-					interval: 'every 5 seconds',
-				});
-				const startedTask = tasklib.startTask(task);
-				assert(!!startedTask._currentlyExecutingSteps);
 				startedTask._timer.clear();
 			});
 		});
@@ -420,42 +385,40 @@ describe(util.f1('lib/'), function() {
 				assert(_.isFunction(execFn));
 			});
 
-			let doneCallback_hasRun = false;
-			let cb_hasRun = false;
+			// let taskDoneCallbackHasRun = false;
+			let stepDoneCallbackHasRun = false;
 			it('should (un)register itself from currently executing steps', function() {
 				let done;
+				const task = tasklib.prepareTask({
+					name: 'task',
+					steps: [],
+					_currentlyExecutingSteps: {},
+				});
 				const block = {
 					fn: (input, step, context, _done) => {
-						done = _done;
-					}
-				};
-				const task = {
-					_currentlyExecutingSteps: {},
-					_doneCallback: () => {
-						doneCallback_hasRun = true;
+						done = _done; // steal the callback
 					}
 				};
 				const step = {
-					id: 'currentStep',
+					id: 'current-step',
 					flow: tasklib.prepareFlow()
-				};
-				const prevStep = {};
-				const input = 'input';
-				const cb = () => {
-					cb_hasRun = true;
 				};
 
 				const execFn = tasklib.createExecuteFunction(block, task, step);
-				execFn(input, prevStep, cb);
+				const prevStep = undefined;
+				const input = 'input';
+				const cb = () => {
+					stepDoneCallbackHasRun = true;
+				};
+				execFn(input, prevStep, cb); // `cb` becomes `done`
 				assert(!!task._currentlyExecutingSteps[step.id]);
 
 				done(null);
 				assert(!task._currentlyExecutingSteps[step.id]);
 			});
 
-			it('should call all the callbacks', function() {
-				assert(cb_hasRun);
-				assert(doneCallback_hasRun);
+			it('should call the callback', function() {
+				assert(stepDoneCallbackHasRun);
 			});
 		});
 
@@ -517,6 +480,11 @@ describe(util.f1('lib/'), function() {
 
 
 		describe(util.f3('.runTask()'), function() {
+			const step = {
+				id: 'single step',
+				flow: tasklib.prepareFlow()
+			};
+
 			it('should work with single step tasks', function() {
 				let hasRun = false;
 				const block = {
@@ -532,10 +500,6 @@ describe(util.f1('lib/'), function() {
 					interval: false
 				});
 
-				const step = {
-					id: 'single step',
-					flow: tasklib.prepareFlow()
-				};
 				step._execute = tasklib.createExecuteFunction(block, task, step);
 				task.steps = [step];
 
@@ -543,6 +507,39 @@ describe(util.f1('lib/'), function() {
 					assert(hasRun);
 				};
 				tasklib.runTask(task);
+			});
+
+			it('should run pre and post task callbacks', function(done) {
+				const block = {
+					fn: function(input, step, context, done) {
+						const decision = true;
+						done(null, 'output', decision);
+					}
+				};
+				let task = tasklib.prepareTask({
+					name: 'task',
+					interval: false
+				});
+				step._execute = tasklib.createExecuteFunction(block, task, step);
+				task.steps = [step];
+
+				let preCbHasRun = false;
+				let postCbHasRun = false;
+				tasklib.runTask(
+					task,
+					(task) => {
+						preCbHasRun = true;
+						// console.log('pre');
+					},
+					(task) => {
+						postCbHasRun = true;
+						// console.log('post');
+
+						assert(preCbHasRun);
+						assert(postCbHasRun);
+						done();
+					}
+				);
 			});
 		});
 
