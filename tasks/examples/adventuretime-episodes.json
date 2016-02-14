@@ -37,7 +37,7 @@
 			"block": "log-console",
 			"options": {
 				"title": "new episodes",
-				"message": "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>"
+				"message": "<%var episodes = input.map((ep) => { return ep.title; })%>\n<%=formatting.list(episodes)%>"
 			},
 			"flow": {
 				"if": [],
@@ -51,7 +51,7 @@
 			"block": "email-notification",
 			"options": {
 				"title": "new adventure time episode(s)",
-				"message": "<%_.each(input, function(ep) {%><a href=\"<%=ep.link%>\"><%=ep.title%></a><br><%})%>"
+				"message": "<%_.each(input, (ep) => {%><a href=\"<%=ep.link%>\"><%=ep.title%></a><br><%})%>"
 			},
 			"flow": {
 				"if": [],

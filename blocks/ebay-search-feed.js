@@ -15,7 +15,7 @@ function fn(input, step, context, done) {
 		const input = output;
 
 		if (!output) {
-			done(new Error('no input received'));
+			return done(new Error('no input received'));
 		}
 
 		input.forEach((item) => {

@@ -57,7 +57,7 @@
 			"id": "desktop-notification",
 			"block": "cause-desktop-notification",
 			"options": {
-				"message": "<%=format.money(input)%>",
+				"message": "<%=formatting.money(input)%>",
 				"title": "’cause: <%=task.name%>"
 			},
 			"flow": {
@@ -71,7 +71,7 @@
 			"id": "pushover",
 			"block": "pushover",
 			"options": {
-				"message": "bitcoin rate: <%=format.money(input)%>",
+				"message": "bitcoin rate: <%=formatting.money(input)%>",
 				"title": "’cause: <%=task.name%>"
 			},
 			"flow": {
