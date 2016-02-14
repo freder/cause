@@ -37,7 +37,7 @@
 			"block": "log-console",
 			"options": {
 				"title": "new episodes",
-				"message": "<%var episodes = input.map((ep) => { return ep.title; })%>\n<%=formatting.list(episodes)%>"
+				"message": "<%var episodes = input.map((ep) => { return ep.title; })%>\n<%=utils.formatting.list(episodes)%>"
 			},
 			"flow": {
 				"if": [],
