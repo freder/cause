@@ -1,29 +1,31 @@
 'use strict';
 
-var _ = require('lodash');
-var sf = require('sf');
-var chalk = require('chalk');
-var feed = require('cause-feed');
+const chalk = require('chalk');
+const causeFeed = require('cause-feed');
 
 
 function fn(input, step, context, done) {
 	// construct rss feed url
-	var query = step.options.search.replace(/ +/ig, '+');
-	step.options.url = sf('http://www.ebay.{1}/sch/i.html?_nkw={0}&_rss=1', query, step.options.tld);
+	const query = step.options.search.replace(/ +/ig, '+');
+	step.options.url = `http://www.ebay.${step.options.tld}/sch/i.html?_nkw=${query}&_rss=1`;
 
-	// wrap original callback
-	var cb = _.wrap(done, function(done, err, output, decision) {
-		// do s.th. with output from `feed` block
-		output.forEach(function(item) {
+	// use `causeFeed` block functionality
+	causeFeed.fn(input, step, context, (err, output, decision) => {
+		// output from `causeFeed` block
+		const input = output;
+
+		if (!output) {
+			done(new Error('no input received'));
+		}
+
+		input.forEach((item) => {
 			console.log(item.title);
 			console.log('\t', chalk.green(item.link));
 		});
-		// pass arguments on to original callback
+
+		// pass arguments on to callback
 		done(err, output, decision);
 	});
-
-	// use `feed` block functionality
-	feed.fn.call(this, input, step, context, cb);
 }
 
 
@@ -34,7 +36,7 @@ module.exports = {
 			tld: 'de',
 			search: 'epson perfection v800'
 		},
-		data: feed.defaults.data,
+		data: causeFeed.defaults.data,
 		description: 'new ebay search results'
 	}
 };
