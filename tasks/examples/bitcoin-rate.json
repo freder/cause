@@ -16,7 +16,7 @@
 				"else": []
 			},
 			"data": {
-				"prev_price": 253.42
+				"prevPrice": 253.42
 			}
 		},
 		{
@@ -44,7 +44,7 @@
 			"block": "email-notification",
 			"options": {
 				"title": "’cause: <%=task.name%>",
-				"message": "<%=prev_step.block%>: <%=input%>"
+				"message": "<%=prevStep.block%>: <%=input%>"
 			},
 			"flow": {
 				"if": [],

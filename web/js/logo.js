@@ -15,15 +15,15 @@ function sketch(p) {
 	var rect_h = rect_w * 1.6;
 	var opacity = 200;
 	// var x_rotation = 0;
-	
-	var prev_duration;
+
+	var prevDuration;
 	var blocks = _.range(num_elems)
 		.map(function(index) {
 			var duration = 500;
 			if (index > 0) {
-				duration = 0.975 * prev_duration;
+				duration = 0.975 * prevDuration;
 			}
-			prev_duration = duration;
+			prevDuration = duration;
 			var delay = 1000 + index * (duration * 0.62);
 			var block = {
 				index: index,
@@ -68,7 +68,7 @@ function sketch(p) {
 				p.translate(0, block.height * 0.5);
 				// p.rotateX(x_rotation);
 				p.rect(0, 0, block.width, block.height);
-			p.popMatrix();	
+			p.popMatrix();
 		});
 
 		p.popMatrix();

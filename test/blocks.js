@@ -160,8 +160,8 @@ describe(util.f1('blocks/'), function() {
 				var step = {
 					options: {
 						limit: 3,
-						// at_least: 1,
-						// or_after: false
+						// atLeast: 1,
+						// orAfter: false
 					}
 				};
 				var run = tasklib.create_execute_function(digest, task, step);
@@ -187,14 +187,14 @@ describe(util.f1('blocks/'), function() {
 		});
 
 		describe(util.f3('.fn()'), function() {
-			it('should obey "at_least" option', function() {
+			it('should obey "atLeast" option', function() {
 				var digest = tasklib.load_block('digest');
 				var task = {};
 				var step = {
 					options: {
 						limit: 1,
-						at_least: 2,
-						// or_after: false
+						atLeast: 2,
+						// orAfter: false
 					}
 				};
 				var run = tasklib.create_execute_function(digest, task, step);
@@ -233,14 +233,14 @@ describe(util.f1('blocks/'), function() {
 		});
 
 		// describe(util.f3('.fn()'), function() {
-		// 	it('should obey "or_after" option', function(done) {
+		// 	it('should obey "orAfter" option', function(done) {
 		// 		var digest = tasklib.load_block('digest');
 		// 		var task = {};
 		// 		var step = {
 		// 			options: {
 		// 				limit: 999,
-		// 				at_least: 1,
-		// 				or_after: '1 seconds'
+		// 				atLeast: 1,
+		// 				orAfter: '1 seconds'
 		// 			}
 		// 		};
 		// 		var run = tasklib.create_execute_function(digest, task, step);
@@ -280,16 +280,16 @@ describe(util.f1('blocks/'), function() {
 				var tick = tasklib.load_block('tick');
 				var task = {};
 				var step = { data: { counter: '12' } };
-				var prev_step = {};
+				var prevStep = {};
 
 				var run = tasklib.create_execute_function(tick, task, step);
 
 				assert.throws(function() {
-					run('input', prev_step);
+					run('input', prevStep);
 				});
 
 				step.data.counter = 12;
-				run('input', prev_step);
+				run('input', prevStep);
 			});
 		});
 	});
@@ -307,7 +307,7 @@ describe(util.f1('blocks/'), function() {
 						step: 1
 					},
 					data: {
-						prev_value: 0.6
+						prevValue: 0.6
 					}
 				};
 				var run = tasklib.create_execute_function(multithresh, task, step);
@@ -335,7 +335,7 @@ describe(util.f1('blocks/'), function() {
 						step: 1
 					},
 					data: {
-						prev_value: 0.6
+						prevValue: 0.6
 					}
 				};
 				var run = tasklib.create_execute_function(multithresh, task, step);
@@ -363,7 +363,7 @@ describe(util.f1('blocks/'), function() {
 						step: 1
 					},
 					data: {
-						prev_value: 0.6
+						prevValue: 0.6
 					}
 				};
 				var run = tasklib.create_execute_function(multithresh, task, step);
@@ -391,7 +391,7 @@ describe(util.f1('blocks/'), function() {
 				};
 				var threshold = step.options.offset + (3 * step.options.step);
 				var values = [threshold+0.1, threshold-0.1];
-				step.data = { prev_value: values[0] };
+				step.data = { prevValue: values[0] };
 
 				var run = tasklib.create_execute_function(multithresh, task, step);
 				var counter = 0;
@@ -421,11 +421,11 @@ describe(util.f1('blocks/'), function() {
 						func: 'function() { output = 999; }'
 					}
 				};
-				var prev_step = {};
+				var prevStep = {};
 				var run = tasklib.create_execute_function(jsfun, task, step);
 				var input = 123;
 
-				run(input, prev_step, function(err, output) {
+				run(input, prevStep, function(err, output) {
 					assert(output === 999);
 					cb();
 				});

@@ -19,7 +19,7 @@
 				"always": []
 			},
 			"data": {
-				"prev_price": 560.55
+				"prevPrice": 560.55
 			}
 		},
 		{
@@ -60,7 +60,7 @@
 			"block": "email-notification",
 			"options": {
 				"title": "’cause: <%=task.name%>",
-				"message": "<%=prev_step.block%>: <%=input%>"
+				"message": "<%=prevStep.block%>: <%=input%>"
 			},
 			"flow": {
 				"if": [],

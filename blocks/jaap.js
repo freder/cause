@@ -214,10 +214,10 @@ function get_items_from_page(body, kill_cb, step) {
 		item.link = make_link(item.id);
 		item.maps_url = cause.utils.misc.make_googlemaps_url(item.street);
 
-		step.data.temp_seen_ids.push(item.id);
-		if (step.data.seen_ids.indexOf(item.id) < 0) {
+		step.data.tempSeenIds.push(item.id);
+		if (step.data.seenIds.indexOf(item.id) < 0) {
 			collected.push(item);
-			// step.data.seen_ids.push(item.id);
+			// step.data.seenIds.push(item.id);
 		} /*else {
 			// kill queue for this neighborhood after this page
 			kill_cb();
@@ -285,10 +285,10 @@ function scrape(done, step) {
 }
 
 
-function fn(task, step, input, prev_step, done) {
+function fn(task, step, input, prevStep, done) {
 	var cause = this;
 
-	step.data.temp_seen_ids = [];
+	step.data.tempSeenIds = [];
 
 	scrape(function(new_items) {
 		// some additional filtering first:
@@ -362,8 +362,8 @@ function fn(task, step, input, prev_step, done) {
 
 			var output = new_matches;
 
-			step.data.seen_ids = _.uniq(step.data.temp_seen_ids);
-			delete step.data.temp_seen_ids;
+			step.data.seenIds = _.uniq(step.data.tempSeenIds);
+			delete step.data.tempSeenIds;
 			cause.save();
 
 			done(null, output, new_ones);
@@ -377,7 +377,7 @@ module.exports = {
 	defaults: {
 		options: {},
 		data: {
-			seen_ids: []
+			seenIds: []
 		},
 		description: "jaap.nl"
 	},

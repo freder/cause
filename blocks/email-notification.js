@@ -36,7 +36,7 @@ module.exports = {
 			from: undefined,
 			to: undefined,
 			title: '’cause: <%=task.name%>',
-			message: '<%=prev_step.block%>: <%=input%>'
+			message: '<%=prevStep.block%>: <%=input%>'
 		},
 		data: {},
 		description: 'email'

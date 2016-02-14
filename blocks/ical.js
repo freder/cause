@@ -80,22 +80,22 @@ function fn(input, step, context, done) {
 		}
 
 		var events = ical.parseICS(body);
-		var current_events = [];
-		var new_items = {};
+		var currentEvents = [];
+		var newItems = {};
 		_.keys(events).forEach(function(key) {
-			if (step.data.seen_events.indexOf(key) < 0) {
+			if (step.data.seenEvents.indexOf(key) < 0) {
 				var e = process_event(events[key]);
-				new_items[key] = e;
+				newItems[key] = e;
 			}
-			current_events.push(key);
+			currentEvents.push(key);
 		});
 
-		var new_items_array = _.values(new_items);
-		var new_ones = (new_items_array.length > 0);
-		var output = new_items_array;
+		var newItemsArray = _.values(newItems);
+		var new_ones = (newItemsArray.length > 0);
+		var output = newItemsArray;
 		done(null, output, new_ones);
 
-		step.data.seen_events = current_events;
+		step.data.seenEvents = currentEvents;
 		context.saveTask();
 	}).on('error', function(err) {
 		done(err);
@@ -108,7 +108,7 @@ module.exports = {
 	defaults: {
 		options: {},
 		data: {
-			seen_events: []
+			seenEvents: []
 		},
 		description: 'new ical event'
 	},

@@ -104,8 +104,8 @@ function fn(input, step, context, done) {
 
 	feedUtils.process_feed(
 		feedparser, {
-			seen_guids: step.data.seen_guids,
-			seen_pubdate: step.data.seen_pubdate
+			seenGuids: step.data.seenGuids,
+			seenPubdate: step.data.seenPubdate
 		},
 		function(err, result) {
 			if (err) { return done(err); }
@@ -139,8 +139,8 @@ function fn(input, step, context, done) {
 
 			var output = new_matches;
 
-			step.data.seen_guids = result.guids;
-			step.data.seen_pubdate = result.meta['pubdate'];
+			step.data.seenGuids = result.guids;
+			step.data.seenPubdate = result.meta['pubdate'];
 			context.saveTask();
 
 			done(null, output, new_ones);
@@ -169,8 +169,8 @@ module.exports = {
 			max_price: 1000
 		},
 		data: {
-			seen_pubdate: null,
-			seen_guids: []
+			seenPubdate: null,
+			seenGuids: []
 		},
 		description: "duinzigt.nl"
 	},

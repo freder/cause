@@ -8,8 +8,8 @@ var parsingUtils = require('cause-utils/parsing');
 
 
 function fn(input, step, context, done) {
-	// sanity check: `limit` must be >= `at_least`
-	step.options.limit = Math.max(step.options.limit, step.options.at_least);
+	// sanity check: `limit` must be >= `atLeast`
+	step.options.limit = Math.max(step.options.limit, step.options.atLeast);
 
 	if (!_.isEmpty(input)) {
 		// doesn't care about what the input exactly is,
@@ -30,45 +30,45 @@ function fn(input, step, context, done) {
 	}
 
 	// TODO: should it flush multiple times, or simply everything all at once?
-	var all_at_once = true;
+	var allAtOnce = true;
 
-	function set_next_flush() {
+	function setNextFlush() {
 		var now = moment();
-		step.data.last_flush = now.format();
+		step.data.lastFlush = now.format();
 
-		var parsed = parsingUtils.time(step.options.or_after);
+		var parsed = parsingUtils.time(step.options.orAfter);
 		var dur = moment.duration(parsed);
-		step.data.next_flush = now.add(dur).format();
+		step.data.nextFlush = now.add(dur).format();
 	}
 
 	function flush() {
-		var take_n = step.options.limit;
-		if (all_at_once) { take_n = step.data.collected.length; }
+		var takeN = step.options.limit;
+		if (allAtOnce) { takeN = step.data.collected.length; }
 
 		context.debug('flushing ...');
 
-		var output = R.take(take_n, step.data.collected);
+		var output = R.take(takeN, step.data.collected);
 		var decision = true;
 		done(null, output, decision);
-		step.data.collected = R.drop(take_n, step.data.collected);
+		step.data.collected = R.drop(takeN, step.data.collected);
 
-		if (step.options.or_after) {
-			set_next_flush();
+		if (step.options.orAfter) {
+			setNextFlush();
 		}
 	}
 
 	// on first run:
-	if (step.options.or_after && !step.data.next_flush) {
-		set_next_flush();
+	if (step.options.orAfter && !step.data.nextFlush) {
+		setNextFlush();
 	}
 
 	// flush after a certain time, no matter if threshold
 	// has been reached or not.
-	if (step.data.next_flush) {
+	if (step.data.nextFlush) {
 		var now = moment();
-		var time_to_flush = moment(step.data.next_flush);
-		if (now >= time_to_flush) {
-			context.debug(step.options.or_after+' have passed');
+		var timeToFlush = moment(step.data.nextFlush);
+		if (now >= timeToFlush) {
+			context.debug(step.options.orAfter+' have passed');
 			if (step.data.collected.length > 0) { flush(); }
 		}
 	}
@@ -85,14 +85,14 @@ module.exports = {
 	defaults: {
 		options: {
 			limit: 5,
-			at_least: 1,
-			or_after: false
+			atLeast: 1,
+			orAfter: false
 		},
 		data: {
 			collected: [],
-			last_flush: 0,
-			// next_flush: undefined
+			lastFlush: 0,
+			// nextFlush: undefined
 		},
-		description: "digest: <%=options.limit%>\n<%if (options.at_least > 1) {%>at least: <%=options.at_least%><%}%>\n<%if (options.or_after) {%>or after: <%=options.or_after%><%}%>"
+		description: "digest: <%=options.limit%>\n<%if (options.atLeast > 1) {%>at least: <%=options.atLeast%><%}%>\n<%if (options.orAfter) {%>or after: <%=options.orAfter%><%}%>"
 	}
 };

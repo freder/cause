@@ -15,7 +15,7 @@ function fn(input, step, context, done) {
 	var data = step.data;
 	var options = step.options;
 
-	var floor_prev = Math.floor((data.prev_value - options.offset) / options.step);
+	var floor_prev = Math.floor((data.prevValue - options.offset) / options.step);
 	var floor_current = Math.floor((input - options.offset) / options.step);
 
 	var crossed_up = (floor_prev < floor_current);
@@ -28,7 +28,7 @@ function fn(input, step, context, done) {
 		: floor_current * options.step + options.offset;
 	if (check) {
 		var arrow = (crossed_up) ? '▲' : '▼';
-		context.debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+data.prev_value, ''+input, chalk.inverse(arrow)) );
+		context.debug( sf('crossed the {0} mark: {1} {3} {2}', chalk.inverse(''+threshold), ''+data.prevValue, ''+input, chalk.inverse(arrow)) );
 	}
 
 	var output = {
@@ -38,7 +38,7 @@ function fn(input, step, context, done) {
 		value: input
 	};
 
-	data.prev_value = input;
+	data.prevValue = input;
 	context.saveTask();
 
 	done(null, output, check);
@@ -53,7 +53,7 @@ module.exports = {
 			step: 1
 		},
 		data: {
-			prev_value: 0
+			prevValue: 0
 		},
 		// description: '<%=options.comparison%> <%=options.value%>'
 	},

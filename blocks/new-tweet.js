@@ -5,7 +5,7 @@ var R = require('ramda');
 
 
 // TODO: more functionality
-var fn = function(task, step, input, prev_step, done) {
+var fn = function(task, step, input, prevStep, done) {
 	var cause = this;
 
 	var endpoint = step.options.endpoint;
