@@ -212,7 +212,7 @@ function get_items_from_page(body, kill_cb, step) {
 
 		item.street = item.street.replace(' 0 Ong', '');
 		item.link = make_link(item.id);
-		item.maps_url = cause.utils.misc.makeGoogleMapsURL(item.street);
+		item.maps_url = context.utils.misc.makeGoogleMapsURL(item.street);
 
 		step.data.tempSeenIds.push(item.id);
 		if (step.data.seenIds.indexOf(item.id) < 0) {

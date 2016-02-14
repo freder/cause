@@ -70,7 +70,7 @@ function prepare_item(item) {
 	new_item.source = 'duinzigt';
 
 	// make google maps url
-	new_item.maps_url = cause.utils.misc.makeGoogleMapsURL(new_item.street);
+	new_item.maps_url = context.utils.misc.makeGoogleMapsURL(new_item.street);
 
 	// prepare images
 	if (item['rss:images']) {
