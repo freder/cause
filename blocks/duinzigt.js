@@ -141,7 +141,7 @@ function fn(input, step, context, done) {
 
 			step.data.seen_guids = result.guids;
 			step.data.seen_pubdate = result.meta['pubdate'];
-			context.save();
+			context.saveTask();
 
 			done(null, output, new_ones);
 		}

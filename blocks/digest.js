@@ -76,7 +76,7 @@ function fn(input, step, context, done) {
 	// flush, once threshold is reached
 	if (step.data.collected.length >= step.options.limit) { flush(); }
 
-	context.save();
+	context.saveTask();
 }
 
 

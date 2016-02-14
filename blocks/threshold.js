@@ -24,7 +24,7 @@ function fn(input, step, context, done) {
 
 	// mark as triggered, or not
 	step.data.triggered = checkResult;
-	context.save();
+	context.saveTask();
 
 	done(null, output, decision);
 }

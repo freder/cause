@@ -16,7 +16,7 @@ function fn(input, step, context, done) {
 	output = output || input;
 	decision = decision || false;
 
-	context.save();
+	context.saveTask();
 	done(null, output, decision);
 }
 

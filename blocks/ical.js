@@ -96,7 +96,7 @@ function fn(input, step, context, done) {
 		done(null, output, new_ones);
 
 		step.data.seen_events = current_events;
-		context.save();
+		context.saveTask();
 	}).on('error', function(err) {
 		done(err);
 	});

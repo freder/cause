@@ -15,7 +15,7 @@ function fn(input, step, context, done) {
 	var output = data.counter;
 
 	data.counter++;
-	context.save();
+	context.saveTask();
 
 	done(null, output, null);
 }

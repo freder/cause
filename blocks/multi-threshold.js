@@ -39,7 +39,7 @@ function fn(input, step, context, done) {
 	};
 
 	data.prev_value = input;
-	context.save();
+	context.saveTask();
 
 	done(null, output, check);
 }
