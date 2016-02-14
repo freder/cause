@@ -1,17 +1,26 @@
 'use strict';
 
+const cli = require('./lib/cli.js');
+const nopt = require('nopt');
+const args = nopt(cli.options, cli.shorthands, process.argv, 2);
+
+if (args.help) {
+	cli.showHelp();
+	process.exit();
+} else if (args.version) {
+	cli.showVersion();
+	process.exit();
+}
+
 const path = require('path');
 const async = require('async');
 const debugCli = require('debug')('cause:cli');
 const io = require('socket.io');
 
 const config = require('./config.js');
+const logger = require('./lib/logger.js');
 const common = require('./lib/common.js');
-const cli = require('./lib/cli.js');
 const tasklib = require('./lib/tasklib.js');
-
-const nopt = require('nopt');
-const args = nopt(cli.options, cli.shorthands, process.argv, 2);
 
 
 // send a notification email when the program crashes
@@ -50,6 +59,13 @@ async.map(
 	tasklib.loadTaskFromFile,
 	(err, tasksData) => {
 		if (err) { throw err; }
+
+		if (!!args.once || !!args.once) {
+			tasksData.forEach((taskData) => {
+				taskData.interval = undefined;
+			});
+		}
+
 		let tasks = tasklib.startTasks(tasksData);
 
 		// start web socket server
@@ -91,21 +107,3 @@ async.map(
 		});
 	}
 );
-
-
-
-
-// var log = require(path.join(libPath, 'log.js'));
-// log.init();
-
-
-// // command line
-// var cli = require(path.join(libPath, 'cli.js'));
-// var nopt = require('nopt');
-// var args = global.args = nopt(cli.opts, cli.shorthands, process.argv, 2);
-// if (args.help) { cli.show_help(); }
-// if (args.version) { cli.show_version(); }
-// if (args.help ||
-// 	args.version) {
-// 	cli.exit(0, true);
-// }
