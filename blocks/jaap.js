@@ -337,7 +337,7 @@ function fn(task, step, input, prev_step, done) {
 			var new_ones = (new_matches.length > 0);
 
 			// if (new_ones) {
-				// var line = formattingUtils.cli_msg('jaap.nl', sf('{0} new houses', new_matches.length));
+				// var line = formattingUtils.cliMsg('jaap.nl', sf('{0} new houses', new_matches.length));
 			// 	cause.winston.info(line);
 
 			// 	var email_content = cause.utils.realestate.email_template(new_matches);

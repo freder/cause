@@ -12,7 +12,7 @@ function fn(input, step, context, done) {
 
 	var line = sf(
 		'{0} {1} {2}: {3}',
-		formattingUtils.cli_msg(context.task.name),
+		formattingUtils.cliMsg(context.task.name),
 		chalk.blue(context.prevStep.block),
 		chalk.white(title),
 		chalk.green(message)

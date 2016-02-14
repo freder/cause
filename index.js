@@ -53,7 +53,7 @@ async.map(
 		let tasks = tasklib.startTasks(tasksData);
 
 		// start web socket server
-		var socketServer = io.listen(config.server.websocket_port);
+		const socketServer = io.listen(config.server.websocket_port);
 		socketServer.sockets.on('connection', (socket) => {
 			debugCli('client connected');
 
