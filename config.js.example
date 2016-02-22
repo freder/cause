@@ -1,13 +1,11 @@
 module.exports = {
 
 	paths: {
-		lib: './lib',
 		tasks: './tasks',
 		blocks: './blocks'
 	},
 
 	server: {
-		port: 3030,
 		websocket_port: 3031
 	},
 

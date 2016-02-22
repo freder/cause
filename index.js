@@ -23,6 +23,7 @@ const common = require('./lib/common.js');
 const tasklib = require('./lib/tasklib.js');
 
 
+// TODO:
 // send a notification email when the program crashes
 process.on('uncaughtException', (err) => {
 	// don't send anything when testing a single task

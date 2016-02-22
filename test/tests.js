@@ -9,13 +9,11 @@ const R = require('ramda');
 const glob = require('glob');
 const mout = require('mout');
 const cheerio = require('cheerio');
-const FeedParser = require('feedparser');
 
 const util = require('./util.js');
 
 const config = require('../config.js');
 const tasklib = require('../lib/tasklib.js');
-const utils = require('../lib/utils.js');
 
 
 describe(util.f1('lib/'), function() {
