@@ -71,7 +71,7 @@ async.map(
 
 		// start web socket server
 		const socketServer = io.listen(config.server.websocketPort);
-		logger.info(`web socket listening on port ${config.server.websocketPort}`)
+		logger.info(`web socket listening on port ${config.server.websocketPort}`);
 
 		socketServer.sockets.on('connection', (socket) => {
 			debugCli('client connected');
