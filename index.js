@@ -61,7 +61,7 @@ async.map(
 	(err, tasksData) => {
 		if (err) { throw err; }
 
-		if (!!args.once || !!args.once) {
+		if (!!args.once || !!args.task) {
 			tasksData.forEach((taskData) => {
 				taskData.interval = undefined;
 			});
