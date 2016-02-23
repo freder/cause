@@ -116,7 +116,7 @@ tasks are defined as json files. example:
 			"block": "log-console",
 			"options": {
 				"title": "new episodes",
-				"message": "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=format.list(episodes)%>"
+				"message": "<%var episodes = input.map(function(ep) { return ep.title; })%>\n<%=utils.formatting.list(episodes)%>"
 			}
 		},
 		{
