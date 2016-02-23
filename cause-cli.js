@@ -8,7 +8,7 @@ const debugCli = require('debug')('cause:cli');
 const config = require('./config.js');
 
 
-const socket = io('http://localhost:' + config.server.websocket_port);
+const socket = io('http://localhost:' + config.websocket.port);
 
 socket.on('connect', function() {
 	debugCli('connected');

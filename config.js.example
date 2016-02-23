@@ -5,8 +5,8 @@ module.exports = {
 		blocks: './blocks'
 	},
 
-	server: {
-		websocket_port: 3031
+	websocket: {
+		port: 3031
 	},
 
 	// pushover: {
