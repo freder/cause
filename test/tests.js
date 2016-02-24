@@ -27,7 +27,6 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-
 		describe(util.f3('.makeSavable()'), function() {
 			const task = {
 				name: 'test task',
@@ -393,7 +392,7 @@ describe(util.f1('lib/'), function() {
 					_currentlyExecutingSteps: {},
 				});
 				const block = {
-					fn: (input, step, context, _done) => {
+					fn: (step, context, config, input, _done) => {
 						done = _done; // steal the callback
 					}
 				};
@@ -417,6 +416,41 @@ describe(util.f1('lib/'), function() {
 
 			it('should call the callback', function() {
 				assert(stepDoneCallbackHasRun);
+			});
+		});
+
+
+		describe(util.f3('.prepareStepConfig()'), function() {
+			it('should be cascading', function() {
+				const block = {
+					name: 'cause-block-name'
+				};
+				const config = {
+					[block.name]: {
+						a: 'config',
+						b: 'config',
+						c: 'config',
+					}
+				};
+				const task = {
+					config: {
+						[block.name]: {
+							b: 'task',
+							c: 'task',
+						}
+					}
+				};
+				const step = {
+					config: {
+						c: 'step'
+					}
+				};
+
+				const cfg = tasklib.prepareStepConfig(config, step, task, block.name);
+				// console.log(c);
+				assert(cfg.a === 'config');
+				assert(cfg.b === 'task');
+				assert(cfg.c === 'step');
 			});
 		});
 
@@ -486,7 +520,7 @@ describe(util.f1('lib/'), function() {
 			it('should work with single step tasks', function() {
 				let hasRun = false;
 				const block = {
-					fn: function(input, step, context, done) {
+					fn: function(step, context, config, input, done) {
 						hasRun = true;
 						const decision = true;
 						done(null, 'output', decision);
@@ -509,7 +543,7 @@ describe(util.f1('lib/'), function() {
 
 			it('should run pre and post task callbacks', function(done) {
 				const block = {
-					fn: function(input, step, context, done) {
+					fn: function(step, context, config, input, done) {
 						const decision = true;
 						done(null, 'output', decision);
 					}
