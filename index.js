@@ -21,26 +21,25 @@ const config = require('./config.js');
 const logger = require('./lib/logger.js');
 const common = require('./lib/common.js');
 const tasklib = require('./lib/tasklib.js');
+const email = require('./lib/email.js');
 
-
-// TODO:
 // send a notification email when the program crashes
 process.on('uncaughtException', (err) => {
 	// don't send anything when testing a single task
-	// if (!args.task) {
-	// 	utils.email.send(
-	// 		{
-	// 			subject: '’cause crashed',
-	// 			html: '<pre>'+err.stack+'</pre>'
-	// 		},
-	// 		(err, info) => {
-	// 			if (err) {
-	// 				common.printStacktrace(err);
-	// 			}
-	// 			// cli.exit(1);
-	// 		}
-	// 	);
-	// }
+	if (!!args.email) {
+		const opts = {
+			subject: '’cause crashed',
+			html: `<pre>${err.stack}</pre>`
+		};
+		email.send(
+			opts,
+			(err, info) => {
+				if (err) {
+					common.printStacktrace(err);
+				}
+			}
+		);
+	}
 
 	common.printStacktrace(err);
 });
