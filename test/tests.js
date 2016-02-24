@@ -181,7 +181,7 @@ describe(util.f1('lib/'), function() {
 				};
 				const preparedStep = tasklib.prepareStep(task, stepData);
 				assert(!!preparedStep.flow);
-				assert(!!preparedStep.options);
+				assert(!!preparedStep.config);
 			});
 		});
 
@@ -422,11 +422,9 @@ describe(util.f1('lib/'), function() {
 
 		describe(util.f3('.prepareStepConfig()'), function() {
 			it('should be cascading', function() {
-				const block = {
-					name: 'cause-block-name'
-				};
+				const blockName = 'cause-block-name';
 				const config = {
-					[block.name]: {
+					[blockName]: {
 						a: 'config',
 						b: 'config',
 						c: 'config',
@@ -434,19 +432,20 @@ describe(util.f1('lib/'), function() {
 				};
 				const task = {
 					config: {
-						[block.name]: {
+						[blockName]: {
 							b: 'task',
 							c: 'task',
 						}
 					}
 				};
 				const step = {
+					block: blockName,
 					config: {
 						c: 'step'
 					}
 				};
 
-				const cfg = tasklib.prepareStepConfig(config, step, task, block.name);
+				const cfg = tasklib.prepareStepConfig(config, step, task, step.block);
 				// console.log(c);
 				assert(cfg.a === 'config');
 				assert(cfg.b === 'task');
