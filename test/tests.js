@@ -392,7 +392,7 @@ describe(util.f1('lib/'), function() {
 					_currentlyExecutingSteps: {},
 				});
 				const block = {
-					fn: (step, context, config, input, _done) => {
+					main: (step, context, config, input, _done) => {
 						done = _done; // steal the callback
 					}
 				};
@@ -520,7 +520,7 @@ describe(util.f1('lib/'), function() {
 			it('should work with single step tasks', function() {
 				let hasRun = false;
 				const block = {
-					fn: function(step, context, config, input, done) {
+					main: function(step, context, config, input, done) {
 						hasRun = true;
 						const decision = true;
 						done(null, 'output', decision);
@@ -543,7 +543,7 @@ describe(util.f1('lib/'), function() {
 
 			it('should run pre and post task callbacks', function(done) {
 				const block = {
-					fn: function(step, context, config, input, done) {
+					main: function(step, context, config, input, done) {
 						const decision = true;
 						done(null, 'output', decision);
 					}
