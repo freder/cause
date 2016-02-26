@@ -95,6 +95,19 @@ async.map(
 				socket.emit('tasks', tasks);
 			});
 
+			socket.on('runTask', (arg) => {
+				let task;
+				if (arg.slug !== undefined) {
+					task = common.getItemByKey('slug', tasks, arg.slug);
+				} else if (arg.index !== undefined) {
+					task = tasks[arg.index];
+				}
+
+				if (task) {
+					tasklib.runTask(task);
+				}
+			});
+
 			socket.on('reloadTask', (index) => {
 				tasklib.reloadTaskByIndex(
 					tasks,

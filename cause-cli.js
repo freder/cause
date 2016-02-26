@@ -51,6 +51,14 @@ vorpal
 
 
 vorpal
+	.command('run <index>', 'run task by index')
+	.action((args, cb) => {
+		socket.emit('runTask', { index: args.index });
+		cb();
+	});
+
+
+vorpal
 	.command('rm <index>', 'remove task by index')
 	.action((args, cb) => {
 		socket.emit('removeTask', args.index);
