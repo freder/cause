@@ -1,6 +1,6 @@
 {
   "name": "cause",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "(web) automation framework",
   "license": "CC-BY-NC-SA-4.0",
   "main": "index.js",
