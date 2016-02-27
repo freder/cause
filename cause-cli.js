@@ -13,6 +13,9 @@ const socket = io('http://localhost:' + config.websocket.port);
 socket.on('connect', function() {
 	debugCli('connected');
 
+	// get and list tasks, first thing
+	socket.emit('getTasks');
+
 	vorpal
 		.history('cause-cli')
 		.delimiter('=>')

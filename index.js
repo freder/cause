@@ -75,8 +75,14 @@ async.map(
 		socketServer.sockets.on('connection', (socket) => {
 			debugCli('client connected');
 
-			socket.on('getTasks', () => {
-				socket.emit('tasks', tasks);
+			socket.on('getTasks', (args) => {
+				if (args.broadcast) {
+					// goes out to all connected clients
+					socketServer.sockets.emit('tasks', tasks);
+				} else {
+					// only goes to the one socket the event was received from
+					socket.emit('tasks', tasks);
+				}
 			});
 
 			socket.on('addTaskFile', (filePath) => {
@@ -85,22 +91,22 @@ async.map(
 					absPath,
 					(err, taskData) => {
 						tasks = tasklib.addAndStartTask(tasks, taskData);
-						socket.emit('tasks', tasks);
+						socketServer.sockets.emit('tasks', tasks);
 					}
 				);
 			});
 
 			socket.on('removeTask', (index) => {
 				tasks = tasklib.removeTaskByIndex(tasks, index);
-				socket.emit('tasks', tasks);
+				socketServer.sockets.emit('tasks', tasks);
 			});
 
-			socket.on('runTask', (arg) => {
+			socket.on('runTask', (args) => {
 				let task;
-				if (arg.slug !== undefined) {
-					task = common.getItemByKey('slug', tasks, arg.slug);
-				} else if (arg.index !== undefined) {
-					task = tasks[arg.index];
+				if (args.slug !== undefined) {
+					task = common.getItemByKey('slug', tasks, args.slug);
+				} else if (args.index !== undefined) {
+					task = tasks[args.index];
 				}
 
 				if (task) {
@@ -115,7 +121,7 @@ async.map(
 					(err, taskData) => {
 						tasks = tasklib.removeTaskByIndex(tasks, index);
 						tasks = tasklib.addAndStartTask(tasks, taskData);
-						socket.emit('tasks', tasks);
+						socketServer.sockets.emit('tasks', tasks);
 					}
 				);
 			});
