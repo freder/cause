@@ -2,15 +2,33 @@
 
 const vorpal = require('vorpal')();
 const R = require('ramda');
-const io = require('socket.io-client');
+const socketClusterClient = require('socketcluster-client');
 const debugCli = require('debug')('cause:cli');
 
 const config = require('./config.js');
 
+const socket = socketClusterClient.connect({
+	hostname: 'localhost',
+	port: config.websocket.port
+});
 
-const socket = io('http://localhost:' + config.websocket.port);
+socket.on('error', (err) => {
+	// catch SocketProtocolError when server is not running / quits,
+	// to wait for connection
+});
 
-socket.on('connect', function() {
+socket.on('error', (err) => {});
+
+const tasksChannel = socket.subscribe('tasks');
+tasksChannel.watch((tasks) => {
+	console.log('tasks:');
+	tasks.map(R.prop('name'))
+		.forEach((name, index) => {
+			console.log(`${index}\t${name}`);
+		});
+});
+
+socket.on('connect', () => {
 	debugCli('connected');
 
 	// get and list tasks, first thing
@@ -23,17 +41,8 @@ socket.on('connect', function() {
 });
 
 
-socket.on('disconnect', function() {
+socket.on('disconnect', () => {
 	debugCli('disconnected');
-});
-
-
-socket.on('tasks', function(tasks) {
-	console.log('tasks:');
-	tasks.map(R.prop('name'))
-		.forEach((name, index) => {
-			console.log(`${index}\t${name}`);
-		});
 });
 
 
@@ -44,14 +53,12 @@ vorpal
 		cb();
 	});
 
-
 vorpal
 	.command('add <filePath>', 'add task from file')
 	.action((args, cb) => {
 		socket.emit('addTaskFile', args.filePath);
 		cb();
 	});
-
 
 vorpal
 	.command('run <index>', 'run task by index')
@@ -60,7 +67,6 @@ vorpal
 		cb();
 	});
 
-
 vorpal
 	.command('rm <index>', 'remove task by index')
 	.action((args, cb) => {
@@ -68,11 +74,9 @@ vorpal
 		cb();
 	});
 
-
 vorpal
 	.command('reload <index>', 'reload task from file')
 	.action((args, cb) => {
 		socket.emit('reloadTask', args.index);
 		cb();
 	});
-
