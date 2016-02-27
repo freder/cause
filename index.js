@@ -79,14 +79,9 @@ async.map(
 		socketServer.on('connection', (socket) => {
 			debugSocket('client connected');
 
-			socket.on('getTasks', (args={}) => {
-				// if (args.broadcast) {
-				// 	// goes out to all connected clients
-					socketServer.exchange.publish('tasks', tasks);
-				// } else {
-				// 	// only goes to the one socket the event was received from
-				// 	socket.emit('tasks', tasks);
-				// }
+			socket.on('getTasks', () => {
+				socketServer.exchange.publish('tasks', tasks);
+				socket.emit('tasks', tasks);
 			});
 
 			socket.on('addTaskFile', (filePath) => {

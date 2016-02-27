@@ -19,14 +19,13 @@ socket.on('error', (err) => {
 
 socket.on('error', (err) => {});
 
-const tasksChannel = socket.subscribe('tasks');
-tasksChannel.watch((tasks) => {
+socket.on('tasks', (tasks) => {
 	console.log('tasks:');
 	tasks.map(R.prop('name'))
 		.forEach((name, index) => {
 			console.log(`${index}\t${name}`);
 		});
-});
+})
 
 socket.on('connect', () => {
 	debugCli('connected');
