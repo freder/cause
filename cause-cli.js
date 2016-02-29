@@ -25,7 +25,7 @@ socket.on('tasks', (tasks) => {
 		.forEach((name, index) => {
 			console.log(`${index}\t${name}`);
 		});
-})
+});
 
 socket.on('connect', () => {
 	debugCli('connected');
