@@ -20,12 +20,18 @@ socket.on('error', (err) => {
 
 socket.on('error', (err) => {});
 
-socket.on('tasks', (tasks) => {
+
+function printTasks(tasks) {
 	console.log('tasks:');
 	tasks.map(R.prop('name'))
 		.forEach((name, index) => {
 			console.log(`${index}\t${name}`);
 		});
+}
+
+
+socket.on('tasks', (tasks) => {
+	printTasks(tasks);
 });
 
 socket.on('connect', () => {
@@ -40,11 +46,16 @@ socket.on('connect', () => {
 		.show();
 });
 
+const tasksChannel = socket.subscribe('tasks');
+tasksChannel.watch((tasks) => {
+	printTasks(tasks);
+});
 
 socket.on('disconnect', () => {
 	debugCli('disconnected');
 });
 
+// —————————————————
 
 vorpal
 	.command('ls', 'list all tasks')
