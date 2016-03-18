@@ -4,7 +4,7 @@
 	"env": {
 		"es6": true,
 		"node": true,
-		"mocha": true,
+		"mocha": true
 	},
 
 	"plugins": [],
@@ -18,9 +18,13 @@
 	"rules": {
 		"indent": [2, "tab"],
 		"no-shadow": 1,
+		"arrow-body-style": 1,
 		"no-unused-vars": 1,
+		"no-console": 0,
+		"no-use-before-define": 0,
 		"comma-dangle": 0,
 		"quote-props": 0,
-		"dot-notation": 0
+		"dot-notation": 0,
+		"spaces-in-parens": 0
 	}
 }
