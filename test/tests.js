@@ -2,32 +2,26 @@
 
 const assert = require('assert');
 const path = require('path');
-const fs = require('fs');
-const chalk = require('chalk');
 const _ = require('lodash');
-const R = require('ramda');
-const glob = require('glob');
 const mout = require('mout');
-const cheerio = require('cheerio');
 
 const util = require('./util.js');
 
-const config = require('../config.js');
+// const config = require('../config.js');
 const tasklib = require('../lib/tasklib.js');
 
 
-describe(util.f1('lib/'), function() {
-
+describe(util.f1('lib/'), () => {
 	// ————————————————————————————————————————————————————————————
-	describe(util.f2('tasklib.js'), function() {
-		describe(util.f3('.startsWithUnderscore()'), function() {
-			it('should work', function() {
+	describe(util.f2('tasklib.js'), () => {
+		describe(util.f3('.startsWithUnderscore()'), () => {
+			it('should work', () => {
 				assert(tasklib.startsWithUnderscore('_yes'));
 				assert(!tasklib.startsWithUnderscore('no'));
 			});
 		});
 
-		describe(util.f3('.makeSavable()'), function() {
+		describe(util.f3('.makeSavable()'), () => {
 			const task = {
 				name: 'test task',
 				_internal: 'schedule',
@@ -40,13 +34,13 @@ describe(util.f1('lib/'), function() {
 				],
 			};
 
-			it("should remove everything prefixed with '_'", function() {
+			it("should remove everything prefixed with '_'", () => {
 				const skipSteps = true;
 				const savableTask = tasklib.makeSavable(task, skipSteps);
 				assert(!savableTask._internal);
 			});
 
-			it("should optionally do the same thing with step objects, too", function() {
+			it('should optionally do the same thing with step objects, too', () => {
 				const skipSteps = false;
 				const savableTask = tasklib.makeSavable(task, skipSteps);
 				assert(!savableTask._internal);
@@ -54,8 +48,8 @@ describe(util.f1('lib/'), function() {
 			});
 		});
 
-		describe(util.f3('.prepareTask()'), function() {
-			it('should set defaults for missing fields', function() {
+		describe(util.f3('.prepareTask()'), () => {
+			it('should set defaults for missing fields', () => {
 				const taskData = {
 					name: 'task name',
 					slug: undefined,
@@ -71,7 +65,7 @@ describe(util.f1('lib/'), function() {
 				assert(!!task._currentlyExecutingSteps);
 			});
 
-			it('should throw error if task name is missing or empty', function() {
+			it('should throw error if task name is missing or empty', () => {
 				const taskData1 = { name: undefined };
 				const taskData2 = { name: '' };
 
@@ -84,7 +78,7 @@ describe(util.f1('lib/'), function() {
 				});
 			});
 
-			it('should let task do its own thing, if interval is undefined', function() {
+			it('should let task do its own thing, if interval is undefined', () => {
 				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: undefined,
@@ -93,7 +87,7 @@ describe(util.f1('lib/'), function() {
 				assert(!task._schedule);
 			});
 
-			it('should throw error, if interval is invalid', function() {
+			it('should throw error, if interval is invalid', () => {
 				assert.throws(() => {
 					const task = tasklib.prepareTask({
 						name: 'test-task',
@@ -102,7 +96,7 @@ describe(util.f1('lib/'), function() {
 				});
 			});
 
-			it('should create a schedule', function() {
+			it('should create a schedule', () => {
 				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: 'every 5 seconds',
@@ -110,7 +104,7 @@ describe(util.f1('lib/'), function() {
 				assert(!!task._schedule);
 			});
 
-			it('should create a _doneCallback() function, if it does not exist', function() {
+			it('should create a _doneCallback() function, if it does not exist', () => {
 				const task = tasklib.prepareTask({
 					name: 'test',
 					interval: false
@@ -120,8 +114,8 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.addDefaults()'), function() {
-			it('should work without defaults argument', function() {
+		describe(util.f3('.addDefaults()'), () => {
+			it('should work without defaults argument', () => {
 				assert(
 					tasklib.addDefaults(
 						{ attr: 'a' },
@@ -130,7 +124,7 @@ describe(util.f1('lib/'), function() {
 				);
 			});
 
-			it('should work without first argument', function() {
+			it('should work without first argument', () => {
 				assert(
 					tasklib.addDefaults(
 						undefined,
@@ -139,7 +133,7 @@ describe(util.f1('lib/'), function() {
 				);
 			});
 
-			it('should work without both', function() {
+			it('should work without both', () => {
 				assert(
 					!!tasklib.addDefaults(
 						undefined,
@@ -148,7 +142,7 @@ describe(util.f1('lib/'), function() {
 				);
 			});
 
-			it('should not overwrite existing keys', function() {
+			it('should not overwrite existing keys', () => {
 				assert(
 					tasklib.addDefaults(
 						{ attr: 'a' },
@@ -159,10 +153,10 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.prepareStep()'), function() {
+		describe(util.f3('.prepareStep()'), () => {
 			const task = {};
 
-			it('should throw error if step block is missing or empty', function() {
+			it('should throw error if step block is missing or empty', () => {
 				const stepData1 = { block: undefined };
 				const stepData2 = { block: '' };
 
@@ -175,7 +169,7 @@ describe(util.f1('lib/'), function() {
 				});
 			});
 
-			it('should add default values', function() {
+			it('should add default values', () => {
 				const stepData = {
 					block: 'assert' // s.th. that exits
 				};
@@ -186,20 +180,20 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.getTaskFiles()'), function() {
+		describe(util.f3('.getTaskFiles()'), () => {
 			const tasksDirPath = path.join(__dirname, './tasks');
 
-			it('should find the files', function() {
+			it('should find the files', () => {
 				const taskFiles = tasklib.getTaskFiles(tasksDirPath);
 				assert(taskFiles.length === 1);
 			});
 		});
 
 
-		describe(util.f3('.loadTaskFromFile()'), function() {
+		describe(util.f3('.loadTaskFromFile()'), () => {
 			const tasksDirPath = path.join(__dirname, './tasks');
 
-			it('should load task data', function(done) {
+			it('should load task data', (done) => {
 				const taskFileName = 'test.json';
 				const taskPath = path.join(tasksDirPath, taskFileName);
 				tasklib.loadTaskFromFile(taskPath, (err, taskData) => {
@@ -215,17 +209,17 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.loadBlock()'), function() {
+		describe(util.f3('.loadBlock()'), () => {
 			const blocksDirPath = path.join(__dirname, './blocks');
 
-			it('should throw error if block does not exist', function() {
+			it('should throw error if block does not exist', () => {
 				const blockName = 'does-not-exist';
 				assert.throws(function() {
 					const block = tasklib.loadBlock(blocksDirPath, blockName);
 				});
 			});
 
-			it('should successfully load local block', function() {
+			it('should successfully load local block', () => {
 				const blockName = 'cause-test';
 				const block = tasklib.loadBlock(blocksDirPath, blockName);
 				assert(block.success === true);
@@ -233,17 +227,17 @@ describe(util.f1('lib/'), function() {
 
 			const blockName = 'test';
 			const block = tasklib.loadBlock(blocksDirPath, blockName);
-			it('should successfully load local file', function() {
+			it('should successfully load local file', () => {
 				assert(block.success === true);
 			});
-			it('should set defaults', function() {
+			it('should set defaults', () => {
 				assert(!!block.defaults);
 			});
 		});
 
 
-		describe(util.f3('.startTask()'), function() {
-			it('should create a timer', function() {
+		describe(util.f3('.startTask()'), () => {
+			it('should create a timer', () => {
 				const task = tasklib.prepareTask({
 					name: 'test-task',
 					interval: 'every 5 seconds',
@@ -255,9 +249,9 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.findRootSteps()'), function() {
-			it('should find all task entry points', function() {
-				var task = {
+		describe(util.f3('.findRootSteps()'), () => {
+			it('should find all task entry points', () => {
+				const task = {
 					name: 'multi-entry-point-task',
 					steps: [
 						{
@@ -297,8 +291,8 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.prepareFlow()'), function() {
-			it('should make sure everything is sane', function() {
+		describe(util.f3('.prepareFlow()'), () => {
+			it('should make sure everything is sane', () => {
 				let flow;
 				let preparedFlow;
 
@@ -322,14 +316,14 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.prepareDecision()'), function() {
-			it('should work with boolean argument', function() {
+		describe(util.f3('.prepareDecision()'), () => {
+			it('should work with boolean argument', () => {
 				const decision = tasklib.prepareDecision(false);
 				assert(decision['if'] === false);
 				assert(decision['else'] === true);
 			});
 
-			it('should work with object argument', function() {
+			it('should work with object argument', () => {
 				const decision = tasklib.prepareDecision({
 					'if': false
 				});
@@ -337,7 +331,7 @@ describe(util.f1('lib/'), function() {
 				assert(decision['else'] === true);
 			});
 
-			it('should work with undefined/null argument', function() {
+			it('should work with undefined/null argument', () => {
 				let decision = tasklib.prepareDecision(null);
 				assert(decision['if'] === false);
 				assert(decision['else'] === false);
@@ -347,12 +341,12 @@ describe(util.f1('lib/'), function() {
 				assert(decision['else'] === false);
 			});
 
-			it('`always` should always be true', function() {
+			it('`always` should always be true', () => {
 				const decision = tasklib.prepareDecision({ 'always': false });
 				assert(decision['always'] === true);
 			});
 
-			it('should leave defaults untouched', function() {
+			it('should leave defaults untouched', () => {
 				tasklib.prepareDecision({
 					'if': false,
 					'else': false,
@@ -363,7 +357,7 @@ describe(util.f1('lib/'), function() {
 				assert(tasklib.decisionDefaults['always'] === true);
 			});
 
-			it('should throw error on wrong argument type', function() {
+			it('should throw error on wrong argument type', () => {
 				const decision = [
 					{ 'if': false },
 					{ 'else': false },
@@ -376,15 +370,15 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.createExecuteFunction()'), function() {
-			it('should return a function', function() {
+		describe(util.f3('.createExecuteFunction()'), () => {
+			it('should return a function', () => {
 				const execFn = tasklib.createExecuteFunction();
 				assert(_.isFunction(execFn));
 			});
 
 			// let taskDoneCallbackHasRun = false;
 			let stepDoneCallbackHasRun = false;
-			it('should (un)register itself from currently executing steps', function() {
+			it('should (un)register itself from currently executing steps', () => {
 				let done;
 				const task = tasklib.prepareTask({
 					name: 'task',
@@ -414,14 +408,14 @@ describe(util.f1('lib/'), function() {
 				assert(!task._currentlyExecutingSteps[step.id]);
 			});
 
-			it('should call the callback', function() {
+			it('should call the callback', () => {
 				assert(stepDoneCallbackHasRun);
 			});
 		});
 
 
-		describe(util.f3('.prepareStepConfig()'), function() {
-			it('should be cascading', function() {
+		describe(util.f3('.prepareStepConfig()'), () => {
+			it('should be cascading', () => {
 				const blockName = 'cause-block-name';
 				const config = {
 					[blockName]: {
@@ -454,8 +448,8 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.isTaskDone()'), function() {
-			it('should work', function() {
+		describe(util.f3('.isTaskDone()'), () => {
+			it('should work', () => {
 				assert(tasklib.isTaskDone({}));
 				assert(tasklib.isTaskDone({ _currentlyExecutingSteps: {} }));
 				assert(!tasklib.isTaskDone({ _currentlyExecutingSteps: { 'asdf': true } }));
@@ -463,8 +457,8 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.invokeChildren()'), function() {
-			it('should work', function() {
+		describe(util.f3('.invokeChildren()'), () => {
+			it('should work', () => {
 				const flow = {
 					'if': ['step-if'],
 					'else': ['step-else'],
@@ -510,23 +504,23 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.runTask()'), function() {
+		describe(util.f3('.runTask()'), () => {
 			const step = {
 				id: 'single step',
 				flow: tasklib.prepareFlow()
 			};
 
-			it('should work with single step tasks', function() {
+			it('should work with single step tasks', () => {
 				let hasRun = false;
 				const block = {
-					main: function(step, context, config, input, done) {
+					main: (step, context, config, input, done) => {
 						hasRun = true;
 						const decision = true;
 						done(null, 'output', decision);
 					}
 				};
 
-				let task = tasklib.prepareTask({
+				const task = tasklib.prepareTask({
 					name: 'single step task',
 					interval: false
 				});
@@ -534,20 +528,20 @@ describe(util.f1('lib/'), function() {
 				step._execute = tasklib.createExecuteFunction(block, task, step);
 				task.steps = [step];
 
-				task._doneCallback = function() {
+				task._doneCallback = () => {
 					assert(hasRun);
 				};
 				tasklib.runTask(task);
 			});
 
-			it('should run pre and post task callbacks', function(done) {
+			it('should run pre and post task callbacks', (done) => {
 				const block = {
-					main: function(step, context, config, input, done) {
+					main: (step, context, config, input, done) => {
 						const decision = true;
 						done(null, 'output', decision);
 					}
 				};
-				let task = tasklib.prepareTask({
+				const task = tasklib.prepareTask({
 					name: 'task',
 					interval: false
 				});
@@ -575,28 +569,27 @@ describe(util.f1('lib/'), function() {
 		});
 
 
-		describe(util.f3('.addAndStartTask()'), function() {
+		describe(util.f3('.addAndStartTask()'), () => {
 			const tasks = [];
 			const taskData = {
 				name: 'test-task'
 			};
 			const newTasks = tasklib.addAndStartTask(tasks, taskData);
 
-			it('should add a task', function() {
+			it('should add a task', () => {
 				assert(newTasks.length === 1);
 			});
 		});
 
 
-		describe(util.f3('.addAndStartTask()'), function() {
+		describe(util.f3('.addAndStartTask()'), () => {
 			const tasks = [{ name: '0' }, { name: '1' }];
 			const newTasks = tasklib.removeTaskByIndex(tasks, 0);
 
-			it('should remove the right task', function() {
+			it('should remove the right task', () => {
 				assert(newTasks.length === 1);
 				assert(newTasks[0].name === '1');
 			});
 		});
 	});
-
 });
