@@ -14,8 +14,10 @@ if (args.help) {
 
 const path = require('path');
 const async = require('async');
-const debugCli = require('debug')('cause:cli');
-const io = require('socket.io');
+const http = require('http');
+const socketClusterServer = require('socketcluster-server');
+const debugSocket = require('debug')('cause:socket');
+
 
 const config = require('./config.js');
 const logger = require('./lib/logger.js');
@@ -69,13 +71,16 @@ async.map(
 		let tasks = tasklib.startTasks(tasksData);
 
 		// start web socket server
-		const socketServer = io.listen(config.websocket.port);
+		const httpServer = http.createServer();
+		httpServer.listen(config.websocket.port);
+		const socketServer = socketClusterServer.attach(httpServer);
 		logger.info(`web socket listening on port ${config.websocket.port}`);
 
-		socketServer.sockets.on('connection', (socket) => {
-			debugCli('client connected');
+		socketServer.on('connection', (socket) => {
+			debugSocket('client connected');
 
 			socket.on('getTasks', () => {
+				socketServer.exchange.publish('tasks', tasks);
 				socket.emit('tasks', tasks);
 			});
 
@@ -85,22 +90,22 @@ async.map(
 					absPath,
 					(err, taskData) => {
 						tasks = tasklib.addAndStartTask(tasks, taskData);
-						socket.emit('tasks', tasks);
+						socketServer.exchange.publish('tasks', tasks);
 					}
 				);
 			});
 
 			socket.on('removeTask', (index) => {
 				tasks = tasklib.removeTaskByIndex(tasks, index);
-				socket.emit('tasks', tasks);
+				socketServer.exchange.publish('tasks', tasks);
 			});
 
-			socket.on('runTask', (arg) => {
+			socket.on('runTask', (args={}) => {
 				let task;
-				if (arg.slug !== undefined) {
-					task = common.getItemByKey('slug', tasks, arg.slug);
-				} else if (arg.index !== undefined) {
-					task = tasks[arg.index];
+				if (args.slug !== undefined) {
+					task = common.getItemByKey('slug', tasks, args.slug);
+				} else if (args.index !== undefined) {
+					task = tasks[args.index];
 				}
 
 				if (task) {
@@ -115,7 +120,7 @@ async.map(
 					(err, taskData) => {
 						tasks = tasklib.removeTaskByIndex(tasks, index);
 						tasks = tasklib.addAndStartTask(tasks, taskData);
-						socket.emit('tasks', tasks);
+						socketServer.exchange.publish('tasks', tasks);
 					}
 				);
 			});
