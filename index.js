@@ -17,7 +17,6 @@ const async = require('async');
 
 const config = require('./config.js');
 const socket = require('./lib/socket.js');
-const logger = require('./lib/logger.js');
 const common = require('./lib/common.js');
 const tasklib = require('./lib/tasklib.js');
 const email = require('./lib/email.js');
@@ -65,11 +64,12 @@ async.map(
 			});
 		}
 
-		const tasks = tasklib.startTasks(tasksData);
-
-		// start web socket server
 		const port = config.websocket.port;
-		socket.startSocketServer(port, tasks);
+		const socketServer = socket.createSocketServer(port);
+		const logger = require('./lib/logger.js').init(socketServer);
 		logger.info(`web socket listening on port ${port}`);
+
+		const tasks = tasklib.startTasks(tasksData, logger);
+		socket.startSocketServer(socketServer, tasks);
 	}
 );
