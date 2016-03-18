@@ -7,6 +7,7 @@ const debugCli = require('debug')('cause:cli');
 
 const config = require('./config.js');
 
+
 const socket = socketClusterClient.connect({
 	hostname: 'localhost',
 	port: config.websocket.port
