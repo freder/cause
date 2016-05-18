@@ -27,7 +27,7 @@ theoretically you could use ’cause to do what tools like [maid](https://github
 ## installation
 
 requirements:
-- [node.js](http://nodejs.org/)
+- [node.js](http://nodejs.org/) >= 6.0.0
 - [git](http://git-scm.com/)
 
 ```shell
